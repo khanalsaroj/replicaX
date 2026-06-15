@@ -1,0 +1,158 @@
+name: Release
+
+# Auto-tag + publish on a version bump.
+#
+# Flow: bump the version and push to main — the workflow does the rest.
+#   npm version patch --no-git-tag-version   # bump package.json + lock only
+#   git commit -am "Release vX.Y.Z"
+#   git push                                 # → tags vX.Y.Z and publishes to npm
+#
+# It is idempotent: the gate is "is this version already on npm?", so ordinary
+# pushes (no version change) are a no-op, and re-running never double-publishes.
+# Prerelease versions (1.2.0-beta.1) go to a matching dist-tag, never `latest`.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Read-only by default; the publish job elevates its own permissions.
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check for new version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+      should_release: ${{ steps.v.outputs.should_release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version and check npm
+        id: v
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          NAME="$(node -p "require('./package.json').name")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "::notice::$NAME@$VERSION is already published — nothing to release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::$NAME@$VERSION is new — will tag v$VERSION and publish."
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    name: Tag & publish
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the tag + create the GitHub Release
+      id-token: write # OIDC token for npm provenance
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@iamsaroj/replicax
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history + tags for tagging and release notes
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Never publish something that doesn't pass the same gate as CI.
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke-test the built CLI
+        run: |
+          node dist/index.js --version
+          node dist/index.js --help
+
+      # latest for stable, otherwise the prerelease label (beta/rc/next/...).
+      - name: Determine npm dist-tag
+        id: disttag
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          if echo "$VERSION" | grep -q '-'; then
+            LABEL="$(echo "$VERSION" | sed -E 's/.*-([a-zA-Z]+).*/\1/')"
+            [ -z "$LABEL" ] && LABEL="next"
+            echo "tag=$LABEL" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Provenance (the verifiable npm "provenance" badge) requires a PUBLIC repo
+      # + id-token: write. We enable it automatically when the repo is public and
+      # skip it otherwise, so publishing works regardless of visibility. Make the
+      # repo public to get the badge — no workflow change needed.
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          DIST_TAG: ${{ steps.disttag.outputs.tag }}
+        run: |
+          VIS="$(gh repo view --json visibility -q .visibility 2>/dev/null || true)"
+          VIS="$(echo "$VIS" | tr '[:upper:]' '[:lower:]')"
+          if [ "$VIS" = "public" ]; then
+            echo "Public repo → publishing with provenance."
+            npm publish --provenance --tag "$DIST_TAG"
+          else
+            echo "::warning::Repo visibility is '$VIS' — publishing WITHOUT provenance (provenance requires a public repo)."
+            npm publish --tag "$DIST_TAG"
+          fi
+
+      # Tag only after a successful publish, so a failed publish stays retryable.
+      - name: Create and push tag
+        env:
+          TAG: ${{ needs.check.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "Tag $TAG already exists — skipping."
+          else
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
+
+      # Best-effort: a release note is nice but must not fail a successful publish.
+      - name: Create GitHub Release
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.check.outputs.tag }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          PRERELEASE=""
+          echo "$VERSION" | grep -q '-' && PRERELEASE="--prerelease"
+          gh release view "$TAG" >/dev/null 2>&1 \
+            || gh release create "$TAG" --generate-notes $PRERELEASE

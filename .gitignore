@@ -1,0 +1,88 @@
+# ─── Dependencies ────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Build output ────────────────────────────────────────────────
+dist/
+build/
+out/
+lib/
+*.tsbuildinfo
+.tsup/
+
+# ─── Tests & coverage ────────────────────────────────────────────
+coverage/
+.nyc_output/
+*.lcov
+
+# ─── Caches ──────────────────────────────────────────────────────
+.cache/
+.eslintcache
+.prettiercache
+.npm/
+
+# ─── Logs ────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Environment & secrets ───────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ─── JetBrains (IntelliJ IDEA, WebStorm, etc.) ───────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+atlassian-ide-plugin.xml
+
+# ─── VS Code (keep shared settings, ignore the rest) ─────────────
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.history/
+*.code-workspace
+
+# ─── Other editors ───────────────────────────────────────────────
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+CLAUDE.md
+
+# ─── OS files ────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ─── ReplicaX scratch (local fixtures / tmp profiles) ────────────
+.replicax-tmp/
+*.replicax.tar.gz
+.replicax

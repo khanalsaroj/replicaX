@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.replicax
+
+# Hand-authored docs — keep manual formatting
+*.md
+
+# Lockfiles / generated
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

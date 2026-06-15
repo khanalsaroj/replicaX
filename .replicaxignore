@@ -1,0 +1,32 @@
+# .replicaxignore — control what ReplicaX exports into a profile.
+# Uses .gitignore syntax. Matched files are excluded from the profile,
+# though ReplicaX may still scan them to infer project metadata.
+
+# Business logic & application source (structure is kept, contents are not)
+src/features/**
+src/services/**
+src/api/**
+src/**/*.ts
+src/**/*.tsx
+src/**/*.js
+src/**/*.jsx
+
+# Secrets (also enforced unconditionally by ReplicaX)
+.env
+.env.*
+*.pem
+*.key
+
+# Dependencies & build output
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

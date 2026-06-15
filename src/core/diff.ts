@@ -1,0 +1,82 @@
+import { PACKAGE_JSON_KEY } from '@/core/checksum';
+import type { Checksum, Metadata, ProfileBundle, Structure } from '@/schema';
+
+export interface ProfileDiff {
+  files: { added: string[]; removed: string[]; changed: string[] };
+  directories: { added: string[]; removed: string[] };
+  packageJsonChanged: boolean;
+  metadataChanges: Array<{ field: string; from: string; to: string }>;
+}
+
+function diffChecksums(prev: Checksum, next: Checksum) {
+  const added: string[] = [];
+  const removed: string[] = [];
+  const changed: string[] = [];
+  let packageJsonChanged = false;
+
+  const keys = new Set([...Object.keys(prev.files), ...Object.keys(next.files)]);
+  for (const key of keys) {
+    const before = prev.files[key];
+    const after = next.files[key];
+    if (key === PACKAGE_JSON_KEY) {
+      if (before !== after) packageJsonChanged = true;
+      continue;
+    }
+    if (before === undefined) added.push(key);
+    else if (after === undefined) removed.push(key);
+    else if (before !== after) changed.push(key);
+  }
+  return {
+    files: { added: added.sort(), removed: removed.sort(), changed: changed.sort() },
+    packageJsonChanged,
+  };
+}
+
+function diffStructure(prev: Structure, next: Structure) {
+  const before = new Set(prev.directories);
+  const after = new Set(next.directories);
+  const added = next.directories.filter((d) => !before.has(d));
+  const removed = prev.directories.filter((d) => !after.has(d));
+  return { added, removed };
+}
+
+function diffMetadata(prev: Metadata, next: Metadata) {
+  const fields: Array<keyof Metadata> = [
+    'nodeVersion',
+    'packageManager',
+    'framework',
+    'language',
+    'platform',
+  ];
+  const changes: Array<{ field: string; from: string; to: string }> = [];
+  for (const field of fields) {
+    if (prev[field] !== next[field]) {
+      changes.push({ field, from: String(prev[field]), to: String(next[field]) });
+    }
+  }
+  return changes;
+}
+
+/** Compute the difference between a previous and a freshly-scanned profile. */
+export function diffBundles(prev: ProfileBundle, next: ProfileBundle): ProfileDiff {
+  const checksums = diffChecksums(prev.checksum, next.checksum);
+  return {
+    files: checksums.files,
+    packageJsonChanged: checksums.packageJsonChanged,
+    directories: diffStructure(prev.structure, next.structure),
+    metadataChanges: diffMetadata(prev.metadata, next.metadata),
+  };
+}
+
+/** True when a diff contains any change at all. */
+export function hasChanges(diff: ProfileDiff): boolean {
+  return (
+    diff.files.added.length > 0 ||
+    diff.files.removed.length > 0 ||
+    diff.files.changed.length > 0 ||
+    diff.directories.added.length > 0 ||
+    diff.directories.removed.length > 0 ||
+    diff.packageJsonChanged ||
+    diff.metadataChanges.length > 0
+  );
+}
