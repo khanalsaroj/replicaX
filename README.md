@@ -10,11 +10,11 @@
   None of your business code. None of your secrets. Just the setup.
 </p>
 
-[![npm](https://img.shields.io/badge/npm-%40iamsaroj%2Freplicax-CB3837?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/@iamsaroj/replicax)
-[![Node](https://img.shields.io/badge/Node-%E2%89%A5%2020-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-![ESM](https://img.shields.io/badge/Module-ESM-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-[![License](https://img.shields.io/badge/License-MIT-3FB950?style=for-the-badge)](LICENSE)
+[![npm](https://img.shields.io/badge/npm-%40iamsaroj%2Freplicax-CB3837?style=flat-square&logo=npm&logoColor=white)](https://www.npmjs.com/package/@iamsaroj/replicax)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A5%2020-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+![ESM](https://img.shields.io/badge/Module-ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+[![License](https://img.shields.io/badge/License-MIT-3FB950?style=flat-square)](LICENSE)
 
 <sub>
   <a href="#quick-start"><b>Quick start</b></a> &nbsp;•&nbsp;
