@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ReplicaX — Copy the setup, not the code</title>
 <meta name="description" content="ReplicaX extracts a project's tooling, folder structure, and conventions into a portable profile — then recreates it anywhere in seconds. None of your source. None of your secrets. Just the setup." />
-<meta name="theme-color" content="#070b12" />
-<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#c4c3b6" />
+<meta name="color-scheme" content="light" />
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website" />
@@ -18,386 +18,444 @@
 <meta name="twitter:title" content="ReplicaX — Copy the setup, not the code" />
 <meta name="twitter:description" content="Extract a project's tooling, structure, and conventions into a portable profile, then recreate it anywhere. No source. No secrets. Just the setup." />
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%2338bdf8'/%3E%3Cstop%20offset='1'%20stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20x='4.5'%20y='4.5'%20width='16'%20height='16'%20rx='4.5'%20fill='none'%20stroke='%2338bdf8'%20stroke-opacity='.55'%20stroke-width='2'/%3E%3Crect%20x='11'%20y='11'%20width='16'%20height='16'%20rx='4.5'%20fill='url(%23g)'/%3E%3C/svg%3E" />
+<!-- monoline ink favicon, no gradient -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='4.5'%20y='4.5'%20width='15'%20height='15'%20fill='none'%20stroke='%23000'%20stroke-width='1.6'/%3E%3Crect%20x='12'%20y='12'%20width='15'%20height='15'%20fill='%23000'/%3E%3C/svg%3E" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
 
+<script>document.documentElement.className += ' js';</script>
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
-  --bg:#070b12;
-  --bg-soft:#0a0f1a;
-  --surface:rgba(255,255,255,.025);
-  --surface-2:rgba(255,255,255,.045);
-  --border:rgba(148,163,184,.14);
-  --border-strong:rgba(148,163,184,.30);
-  --text:#e8eef6;
-  --muted:#9fb0c6;
-  --faint:#6c7b93;
-  --sky:#38bdf8;
-  --indigo:#818cf8;
-  --violet:#a78bfa;
-  --amber:#fbbf24;
-  --green:#34d399;
-  --red:#fb7185;
-  --grad:linear-gradient(115deg,#38bdf8 0%,#818cf8 52%,#a78bfa 100%);
-  --grad-text:linear-gradient(115deg,#7dd3fc 0%,#a5b4fc 50%,#c4b5fd 100%);
-  --radius:18px;
-  --radius-sm:12px;
-  --maxw:1140px;
-  --shadow:0 24px 60px -28px rgba(2,6,23,.85);
-  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  /* ---- colours (Structured palette) ---- */
+  --color-putty:#c4c3b6;
+  --color-ink:#000000;
+  --color-bone:#e7e5e4;
+  --color-chalk:#ebebeb;
+  --color-vellum:#dfdcd5;
+  --color-graphite:#595855;
+  --color-ash:#808080;
+  --color-paper:#ffffff;
+
+  /* derived hairlines / muted-on-dark */
+  --hair:var(--color-vellum);
+  --hair-ink:rgba(0,0,0,.18);
+  --hair-paper:rgba(255,255,255,.16);
+  --muted-on-dark:#aeaca4;
+
+  /* ---- type ---- */
+  --font-davinci:'Playfair Display',Georgia,'Times New Roman',serif;
+  --font-grotesk:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;
+
+  --text-body-sm:15px;--leading-body-sm:1.5;
+  --text-subheading:22px;--leading-subheading:1.33;--tracking-subheading:-.11px;
+  --text-heading-sm:26px;--leading-heading-sm:1.33;--tracking-heading-sm:-.13px;
+  --text-heading:43px;--leading-heading:1.1;--tracking-heading:-.215px;
+  --text-heading-lg:52px;--leading-heading-lg:1;--tracking-heading-lg:-.47px;
+  --text-display:374px;--leading-display:.84;--tracking-display:-3.37px;
+
+  /* ---- spacing / shape ---- */
+  --spacing-16:16px;--spacing-20:20px;--spacing-28:28px;--spacing-32:32px;
+  --spacing-40:40px;--spacing-52:52px;--spacing-60:60px;--spacing-96:96px;--spacing-168:168px;
+  --radius-cards:9px;--radius-links:2px;--radius-buttons:28.8px;
+
+  --maxw:1180px;
 }
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
-  line-height:1.6;font-size:16px;letter-spacing:-.011em;
-  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-  overflow-x:hidden;
+  margin:0;background:var(--color-putty);color:var(--color-ink);
+  font-family:var(--font-grotesk);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;
 }
 a{color:inherit;text-decoration:none}
-h1,h2,h3,h4{margin:0;line-height:1.1;letter-spacing:-.03em;font-weight:800}
 p{margin:0}
 img,svg{display:block}
-code,pre,kbd{font-family:var(--mono)}
+code,pre{font-family:var(--font-mono)}
+::selection{background:var(--color-ink);color:var(--color-paper)}
 
-/* ---------- background aurora + grid ---------- */
-.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
-.bg::before{
-  content:"";position:absolute;inset:-20% -10% auto -10%;height:90vh;
-  background:
-    radial-gradient(45% 55% at 22% 18%,rgba(56,189,248,.20),transparent 70%),
-    radial-gradient(40% 50% at 80% 8%,rgba(167,139,250,.20),transparent 70%),
-    radial-gradient(35% 45% at 60% 35%,rgba(129,140,248,.14),transparent 70%);
-  filter:blur(8px);
-}
-.grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);
-  background-size:54px 54px;
-  -webkit-mask-image:radial-gradient(120% 80% at 50% 0%,#000 0%,transparent 72%);
-  mask-image:radial-gradient(120% 80% at 50% 0%,#000 0%,transparent 72%);
-}
+/* ---------- layout primitives ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+section{padding:clamp(72px,9vw,120px) 0;position:relative;scroll-margin-top:60px}
+.room-putty{background:var(--color-putty);color:var(--color-ink)}
+.room-bone{background:var(--color-bone);color:var(--color-ink)}
+.room-chalk{background:var(--color-chalk);color:var(--color-ink)}
+.room-ink{background:var(--color-ink);color:var(--color-paper)}
 
-/* ---------- layout ---------- */
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-section{position:relative;padding:104px 0;scroll-margin-top:84px}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--sky);
-  padding:6px 13px;border:1px solid var(--border);border-radius:999px;
-  background:var(--surface);margin-bottom:20px;
+/* ---------- labels & headings ---------- */
+.label{
+  font-family:var(--font-grotesk);font-size:12px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--color-graphite);
 }
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--sky);box-shadow:0 0 12px var(--sky)}
-.section-head{max-width:680px;margin-bottom:56px}
-.section-head.center{margin-left:auto;margin-right:auto;text-align:center}
-h2.title{font-size:clamp(30px,4.6vw,46px);font-weight:900}
-.section-head p{margin-top:18px;color:var(--muted);font-size:18px}
-.grad-text{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.room-ink .label{color:var(--muted-on-dark)}
+.serif{font-family:var(--font-davinci);font-weight:500}
+.section-head{margin-bottom:clamp(40px,6vw,72px)}
+.section-head .toprow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:22px}
+.display-title{
+  font-family:var(--font-davinci);font-weight:500;
+  font-size:clamp(40px,8.5vw,94px);line-height:.86;letter-spacing:-.012em;
+  text-align:center;margin:0;
+}
+.section-head.left .display-title{text-align:left}
+.lede{
+  max-width:560px;margin:22px auto 0;text-align:center;
+  font-size:var(--text-body-sm);line-height:var(--leading-body-sm);color:var(--color-graphite);
+}
+.section-head.left .lede{margin-left:0;text-align:left}
+.room-ink .lede{color:var(--muted-on-dark)}
+em.it{font-style:italic;font-family:var(--font-davinci)}
 
-/* ---------- nav ---------- */
-header.nav{position:sticky;top:0;z-index:50;border-bottom:1px solid transparent;transition:.3s}
-header.nav.scrolled{
-  background:rgba(7,11,18,.72);backdrop-filter:blur(16px) saturate(160%);
-  -webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom-color:var(--border);
+/* ---------- components: pill / ghost link ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
+  font-family:var(--font-grotesk);font-size:12px;font-weight:500;letter-spacing:.01em;
+  padding:10px 18px;border-radius:var(--radius-buttons);border:1px solid var(--color-ink);
+  background:var(--color-ink);color:var(--color-paper);transition:opacity .18s,background .18s,color .18s;
 }
-.nav-inner{display:flex;align-items:center;gap:14px;height:66px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:18px;letter-spacing:-.02em}
-.brand .logo{width:30px;height:30px;flex:0 0 auto;filter:drop-shadow(0 4px 14px rgba(56,189,248,.45))}
-.brand b{font-weight:900}
-.nav-links{display:flex;gap:4px;margin-left:18px}
-.nav-links a{padding:8px 13px;border-radius:9px;color:var(--muted);font-size:14.5px;font-weight:500;transition:.18s}
-.nav-links a:hover{color:var(--text);background:var(--surface-2)}
-.nav-cta{margin-left:auto;display:flex;align-items:center;gap:10px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  font-family:var(--font);font-weight:600;font-size:14.5px;cursor:pointer;
-  padding:10px 18px;border-radius:11px;border:1px solid var(--border-strong);
-  background:var(--surface-2);color:var(--text);transition:.2s;white-space:nowrap;
+.pill:hover{opacity:.82}
+.pill svg{width:14px;height:14px}
+.pill.ghost{background:transparent;color:var(--color-ink)}
+.pill.ghost:hover{background:var(--color-ink);color:var(--color-paper);opacity:1}
+.room-ink .pill{background:var(--color-paper);color:var(--color-ink);border-color:var(--color-paper)}
+.room-ink .pill.ghost{background:transparent;color:var(--color-paper)}
+.room-ink .pill.ghost:hover{background:var(--color-paper);color:var(--color-ink)}
+.tlink{
+  font-family:var(--font-grotesk);font-size:13px;color:inherit;border-radius:var(--radius-links);
+  border-bottom:1px solid transparent;transition:border-color .18s;
 }
-.btn:hover{border-color:var(--border-strong);background:rgba(255,255,255,.08);transform:translateY(-1px)}
-.btn svg{width:17px;height:17px}
-.btn-primary{
-  border:none;color:#04111f;font-weight:700;background:var(--grad);
-  box-shadow:0 12px 30px -10px rgba(56,189,248,.6);
+.tlink:hover{border-bottom-color:currentColor}
+.tlink .arr{font-style:normal}
+
+/* hex indicator */
+.hex{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.4}
+.hexrow{display:flex;gap:8px;justify-content:center;align-items:center;opacity:.65}
+
+/* ---------- header ---------- */
+header.bar{position:sticky;top:0;z-index:60;background:var(--color-putty);transition:border-color .3s,background .3s}
+header.bar.scrolled{border-bottom:1px solid var(--hair)}
+.bar-inner{display:flex;align-items:center;height:64px}
+.mark{display:flex;align-items:center;gap:11px}
+.monogram{
+  width:32px;height:32px;border:1.5px solid var(--color-ink);border-radius:50%;
+  display:grid;place-items:center;font-family:var(--font-davinci);font-weight:500;font-size:16px;line-height:1;
 }
-.btn-primary:hover{filter:brightness(1.07);box-shadow:0 16px 38px -10px rgba(129,140,248,.65)}
-.btn-lg{padding:14px 26px;font-size:16px;border-radius:13px}
-.nav-burger{display:none;margin-left:auto;background:var(--surface-2);border:1px solid var(--border);color:var(--text);width:42px;height:42px;border-radius:11px;cursor:pointer;align-items:center;justify-content:center}
+.mark .name{font-family:var(--font-grotesk);font-size:13px;font-weight:500;letter-spacing:.04em}
+.bar-inner .right{margin-left:auto;display:flex;align-items:center;gap:22px}
 
 /* ---------- hero ---------- */
-.hero{padding:78px 0 96px;text-align:center}
-.hero .eyebrow{margin-bottom:26px}
-.hero h1{font-size:clamp(42px,7.2vw,82px);font-weight:900;letter-spacing:-.045em;line-height:.98}
-.hero .lede{max-width:640px;margin:26px auto 0;color:var(--muted);font-size:clamp(17px,2.2vw,21px)}
-.hero .lede b{color:var(--text);font-weight:600}
-.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px}
-.install{
-  display:inline-flex;align-items:center;gap:14px;margin-top:30px;
-  padding:6px 6px 6px 20px;border:1px solid var(--border);border-radius:14px;
-  background:rgba(255,255,255,.03);font-family:var(--mono);font-size:15px;
+.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:0;overflow:hidden;text-align:center}
+.hero .cluster{display:flex;flex-direction:column;align-items:center;gap:22px;padding-bottom:clamp(28px,5vw,56px)}
+.hero .kicker{font-size:12px}
+.hero h1{
+  margin:0;font-family:var(--font-davinci);font-weight:500;
+  font-size:clamp(30px,5.4vw,52px);line-height:1.05;letter-spacing:-.009em;max-width:14ch;
 }
-.install .prompt{color:var(--violet)}
-.install code{color:var(--text)}
+.statpair{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center}
+.stat{font-size:16px;font-weight:500;letter-spacing:.02em;text-transform:uppercase}
+.stat b{font-weight:500}
+.stat .dim{color:var(--color-graphite)}
+.codecap{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:7px 7px 7px 16px;border:1px solid var(--hair-ink);border-radius:var(--radius-buttons);
+  font-family:var(--font-mono);font-size:13px;background:transparent;
+}
+.codecap .pr{color:var(--color-graphite)}
 .copy{
-  display:inline-flex;align-items:center;gap:7px;font-family:var(--font);font-weight:600;font-size:13px;
-  padding:9px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);
-  color:var(--muted);cursor:pointer;transition:.18s;flex:0 0 auto;
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;flex:0 0 auto;
+  font-family:var(--font-grotesk);font-size:11px;font-weight:500;letter-spacing:.02em;
+  padding:7px 13px;border-radius:var(--radius-buttons);border:1px solid var(--color-ink);
+  background:var(--color-ink);color:var(--color-paper);transition:opacity .18s;
 }
-.copy:hover{color:var(--text);border-color:var(--border-strong)}
-.copy.done{color:var(--green);border-color:rgba(52,211,153,.5)}
-.copy svg{width:14px;height:14px}
-.trust{display:flex;gap:10px 26px;justify-content:center;flex-wrap:wrap;margin-top:34px;color:var(--faint);font-size:13.5px;font-weight:500}
-.trust span{display:inline-flex;align-items:center;gap:8px}
-.trust svg{width:15px;height:15px;color:var(--green)}
+.copy:hover{opacity:.82}
+.copy svg{width:12px;height:12px}
+.copy.done{background:transparent;color:var(--color-ink)}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 
-/* ---------- terminal ---------- */
-.term{
-  margin:54px auto 0;max-width:760px;text-align:left;border-radius:16px;overflow:hidden;
-  border:1px solid var(--border-strong);background:#070c15;box-shadow:var(--shadow);
+/* hero wordmark — the signature element, cropped at the viewport edges */
+.wordmark{
+  font-family:var(--font-davinci);font-weight:500;color:var(--color-ink);
+  font-size:clamp(96px,34vw,374px);line-height:.84;letter-spacing:-.012em;
+  white-space:nowrap;text-align:center;user-select:none;
+  margin:0;padding:0;
 }
-.term-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border)}
-.term-bar i{width:12px;height:12px;border-radius:50%;display:block}
-.term-bar i:nth-child(1){background:#ff5f57}.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
-.term-bar .t{margin-left:10px;font-family:var(--mono);font-size:12.5px;color:var(--faint)}
-.term pre{margin:0;padding:20px 22px;font-family:var(--mono);font-size:13px;line-height:1.65;overflow-x:auto;color:#cdd9e8}
-.term .c-cmd{color:#fff;font-weight:600}.term .c-ok{color:#34d399}.term .c-info{color:#7dd3fc}
-.term .c-key{color:#a5b4fc}.term .c-dim{color:#6c7b93}.term .c-path{color:#fbbf24}
+.wordmark-wrap{width:100%;overflow:hidden}
 
-/* ---------- generic cards ---------- */
-.card{
-  border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);
-  padding:26px;transition:.25s;position:relative;overflow:hidden;height:100%;
+/* ---------- classical painting panel + floating card ---------- */
+.panel{position:relative;width:100%;min-height:clamp(440px,66vh,680px);display:grid;place-items:center;overflow:hidden;background:var(--color-graphite)}
+.panel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.notched{
+  position:relative;z-index:2;width:min(420px,84vw);min-height:300px;
+  background:var(--color-ink);color:var(--color-paper);padding:32px 30px;
+  display:flex;flex-direction:column;
+  clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 16px,100% calc(100% - 16px),calc(100% - 16px) 100%,16px 100%,0 calc(100% - 16px),0 16px);
 }
-.card:hover{border-color:var(--border-strong);background:var(--surface-2);transform:translateY(-3px)}
-.grid-feat{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.ic{
-  width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,rgba(56,189,248,.16),rgba(167,139,250,.16));
-  border:1px solid var(--border);margin-bottom:18px;
+.notched .nlabel{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-on-dark)}
+.notched h3{font-family:var(--font-davinci);font-weight:500;font-size:34px;line-height:1.04;letter-spacing:-.01em;margin:18px 0 0}
+.notched p{margin-top:14px;font-size:14px;line-height:1.5;color:var(--muted-on-dark)}
+.notched .scroll{margin-top:auto;padding-top:26px;font-family:var(--font-grotesk);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--color-paper);display:flex;align-items:center;gap:8px}
+.notched .scroll svg{width:9px;height:14px;stroke:var(--color-paper);fill:none;stroke-width:1.4}
+
+/* ---------- bone cards (wall labels) ---------- */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)}
+.cell{background:var(--color-bone);padding:28px 24px}
+.cell .num{font-family:var(--font-mono);font-size:12px;color:var(--color-graphite);letter-spacing:.08em}
+.cell h3{font-family:var(--font-davinci);font-weight:500;font-size:24px;line-height:1.1;letter-spacing:-.01em;margin:14px 0 0}
+.cell p{margin-top:10px;font-size:14px;line-height:1.5;color:var(--color-graphite)}
+.cell code,.line code,.q .a code,.notebody code{font-family:var(--font-mono);font-size:.86em;color:var(--color-ink);background:rgba(0,0,0,.06);padding:1px 5px;border-radius:var(--radius-links)}
+.room-ink code{color:var(--color-paper);background:rgba(255,255,255,.1)}
+
+/* ---------- circular vignettes (dark) ---------- */
+.vignettes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,52px);margin-top:clamp(36px,5vw,60px)}
+.vignette{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+.vignette .cap{font-family:var(--font-davinci);font-weight:500;font-size:22px;letter-spacing:-.01em}
+.vignette .crop{width:clamp(160px,20vw,212px);height:clamp(160px,20vw,212px);border-radius:50%;overflow:hidden;background:var(--color-graphite)}
+.vignette .crop img{width:100%;height:100%;object-fit:cover}
+.vignette p{font-size:13px;line-height:1.5;color:var(--muted-on-dark);max-width:30ch}
+
+/* ---------- two-up command steps ---------- */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
+.step{background:var(--color-bone);padding:30px 28px;display:flex;flex-direction:column;gap:16px}
+.step .head{display:flex;align-items:baseline;gap:12px}
+.step .head .idx{font-family:var(--font-mono);font-size:13px;color:var(--color-graphite)}
+.step .head h3{font-family:var(--font-davinci);font-weight:500;font-size:26px;letter-spacing:-.01em;margin:0}
+.step .body{font-size:14px;color:var(--color-graphite)}
+.step .runline{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--hair-ink);border-radius:var(--radius-cards);padding:6px 6px 6px 14px;
+  font-family:var(--font-mono);font-size:13px;background:var(--color-paper)
 }
-.ic svg{width:23px;height:23px;color:var(--sky)}
-.card h3{font-size:17.5px;font-weight:700;letter-spacing:-.02em}
-.card p{margin-top:9px;color:var(--muted);font-size:14.5px}
-.card p code,.feat-li code{font-family:var(--mono);font-size:.88em;color:var(--violet);background:rgba(167,139,250,.1);padding:1px 6px;border-radius:5px}
+.step .note{font-size:13px;color:var(--color-graphite);margin-top:-2px}
 
-/* ---------- compare (why) ---------- */
-.why{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.why-col{border:1px solid var(--border);border-radius:var(--radius);padding:8px;background:var(--surface)}
-.why-col.bad{--c:var(--red)}.why-col.good{--c:var(--green)}
-.why-col h3{display:flex;align-items:center;gap:10px;font-size:15px;padding:16px 18px 14px}
-.why-col h3 .badge{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
-.why-col h3 .badge svg{width:15px;height:15px}
-.why-row{display:flex;gap:12px;padding:13px 18px;border-top:1px solid var(--border);font-size:14.5px}
-.why-row .lbl{color:var(--faint);min-width:130px;font-weight:500}
-.why-row .val{color:var(--muted)}
-.why-col.good .why-row .val{color:var(--text)}
-.why-row .val code{font-family:var(--mono);font-size:.9em;color:var(--sky)}
+/* ---------- exhibit terminal ---------- */
+.exhibit{border:1px solid var(--hair-ink);border-radius:var(--radius-cards);overflow:hidden;background:var(--color-ink);max-width:760px;margin:0 auto clamp(36px,5vw,56px);text-align:left}
+.exhibit .plate{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--hair-paper)}
+.exhibit .plate .h{width:10px;height:10px;border:1px solid var(--hair-paper);border-radius:50%}
+.exhibit .plate .t{margin-left:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--muted-on-dark);text-transform:uppercase}
+.exhibit pre{margin:0;padding:22px;font-family:var(--font-mono);font-size:12.5px;line-height:1.6;overflow-x:auto;color:#d7d6cf}
+.exhibit .c-cmd{color:#fff}.exhibit .c-key{color:#fff;font-weight:600}.exhibit .c-dim{color:var(--color-ash)}.exhibit .c-path{color:#fff;font-style:italic}
 
-/* ---------- before/after ---------- */
-.ba{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.ba-pane{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#070c15}
-.ba-pane .h{padding:13px 18px;font-size:13.5px;font-weight:600;border-bottom:1px solid var(--border);background:rgba(255,255,255,.025);display:flex;align-items:center;gap:9px}
-.ba-pane.gen .h{color:var(--green)}.ba-pane.src .h{color:var(--muted)}
-.ba-pane pre{margin:0;padding:18px 20px;font-family:var(--mono);font-size:12.5px;line-height:1.7;overflow-x:auto;color:#aebacb}
-.ba-pane .sec{color:var(--red)}.ba-pane .biz{color:var(--amber)}.ba-pane .ok{color:var(--green)}.ba-pane .empty{color:var(--sky)}
-.ba-note{margin-top:24px;text-align:center;color:var(--muted);font-size:15px}
-.ba-note b{color:var(--text)}
+/* ---------- before / after ---------- */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
+.ba-pane{background:var(--color-bone);overflow:hidden}
+.ba-pane .h{padding:14px 20px;border-bottom:1px solid var(--hair);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-graphite)}
+.ba-pane pre{margin:0;padding:20px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;overflow-x:auto;color:var(--color-ink)}
+.ba-pane .out{color:var(--color-graphite)}
+.ba-pane .tag{color:var(--color-graphite);font-style:italic}
+.ba-note{margin-top:26px;text-align:center;font-size:15px;color:var(--color-graphite)}
+.ba-note b{color:var(--color-ink);font-weight:600}
 
-/* ---------- commands ---------- */
-.cmds{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.cmd-row{
-  display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--border);
-  border-radius:13px;background:var(--surface);transition:.2s;
+/* ---------- commands list ---------- */
+.cmds{border-top:1px solid var(--hair-ink)}
+.line{
+  display:flex;align-items:center;gap:18px;padding:18px 4px;border-bottom:1px solid var(--hair-ink);transition:padding-left .18s;
 }
-.cmd-row:hover{border-color:var(--border-strong);background:var(--surface-2);transform:translatex(2px)}
-.cmd-row .name{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
-.cmd-row .name .kw{color:var(--violet)}
-.cmd-row .desc{color:var(--muted);font-size:13.5px;margin-left:auto;text-align:right}
-.cmd-row .arrow{color:var(--faint);transition:.2s}
-.cmd-row:hover .arrow{color:var(--sky);transform:translateX(3px)}
+.line:hover{padding-left:12px}
+.line .name{font-family:var(--font-mono);font-size:14px;color:var(--color-ink);white-space:nowrap;min-width:200px}
+.line .name .kw{color:var(--color-graphite)}
+.line .desc{font-size:14px;color:var(--color-graphite);margin-left:auto;text-align:right}
+.line .arr{font-style:normal;color:var(--color-ink)}
 
-/* ---------- security ---------- */
-.sec-band{
-  border:1px solid var(--border);border-radius:24px;padding:8px;position:relative;overflow:hidden;
-  background:
-    radial-gradient(60% 80% at 100% 0%,rgba(251,191,36,.10),transparent 60%),
-    radial-gradient(70% 90% at 0% 100%,rgba(52,211,153,.08),transparent 60%),
-    var(--surface);
-}
-.sec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border-radius:18px;overflow:hidden}
-.sec-item{padding:26px 26px;background:var(--bg-soft)}
-.sec-item .top{display:flex;align-items:center;gap:13px;margin-bottom:11px}
-.sec-item .shield{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;
-  background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25)}
-.sec-item .shield svg{width:21px;height:21px;color:var(--green)}
-.sec-item h3{font-size:16px;font-weight:700}
-.sec-item p{color:var(--muted);font-size:14px}
-.sec-item p code{font-family:var(--mono);font-size:.86em;color:var(--amber);background:rgba(251,191,36,.1);padding:1px 6px;border-radius:5px}
-
-/* ---------- how it works ---------- */
-.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;justify-content:center}
-.stage{
-  flex:1;min-width:170px;border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;
-  background:var(--surface);text-align:center;position:relative;
-}
-.stage .n{font-family:var(--mono);font-size:12px;color:var(--sky);font-weight:600;letter-spacing:.1em}
-.stage .si{width:48px;height:48px;margin:12px auto 14px;border-radius:13px;display:grid;place-items:center;
-  background:linear-gradient(135deg,rgba(56,189,248,.16),rgba(167,139,250,.16));border:1px solid var(--border)}
-.stage .si svg{width:24px;height:24px;color:var(--sky)}
-.stage h3{font-size:15.5px;font-weight:700}
-.stage p{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.5}
-.flow .conn{display:flex;align-items:center;justify-content:center;padding:0 6px;color:var(--faint)}
-.flow .conn svg{width:24px;height:24px}
+/* ---------- security (dark) wall labels ---------- */
+.sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair-paper);border:1px solid var(--hair-paper)}
+.sec-item{background:var(--color-ink);padding:28px 24px}
+.sec-item .n{font-family:var(--font-mono);font-size:12px;color:var(--muted-on-dark);letter-spacing:.08em}
+.sec-item h3{font-family:var(--font-davinci);font-weight:500;font-size:22px;line-height:1.12;letter-spacing:-.01em;margin:12px 0 0;color:var(--color-paper)}
+.sec-item p{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--muted-on-dark)}
+.sec-item p code{color:var(--color-paper);background:rgba(255,255,255,.1)}
 
 /* ---------- faq ---------- */
-.faq{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-details.q{border:1px solid var(--border);border-radius:14px;background:var(--surface);overflow:hidden;transition:.2s}
-details.q[open]{border-color:var(--border-strong);background:var(--surface-2)}
+.faq{max-width:780px;margin:0 auto;border-top:1px solid var(--hair-ink)}
+details.q{border-bottom:1px solid var(--hair-ink)}
 details.q summary{
-  list-style:none;cursor:pointer;padding:19px 22px;font-weight:600;font-size:16px;
-  display:flex;align-items:center;gap:14px;
+  list-style:none;cursor:pointer;padding:22px 4px;font-size:16px;font-weight:500;
+  display:flex;align-items:center;gap:16px;
 }
 details.q summary::-webkit-details-marker{display:none}
-details.q summary .pm{margin-left:auto;flex:0 0 auto;width:22px;height:22px;color:var(--sky);transition:.25s}
+details.q summary .pm{margin-left:auto;flex:0 0 auto;width:18px;height:18px;transition:transform .25s;stroke:var(--color-ink);fill:none;stroke-width:1.6}
 details.q[open] summary .pm{transform:rotate(45deg)}
-details.q .a{padding:0 22px 21px;color:var(--muted);font-size:15px}
-details.q .a code{font-family:var(--mono);font-size:.88em;color:var(--violet);background:rgba(167,139,250,.1);padding:1px 6px;border-radius:5px}
+details.q .a{padding:0 4px 24px;font-size:15px;line-height:1.55;color:var(--color-graphite);max-width:64ch}
 
-/* ---------- CTA + footer ---------- */
-.cta{
-  text-align:center;border:1px solid var(--border-strong);border-radius:26px;padding:64px 28px;position:relative;overflow:hidden;
-  background:radial-gradient(80% 120% at 50% 0%,rgba(129,140,248,.16),transparent 60%),var(--surface);
-}
-.cta h2{font-size:clamp(28px,4.4vw,42px);font-weight:900}
-.cta p{margin:16px auto 0;max-width:520px;color:var(--muted);font-size:18px}
-footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
-.foot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;color:var(--faint);font-size:14px}
-.foot .brand{font-size:16px;color:var(--text)}
-.foot-links{margin-left:auto;display:flex;gap:20px}
-.foot-links a{color:var(--muted);transition:.18s}.foot-links a:hover{color:var(--text)}
-.foot .note{flex-basis:100%;color:var(--faint);font-size:13px;margin-top:6px}
+/* ---------- cta ---------- */
+.cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px}
+.cta h2{font-family:var(--font-davinci);font-weight:500;font-size:clamp(40px,7.5vw,84px);line-height:.9;letter-spacing:-.012em;margin:0}
+.cta p{max-width:480px;font-size:16px;color:var(--muted-on-dark)}
+
+/* ---------- footer ---------- */
+footer{background:var(--color-chalk);color:var(--color-ink);padding:52px 0 60px;border-top:1px solid var(--hair)}
+.foot{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.foot .mark .name{font-size:13px}
+.foot-links{margin-left:auto;display:flex;gap:22px;flex-wrap:wrap}
+.foot-links a{font-size:13px;color:var(--color-graphite)}
+.foot-links a:hover{color:var(--color-ink)}
+.foot .note{flex-basis:100%;font-size:12px;color:var(--color-graphite);margin-top:8px;line-height:1.6}
+.foot .note em{font-style:italic;font-family:var(--font-davinci)}
 
 /* ---------- reveal ---------- */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-.reveal.in{opacity:1;transform:none}
+html.js .reveal{opacity:0;transform:translateY(14px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+html.js .reveal.in{opacity:1;transform:none}
 
 /* ---------- responsive ---------- */
-@media(max-width:920px){
-  .grid-feat{grid-template-columns:repeat(2,1fr)}
-  .nav-links{display:none}
+@media(max-width:900px){
+  .grid3,.sec-grid,.vignettes{grid-template-columns:1fr}
+  .duo,.ba{grid-template-columns:1fr}
+  .section-head .toprow{flex-wrap:wrap}
 }
-@media(max-width:760px){
-  section{padding:78px 0}
-  .why,.ba,.cmds,.sec-grid{grid-template-columns:1fr}
-  .nav-cta .btn:not(.btn-primary){display:none}
-  .nav-burger{display:flex}
-  .nav-links{
-    position:absolute;top:66px;left:0;right:0;flex-direction:column;gap:2px;padding:12px;
-    background:rgba(7,11,18,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:none;
-  }
-  .nav-links.open{display:flex}
-  .nav-links a{padding:13px 14px;font-size:16px}
-  .grid-feat{grid-template-columns:1fr}
-  .install{flex-wrap:wrap;font-size:13.5px;padding-left:16px}
-  .flow .conn{transform:rotate(90deg);padding:8px 0}
-  .stage{min-width:100%}
-  .cmd-row .desc{display:none}
+@media(max-width:620px){
+  .mark .name{display:none}
+  .line .desc{display:none}
+  .line .name{min-width:0}
+  .statpair{gap:16px}
+  .hero .actions{flex-direction:column}
+  .codecap{flex-wrap:wrap;justify-content:center}
 }
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .reveal{opacity:1;transform:none;transition:none}
+  html.js .reveal{opacity:1;transform:none;transition:none}
 }
 </style>
 </head>
 <body>
-<div class="bg"></div>
-<div class="grid"></div>
 
-<!-- ============ NAV ============ -->
-<header class="nav" id="nav">
-  <div class="wrap nav-inner">
-    <a class="brand" href="#home" aria-label="ReplicaX home">
-      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/>
-        </linearGradient></defs>
-        <rect x="4.5" y="4.5" width="16" height="16" rx="4.5" fill="none" stroke="#38bdf8" stroke-opacity=".55" stroke-width="2"/>
-        <rect x="11" y="11" width="16" height="16" rx="4.5" fill="url(#lg)"/>
-      </svg>
-      <span>Replica<b>X</b></span>
+<!-- ============ HEADER — logo mark + single text link ============ -->
+<header class="bar" id="bar">
+  <div class="wrap bar-inner">
+    <a class="mark" href="#top" aria-label="ReplicaX home">
+      <span class="monogram">R</span>
+      <span class="name">REPLICAX</span>
     </a>
-    <nav class="nav-links" id="navlinks">
-      <a href="#features">Features</a>
-      <a href="#start">Quick start</a>
-      <a href="#commands">Commands</a>
-      <a href="#security">Security</a>
-      <a href="#how">How it works</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-    <div class="nav-cta">
-      <a class="btn" href="https://www.npmjs.com/package/@iamsaroj/replicax" target="_blank" rel="noopener">npm</a>
-      <a class="btn btn-primary" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
-        GitHub
-      </a>
+    <div class="right">
+      <a class="tlink" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">GitHub <span class="arr">↗</span></a>
     </div>
-    <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
   </div>
 </header>
 
 <!-- ============ HERO ============ -->
-<section class="hero" id="home">
-  <div class="wrap">
-    <span class="eyebrow reveal"><span class="dot"></span> Open-source CLI · Node ≥ 20 · MIT</span>
-    <h1 class="reveal">Copy the setup,<br/><span class="grad-text">not the code.</span></h1>
-    <p class="lede reveal">
-      ReplicaX extracts a project's <b>tooling, folder structure, and conventions</b> into a portable
-      profile — then recreates it anywhere in seconds. None of your business code. None of your secrets.
-      Just the setup.
-    </p>
-
-    <div class="install reveal">
-      <span><span class="prompt">$</span> <code>npm install -g @iamsaroj/replicax</code></span>
+<section class="hero room-putty" id="top">
+  <div class="wrap cluster">
+    <span class="kicker label reveal">Open-source CLI · Node ≥ 20 · MIT</span>
+    <h1 class="reveal">Copy the <em class="it">setup,</em><br/>not the code.</h1>
+    <div class="statpair reveal">
+      <span class="stat">Commands <span class="dim">— 11</span></span>
+      <span class="stat">Secrets captured <span class="dim">— 0</span></span>
+    </div>
+    <div class="codecap reveal">
+      <span><span class="pr">$</span> npm install -g @iamsaroj/replicax</span>
       <button class="copy" data-copy="npm install -g @iamsaroj/replicax" aria-label="Copy install command">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         Copy
       </button>
     </div>
+    <div class="actions reveal">
+      <a class="pill" href="#start">Get started</a>
+      <a class="pill ghost" href="#commands">Browse commands</a>
+    </div>
+  </div>
+  <div class="wordmark-wrap reveal" aria-hidden="true">
+    <div class="wordmark">ReplicaX</div>
+  </div>
+</section>
 
-    <div class="hero-actions reveal">
-      <a class="btn btn-primary btn-lg" href="#start">Get started
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a class="btn btn-lg" href="#commands">Browse commands</a>
+<!-- ============ FLOATING CARD OVER PAINTING ============ -->
+<section class="panel" aria-label="Capture once, reproduce anywhere" style="padding:0">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Albert_Bierstadt_-_Among_the_Sierra_Nevada%2C_California_-_Google_Art_Project.jpg/1920px-Albert_Bierstadt_-_Among_the_Sierra_Nevada%2C_California_-_Google_Art_Project.jpg" alt="Albert Bierstadt, Among the Sierra Nevada, California (1868)" loading="lazy" />
+  <div class="notched reveal">
+    <span class="nlabel">The loop</span>
+    <h3>Capture once.<br/>Reproduce anywhere.</h3>
+    <p>One profile holds a project's tooling and folder structure — never its source, never its secrets.</p>
+    <span class="scroll">
+      <svg viewBox="0 0 9 14" aria-hidden="true"><path d="M4.5 1v12M1.5 9.5 4.5 13l3-3.5"/></svg>
+      Scroll
+    </span>
+  </div>
+</section>
+
+<!-- ============ WHAT TRAVELS (features) ============ -->
+<section class="room-putty" id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Capabilities</span>
+        <span class="label">Fig. 01</span>
+      </div>
+      <h2 class="display-title">What travels</h2>
+      <p class="lede">Everything needed to clone a workflow — and nothing that shouldn't leave the building.</p>
+    </div>
+    <div class="grid3 reveal">
+      <div class="cell"><div class="num">01</div><h3>One-command capture</h3><p><code>init</code> scans the current project into a reusable profile under <code>.replicax/</code>.</p></div>
+      <div class="cell"><div class="num">02</div><h3>Any GitHub repo</h3><p><code>extract owner/repo</code> profiles a remote repo — no clone, no <code>git</code> binary required.</p></div>
+      <div class="cell"><div class="num">03</div><h3>One-command scaffold</h3><p><code>create</code> reproduces the exact setup in a fresh directory — same tooling, zero code.</p></div>
+      <div class="cell"><div class="num">04</div><h3>AI assistant skills</h3><p><code>init-skill</code> uses <em>your own</em> AI — Claude, Codex, or Gemini — to author a ready-to-use skill.</p></div>
+      <div class="cell"><div class="num">05</div><h3>.ts and .js configs</h3><p>Copied byte-for-byte — never compiled, never executed. Both variants simply work.</p></div>
+      <div class="cell"><div class="num">06</div><h3>Secret-safe by design</h3><p><code>.env</code>, keys, and certs can never enter a profile; <code>.npmrc</code> tokens are stripped automatically.</p></div>
+      <div class="cell"><div class="num">07</div><h3>Stays in sync</h3><p><code>sync --diff</code> shows what drifted; <code>validate</code> verifies integrity via SHA-256.</p></div>
+      <div class="cell"><div class="num">08</div><h3>Portable &amp; shareable</h3><p><code>export</code> / <code>import</code> a whole profile as a single, validated <code>.tar.gz</code>.</p></div>
+      <div class="cell"><div class="num">09</div><h3>Precise control</h3><p><code>.replicaxignore</code> excludes, <code>.replicaxinclude</code> adds — gitignore-style control over what travels.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE METHOD — circular vignettes (dark room) ============ -->
+<section class="room-ink" id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Process</span>
+        <span class="label">Fig. 02</span>
+      </div>
+      <h2 class="display-title">The method</h2>
+      <p class="lede">A two-pipeline design: capture filters everything through a non-overridable secret guard, and reproduce validates every path on the way out.</p>
+    </div>
+    <div class="vignettes reveal">
+      <div class="vignette">
+        <span class="cap">Scan</span>
+        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg/960px-Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg" alt="Pieter Bruegel the Elder, Hunters in the Snow (1565)" loading="lazy" /></div>
+        <p>Surveys config files, the folder hierarchy, and metadata — locally or from a GitHub tarball.</p>
+        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
+      </div>
+      <div class="vignette">
+        <span class="cap">Guard</span>
+        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Jan_van_Huysum_-_Still_Life_of_Flowers_and_Fruit_-_Google_Art_Project.jpg/960px-Jan_van_Huysum_-_Still_Life_of_Flowers_and_Fruit_-_Google_Art_Project.jpg" alt="Jan van Huysum, Still Life of Flowers and Fruit (c. 1715)" loading="lazy" /></div>
+        <p>A non-overridable secret guard sits beneath default ignores and your <code>.replicaxignore</code>.</p>
+        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
+      </div>
+      <div class="vignette">
+        <span class="cap">Reproduce</span>
+        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Claude_Lorrain_-_Seaport_with_the_Embarkation_of_the_Queen_of_Sheba_-_WGA05002.jpg/960px-Claude_Lorrain_-_Seaport_with_the_Embarkation_of_the_Queen_of_Sheba_-_WGA05002.jpg" alt="Claude Lorrain, Seaport with the Embarkation of the Queen of Sheba (1648)" loading="lazy" /></div>
+        <p>Loads and zod-validates the bundle, then rebuilds the setup — every path checked on the way out.</p>
+        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUICK START ============ -->
+<section class="room-putty" id="start">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Quick start</span>
+        <span class="label">Fig. 03</span>
+      </div>
+      <h2 class="display-title">Two commands</h2>
+      <p class="lede">Capture a well-configured project once, then scaffold as many fresh ones as you like.</p>
     </div>
 
-    <div class="trust reveal">
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Secrets blocked unconditionally</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Source code never read</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> No clone, no <code style="font-family:var(--mono);font-size:.85em">git</code> required</span>
-    </div>
-
-    <!-- terminal demo -->
-    <div class="term reveal" role="img" aria-label="Example output of the replicax init command">
-      <div class="term-bar"><i></i><i></i><i></i><span class="t">zsh — replicax</span></div>
+    <div class="exhibit reveal" role="img" aria-label="Example output of the replicax init command">
+      <div class="plate"><span class="h"></span><span class="h"></span><span class="h"></span><span class="t">replicax init</span></div>
 <pre><span class="c-dim">$</span> <span class="c-cmd">replicax init</span>
 
-<span class="c-ok">✔</span> Scanned 14 config file(s) and 9 director(ies)
+<span class="c-dim">✔</span> Scanned 14 config file(s) and 9 director(ies)
 
-<span class="c-info">ℹ</span> Captured setup
+<span class="c-dim">ℹ</span> Captured setup
   <span class="c-key">language</span>       typescript
   <span class="c-key">framework</span>      react
   <span class="c-key">packageManager</span> npm
   <span class="c-key">nodeVersion</span>    20.x
 
-<span class="c-info">ℹ</span> Structure (9 directories)
+<span class="c-dim">ℹ</span> Structure (9 directories)
 <span class="c-path">my-app/</span>
 ├── .github/workflows/
 ├── .husky/
@@ -408,108 +466,46 @@ footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
     ├── pages/
     └── services/
 
-<span class="c-ok">✔</span> Profile <span class="c-path">"my-app"</span> written to <span class="c-path">.replicax/</span>
-  Create a project from it with: <span class="c-cmd">replicax create &lt;project-name&gt;</span></pre>
+<span class="c-dim">✔</span> Profile <span class="c-path">"my-app"</span> written to <span class="c-path">.replicax/</span></pre>
     </div>
-  </div>
-</section>
 
-<!-- ============ WHY ============ -->
-<section id="why">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <span class="eyebrow"><span class="dot"></span> Why ReplicaX</span>
-      <h2 class="title">Every new repo starts<br/>the <span class="grad-text">same tedious way.</span></h2>
-      <p>Copy <code style="font-family:var(--mono);color:var(--violet)">tsconfig.json</code>, port the ESLint/Prettier config, recreate the Dockerfiles and CI, rebuild the folder layout. It's slow, error-prone, and quietly drifts across a team. ReplicaX captures that ritual <b style="color:var(--text)">once</b> and replays it <b style="color:var(--text)">on demand</b>.</p>
-    </div>
-    <div class="why reveal">
-      <div class="why-col bad">
-        <h3><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></span> Without ReplicaX</h3>
-        <div class="why-row"><span class="lbl">New setup</span><span class="val">30+ minutes of copy-paste from an old repo</span></div>
-        <div class="why-row"><span class="lbl">What you copy</span><span class="val">Whatever you remember to grab</span></div>
-        <div class="why-row"><span class="lbl">Secrets</span><span class="val">One stray <code>.env</code> away from a leak</span></div>
-        <div class="why-row"><span class="lbl">Team consistency</span><span class="val">Drifts repo to repo</span></div>
-        <div class="why-row"><span class="lbl">Source code</span><span class="val">Tangled up with the config</span></div>
+    <div class="duo reveal">
+      <div class="step">
+        <div class="head"><span class="idx">01</span><h3>Capture a project</h3></div>
+        <p class="body">In a project you've already set up the way you like:</p>
+        <div class="runline">
+          <span><span style="color:var(--color-graphite)">$</span> cd my-project &amp;&amp; replicax init</span>
+          <button class="copy" data-copy="cd my-project && replicax init" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <p class="note">→ writes a profile to <code>.replicax/</code>. Add <code>--dry-run</code> to preview without writing.</p>
       </div>
-      <div class="why-col good">
-        <h3><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></span> With ReplicaX</h3>
-        <div class="why-row"><span class="lbl">New setup</span><span class="val"><code>replicax create my-app</code></span></div>
-        <div class="why-row"><span class="lbl">What you copy</span><span class="val">A complete, validated profile</span></div>
-        <div class="why-row"><span class="lbl">Secrets</span><span class="val">Blocked unconditionally</span></div>
-        <div class="why-row"><span class="lbl">Team consistency</span><span class="val">One shareable <code>.tar.gz</code> profile</span></div>
-        <div class="why-row"><span class="lbl">Source code</span><span class="val">Never touched</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ FEATURES ============ -->
-<section id="features">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> Features</span>
-      <h2 class="title">Everything to clone a workflow,<br/>nothing that shouldn't travel.</h2>
-    </div>
-    <div class="grid-feat">
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></div><h3>One-command capture</h3><p><code>init</code> scans the current project into a reusable profile under <code>.replicax/</code>.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div><h3>Capture any GitHub repo</h3><p><code>extract owner/repo</code> profiles a remote repo — no clone, no <code>git</code> binary required.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20" /><path d="m5 8 7-6 7 6" /></svg></div><h3>One-command scaffold</h3><p><code>create</code> reproduces the exact setup in a fresh directory — same tooling, zero code.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/><path d="M21 3v6h-6"/></svg></div><h3>AI assistant skills</h3><p><code>init-skill</code> uses <em>your own</em> AI (Claude / Codex / Gemini) to author a ready-to-use skill for agentic coding tools.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18 22 12 16 6M8 6 2 12l6 6"/></svg></div><h3><code>.ts</code> and <code>.js</code> configs</h3><p>Copied byte-for-byte — never compiled, never executed. Both variants just work.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Secret-safe by design</h3><p><code>.env</code>, keys, and certs can never enter a profile; <code>.npmrc</code> tokens are stripped automatically.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.7 3M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.7-3"/><path d="M21 3v5h-5M3 21v-5h5"/></svg></div><h3>Stays in sync</h3><p><code>sync --diff</code> shows what drifted; <code>validate</code> verifies integrity via SHA-256.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></div><h3>Portable &amp; shareable</h3><p><code>export</code> / <code>import</code> a whole profile as a single, validated <code>.tar.gz</code>.</p></div>
-      <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 6V4h12v2M8 6v14h8V6M10 10v6M14 10v6"/></svg></div><h3>Precise control</h3><p><code>.replicaxignore</code> excludes, <code>.replicaxinclude</code> adds — gitignore-style control over exactly what travels.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ QUICK START ============ -->
-<section id="start">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> Quick start</span>
-      <h2 class="title">Two commands. <span class="grad-text">That's the loop.</span></h2>
-      <p>Capture a well-configured project once, then scaffold as many fresh ones as you like.</p>
-    </div>
-    <div class="ba">
-      <div class="card reveal" style="display:flex;flex-direction:column;gap:18px">
-        <div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-family:var(--mono);color:var(--sky);font-weight:700">01</span><h3 style="font-size:17px">Capture an existing project</h3></div>
-          <p style="color:var(--muted);font-size:14.5px">In a project you've already set up the way you like:</p>
+      <div class="step">
+        <div class="head"><span class="idx">02</span><h3>Scaffold a fresh one</h3></div>
+        <p class="body">Anywhere the profile lives, reproduce the setup:</p>
+        <div class="runline">
+          <span><span style="color:var(--color-graphite)">$</span> replicax create my-new-app</span>
+          <button class="copy" data-copy="replicax create my-new-app" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
         </div>
-        <div class="install" style="margin:0;width:100%;justify-content:space-between">
-          <span><span class="prompt">$</span> <code>cd my-project &amp;&amp; replicax init</code></span>
-          <button class="copy" data-copy="cd my-project &amp;&amp; replicax init"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
-        </div>
-        <p style="color:var(--faint);font-size:13.5px;margin-top:-4px">→ writes a profile to <code style="font-family:var(--mono);color:var(--violet)">.replicax/</code>. Add <code style="font-family:var(--mono);color:var(--violet)">--dry-run</code> to preview without writing.</p>
-      </div>
-      <div class="card reveal" style="display:flex;flex-direction:column;gap:18px">
-        <div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-family:var(--mono);color:var(--violet);font-weight:700">02</span><h3 style="font-size:17px">Scaffold a fresh one</h3></div>
-          <p style="color:var(--muted);font-size:14.5px">Anywhere the profile lives, reproduce the setup:</p>
-        </div>
-        <div class="install" style="margin:0;width:100%;justify-content:space-between">
-          <span><span class="prompt">$</span> <code>replicax create my-new-app</code></span>
-          <button class="copy" data-copy="replicax create my-new-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
-        </div>
-        <p style="color:var(--faint);font-size:13.5px;margin-top:-4px">→ same tooling and structure, <b style="color:var(--text)">none of the code</b>. Or pull from a remote repo with <code style="font-family:var(--mono);color:var(--violet)">replicax extract owner/repo</code>.</p>
+        <p class="note">→ same tooling and structure, <b style="color:var(--color-ink)">none of the code</b>. Or pull from a repo with <code>extract owner/repo</code>.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ BEFORE / AFTER ============ -->
-<section id="before-after">
+<section class="room-bone" id="before-after">
   <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> Before &amp; after</span>
-      <h2 class="title">A clean skeleton — <span class="grad-text">no code, no secrets.</span></h2>
-      <p>Starting from a typical Vite + React + TypeScript project, ReplicaX keeps the tooling and folder layout and drops everything else.</p>
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Before &amp; after</span>
+        <span class="label">Fig. 04</span>
+      </div>
+      <h2 class="display-title">What stays behind</h2>
+      <p class="lede">Starting from a typical Vite + React + TypeScript project, ReplicaX keeps the tooling and folder layout and drops everything else.</p>
     </div>
     <div class="ba reveal">
-      <div class="ba-pane src">
-        <div class="h"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v13h18V7M3 7l2-3h14l2 3M3 7h18"/></svg> Source project</div>
+      <div class="ba-pane">
+        <div class="h">Source project</div>
 <pre>my-project/
 ├── vite.config.ts
 ├── tsconfig.json
@@ -518,174 +514,143 @@ footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
 ├── Dockerfile
 ├── .github/workflows/ci.yml
 ├── .husky/pre-commit
-├── <span class="sec">.env                  ← secret</span>
-├── <span class="biz">package.json          ← runtime deps</span>
+├── .env                  <span class="tag">← secret</span>
+├── package.json          <span class="tag">← runtime deps</span>
 └── src/
     ├── components/
-    │   └── <span class="biz">Button.tsx     ← business code</span>
+    │   └── Button.tsx     <span class="tag">← business code</span>
     ├── hooks/
     ├── services/
-    │   └── <span class="biz">UserService.ts ← business code</span>
+    │   └── UserService.ts <span class="tag">← business code</span>
     └── pages/</pre>
       </div>
-      <div class="ba-pane gen">
-        <div class="h"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.5 6 6.5.5-5 4.2 1.6 6.3L12 17l-5.6 3 1.6-6.3-5-4.2 6.5-.5z"/></svg> Generated by ReplicaX</div>
+      <div class="ba-pane">
+        <div class="h">Generated by ReplicaX</div>
 <pre>my-new-app/
-├── vite.config.ts        <span class="ok">✓ verbatim</span>
-├── tsconfig.json         <span class="ok">✓</span>
-├── .prettierrc           <span class="ok">✓</span>
-├── eslint.config.js      <span class="ok">✓</span>
-├── Dockerfile            <span class="ok">✓</span>
+├── vite.config.ts        <span class="out">✓ verbatim</span>
+├── tsconfig.json         <span class="out">✓</span>
+├── .prettierrc           <span class="out">✓</span>
+├── eslint.config.js      <span class="out">✓</span>
+├── Dockerfile            <span class="out">✓</span>
 ├── .github/workflows/ci.yml
-├── .husky/pre-commit     <span class="ok">✓</span>
-├── package.json          <span class="ok">✓ curated</span>
+├── .husky/pre-commit     <span class="out">✓</span>
+├── package.json          <span class="out">✓ curated</span>
 └── src/
-    ├── components/        <span class="empty">✓ empty</span>
+    ├── components/        <span class="out">✓ empty</span>
     │
-    ├── hooks/             <span class="empty">✓ empty</span>
-    ├── services/          <span class="empty">✓ empty</span>
+    ├── hooks/             <span class="out">✓ empty</span>
+    ├── services/          <span class="out">✓ empty</span>
     │
-    └── pages/             <span class="empty">✓ empty</span></pre>
+    └── pages/             <span class="out">✓ empty</span></pre>
       </div>
     </div>
-    <p class="ba-note reveal">No <code style="font-family:var(--mono);color:var(--red)">.env</code>. No <code style="font-family:var(--mono);color:var(--amber)">Button.tsx</code>. No <code style="font-family:var(--mono);color:var(--amber)">react</code> runtime dependency. <b>Only the setup.</b></p>
+    <p class="ba-note reveal">No <code>.env</code>. No <code>Button.tsx</code>. No <code>react</code> runtime dependency. <b>Only the setup.</b></p>
   </div>
 </section>
 
 <!-- ============ COMMANDS ============ -->
-<section id="commands">
+<section class="room-putty" id="commands">
   <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> Commands</span>
-      <h2 class="title">One small CLI, <span class="grad-text">eleven sharp tools.</span></h2>
-      <p>Every write operation accepts <code style="font-family:var(--mono);color:var(--violet)">--dry-run</code> (preview, touch nothing) and <code style="font-family:var(--mono);color:var(--violet)">--verbose</code>.</p>
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Reference</span>
+        <span class="label">Fig. 05</span>
+      </div>
+      <h2 class="display-title">The instrument</h2>
+      <p class="lede">One small CLI, eleven sharp tools. Every write operation accepts <code>--dry-run</code> and <code>--verbose</code>.</p>
     </div>
     <div class="cmds reveal">
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-init" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init</span><span class="desc">Scan the current project → profile</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-extract-repo" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> extract</span><span class="desc">Profile a remote GitHub repo</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-create-project-name" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> create</span><span class="desc">Scaffold a new project</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-sync" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> sync</span><span class="desc">Update the profile from the project</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-inspect" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> inspect</span><span class="desc">Display captured config &amp; structure</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-validate" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> validate</span><span class="desc">Schema + SHA-256 integrity check</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-export--import" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> export / import</span><span class="desc">Portable <code style="font-family:var(--mono);color:var(--sky)">.tar.gz</code> in/out</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-init-skill" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init-skill</span><span class="desc">Author an AI-assistant skill</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-doctor" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> doctor</span><span class="desc">Check which dev tools are installed</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-compare-source-target" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> compare</span><span class="desc">Diff two profiles or projects</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#replicax-audit" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> audit</span><span class="desc">Score a setup vs best practices</span><span class="arrow">→</span></a>
-      <a class="cmd-row" href="https://github.com/khanalsaroj/replicaX#commands" target="_blank" rel="noopener" style="border-style:dashed"><span class="name" style="color:var(--sky)">Full reference</span><span class="desc">Flags, examples &amp; output</span><span class="arrow">→</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-init" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init</span><span class="desc">Scan the current project into a profile</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-extract-repo" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> extract</span><span class="desc">Profile a remote GitHub repo</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-create-project-name" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> create</span><span class="desc">Scaffold a new project</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-sync" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> sync</span><span class="desc">Update the profile from the project</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-inspect" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> inspect</span><span class="desc">Display captured config &amp; structure</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-validate" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> validate</span><span class="desc">Schema + SHA-256 integrity check</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-export--import" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> export / import</span><span class="desc">Portable .tar.gz in and out</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-init-skill" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init-skill</span><span class="desc">Author an AI-assistant skill</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-doctor" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> doctor</span><span class="desc">Check which dev tools are installed</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-compare-source-target" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> compare</span><span class="desc">Diff two profiles or projects</span><span class="arr">↗</span></a>
+      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-audit" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> audit</span><span class="desc">Score a setup against best practices</span><span class="arr">↗</span></a>
     </div>
   </div>
 </section>
 
-<!-- ============ SECURITY ============ -->
-<section id="security">
+<!-- ============ SECURITY (dark room) ============ -->
+<section class="room-ink" id="security">
   <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow" style="color:var(--green)"><span class="dot" style="background:var(--green);box-shadow:0 0 12px var(--green)"></span> Security</span>
-      <h2 class="title">Secret exclusion is a <span class="grad-text">hard guarantee</span>,<br/>not a best effort.</h2>
-      <p>These boundaries are enforced in code and covered by tests — not configuration you can accidentally turn off.</p>
-    </div>
-    <div class="sec-band reveal">
-      <div class="sec-grid">
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Secrets are never captured</h3></div>
-          <p><code>.env</code>, <code>.env.*</code>, <code>*.pem</code>, <code>*.key</code>, <code>*.crt</code>, SSH keys and friends are blocked <b style="color:var(--text)">unconditionally</b> — this cannot be overridden by configuration.</p>
-        </div>
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6c0 1.7 4 3 9 3s9-1.3 9-3-4-3-9-3-9 1.3-9 3z"/><path d="M3 6v6c0 1.7 4 3 9 3M21 6v6"/><path d="M16 19l2 2 4-4"/></svg></span><h3><code>.npmrc</code> is sanitized</h3></div>
-          <p>A legitimate setup file — but auth tokens (<code>_authToken</code>, <code>_password</code>, …) are stripped out before it ever enters a profile.</p>
-        </div>
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><h3>No path escapes</h3></div>
-          <p>Every path from a profile or AI response is validated against traversal (<code>..</code>) and absolute paths before anything is written. <code>validate</code> re-checks it.</p>
-        </div>
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></span><h3>Archive extraction is a trust boundary</h3></div>
-          <p>An imported <code>.tar.gz</code> is validated before a byte is written: traversal, symlinks/hardlinks and device entries are rejected, with caps on size, file count, and per-file size — tar bombs aborted up front.</p>
-        </div>
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0 3-3m-3 3L9 5"/><path d="M5 12H2m20 0h-3"/><circle cx="12" cy="14" r="6"/></svg></span><h3>Install is opt-in for untrusted profiles</h3></div>
-          <p>Because installing runs lifecycle scripts, <code>create</code> won't auto-install for an <code>extract</code>ed or <code>import</code>ed profile — it prints the dependency list and waits for an explicit <code>--install</code>.</p>
-        </div>
-        <div class="sec-item">
-          <div class="top"><span class="shield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg></span><h3>No business source is captured</h3></div>
-          <p>Only config files and the empty folder hierarchy enter a profile. Application source is never read; runtime <code>dependencies</code> are dropped from <code>package.json</code>.</p>
-        </div>
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Boundaries</span>
+        <span class="label">Fig. 06</span>
       </div>
+      <h2 class="display-title">A hard guarantee</h2>
+      <p class="lede">Secret exclusion is enforced in code and covered by tests — not configuration you can accidentally turn off.</p>
     </div>
-  </div>
-</section>
-
-<!-- ============ HOW IT WORKS ============ -->
-<section id="how">
-  <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> How it works</span>
-      <h2 class="title">Scan → guard → <span class="grad-text">profile → reproduce.</span></h2>
-      <p>A two-pipeline design: capture filters everything through a non-overridable secret guard, and reproduce validates every path on the way out.</p>
-    </div>
-    <div class="flow reveal">
-      <div class="stage">
+    <div class="sec-grid reveal">
+      <div class="sec-item">
         <div class="n">01</div>
-        <div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
-        <h3>Scanner</h3><p>Detects config files, the folder hierarchy, and metadata — locally or from a GitHub tarball.</p>
+        <h3>Secrets are never captured</h3>
+        <p><code>.env</code>, <code>*.pem</code>, <code>*.key</code>, <code>*.crt</code>, SSH keys and friends are blocked <b style="color:var(--color-paper)">unconditionally</b> — config cannot override it.</p>
       </div>
-      <div class="conn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-      <div class="stage">
+      <div class="sec-item">
         <div class="n">02</div>
-        <div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5z"/></svg></div>
-        <h3>Ignore + secret guard</h3><p>Layers default ignores and <code style="font-family:var(--mono);color:var(--violet)">.replicaxignore</code> over a separate, non-overridable secret guard.</p>
+        <h3>.npmrc is sanitized</h3>
+        <p>A legitimate setup file — but auth tokens (<code>_authToken</code>, <code>_password</code>, …) are stripped before it ever enters a profile.</p>
       </div>
-      <div class="conn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-      <div class="stage">
+      <div class="sec-item">
         <div class="n">03</div>
-        <div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg></div>
-        <h3>Profile generator</h3><p>Assembles the bundle of 5 JSON files and computes SHA-256 checksums for integrity.</p>
+        <h3>No path escapes</h3>
+        <p>Every path from a profile or AI response is validated against traversal (<code>..</code>) and absolute paths before anything is written.</p>
       </div>
-      <div class="conn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-      <div class="stage">
+      <div class="sec-item">
         <div class="n">04</div>
-        <div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.5 6 6.5.5-5 4.2 1.6 6.3L12 17l-5.6 3 1.6-6.3-5-4.2 6.5-.5z"/></svg></div>
-        <h3>Project generator</h3><p>Loads + zod-validates the bundle, then reproduces the setup with a conflict resolver for existing files.</p>
+        <h3>Archives are a trust boundary</h3>
+        <p>An imported <code>.tar.gz</code> is validated first: traversal, symlinks and device entries are rejected, with caps on size and file count.</p>
+      </div>
+      <div class="sec-item">
+        <div class="n">05</div>
+        <h3>Install is opt-in</h3>
+        <p>Because installing runs lifecycle scripts, <code>create</code> won't auto-install an untrusted profile — it waits for an explicit <code>--install</code>.</p>
+      </div>
+      <div class="sec-item">
+        <div class="n">06</div>
+        <h3>No business source</h3>
+        <p>Only config and the empty folder hierarchy enter a profile. Runtime <code>dependencies</code> are dropped from <code>package.json</code>.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ FAQ ============ -->
-<section id="faq">
+<section class="room-bone" id="faq">
   <div class="wrap">
-    <div class="section-head center reveal">
-      <span class="eyebrow"><span class="dot"></span> FAQ</span>
-      <h2 class="title">Good questions, <span class="grad-text">short answers.</span></h2>
+    <div class="section-head reveal">
+      <div class="toprow">
+        <span class="label">Questions</span>
+        <span class="label">Fig. 07</span>
+      </div>
+      <h2 class="display-title">Short answers</h2>
     </div>
-    <div class="faq">
-      <details class="q reveal"><summary>Does it copy my source code?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Only configuration files and the empty folder hierarchy. Application code is never read into a profile.</div></details>
-      <details class="q reveal"><summary>What about <code>.ts</code> configs like <code>vite.config.ts</code>?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Fully supported — they're copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.</div></details>
-      <details class="q reveal"><summary>Can a profile leak a secret?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Secret exclusion is unconditional and <code>.npmrc</code> tokens are stripped; <code>validate</code> fails if a secret ever appears in a profile.</div></details>
-      <details class="q reveal"><summary>Why are runtime <code>dependencies</code> dropped from <code>package.json</code>?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">They're part of your application, not your setup. <code>devDependencies</code>, <code>scripts</code>, and <code>engines</code> are kept; the new project's name is stamped in on <code>create</code>.</div></details>
-      <details class="q reveal"><summary>Does <code>extract</code> need <code>git</code> installed?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code> — no <code>git</code> binary, no full clone.</div></details>
-      <details class="q reveal"><summary>Is it cross-platform?<svg class="pm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Yes — Windows (native + WSL), macOS, and Linux.</div></details>
+    <div class="faq reveal">
+      <details class="q"><summary>Does it copy my source code?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Only configuration files and the empty folder hierarchy. Application code is never read into a profile.</div></details>
+      <details class="q"><summary>What about <code>.ts</code> configs like <code>vite.config.ts</code>?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Fully supported — they're copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.</div></details>
+      <details class="q"><summary>Can a profile leak a secret?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Secret exclusion is unconditional and <code>.npmrc</code> tokens are stripped; <code>validate</code> fails if a secret ever appears in a profile.</div></details>
+      <details class="q"><summary>Why are runtime <code>dependencies</code> dropped?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">They're part of your application, not your setup. <code>devDependencies</code>, <code>scripts</code>, and <code>engines</code> are kept; the new project's name is stamped in on <code>create</code>.</div></details>
+      <details class="q"><summary>Does <code>extract</code> need <code>git</code> installed?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code> — no <code>git</code> binary, no full clone.</div></details>
+      <details class="q"><summary>Is it cross-platform?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Yes — Windows (native + WSL), macOS, and Linux.</div></details>
     </div>
   </div>
 </section>
 
-<!-- ============ CTA ============ -->
-<section id="cta" style="padding-top:40px">
-  <div class="wrap">
-    <div class="cta reveal">
-      <h2>Stop re-typing your <span class="grad-text">setup.</span></h2>
-      <p>Capture it once, reproduce it anywhere — secret-safe by design.</p>
-      <div class="hero-actions" style="margin-top:32px">
-        <a class="btn btn-primary btn-lg" href="https://www.npmjs.com/package/@iamsaroj/replicax" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 7.3V18h6.7v1.8H12V18h12V7.3zm6.7 9H5.3V9.1h1.4zm5.3 0h-1.3V9.1h-2.7v7.2H6.7m12 0h-1.4v-5.4h-1.3v5.4h-1.3v-5.4h-1.4v5.4h-2.6V9.1h8z"/></svg>
-          Install from npm
-        </a>
-        <a class="btn btn-lg" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
-          Star on GitHub
-        </a>
-      </div>
+<!-- ============ CTA (dark room) ============ -->
+<section class="room-ink">
+  <div class="wrap cta reveal">
+    <span class="label">Begin</span>
+    <h2>Stop re-typing<br/>your setup.</h2>
+    <p>Capture it once, reproduce it anywhere — secret-safe by design.</p>
+    <div class="actions" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+      <a class="pill" href="https://www.npmjs.com/package/@iamsaroj/replicax" target="_blank" rel="noopener">Install from npm</a>
+      <a class="pill ghost" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">Star on GitHub</a>
     </div>
   </div>
 </section>
@@ -693,12 +658,9 @@ footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
 <!-- ============ FOOTER ============ -->
 <footer>
   <div class="wrap foot">
-    <a class="brand" href="#home">
-      <svg class="logo" viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
-        <rect x="4.5" y="4.5" width="16" height="16" rx="4.5" fill="none" stroke="#38bdf8" stroke-opacity=".55" stroke-width="2"/>
-        <rect x="11" y="11" width="16" height="16" rx="4.5" fill="url(#lg)"/>
-      </svg>
-      Replica<b>X</b>
+    <a class="mark" href="#top">
+      <span class="monogram">R</span>
+      <span class="name">REPLICAX</span>
     </a>
     <div class="foot-links">
       <a href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">GitHub</a>
@@ -707,39 +669,35 @@ footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
       <a href="https://github.com/khanalsaroj/replicaX/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
       <a href="https://github.com/khanalsaroj/replicaX/issues" target="_blank" rel="noopener">Issues</a>
     </div>
-    <p class="note">MIT © Saroj Khanal · <em>Copy the setup, not the code.</em> · Built with no external services.</p>
+    <p class="note">
+      MIT © Saroj Khanal · <em>Copy the setup, not the code.</em><br/>
+      Paintings by Bierstadt, Bruegel, van Huysum &amp; Claude Lorrain — public domain, via Wikimedia Commons.
+    </p>
   </div>
 </footer>
 
 <script>
 (function(){
-  // sticky nav shadow
-  var nav=document.getElementById('nav');
-  var onScroll=function(){nav.classList.toggle('scrolled',window.scrollY>8);};
+  // hairline under the header once scrolled
+  var bar=document.getElementById('bar');
+  var onScroll=function(){bar.classList.toggle('scrolled',window.scrollY>8);};
   onScroll();window.addEventListener('scroll',onScroll,{passive:true});
-
-  // mobile menu
-  var burger=document.getElementById('burger'),links=document.getElementById('navlinks');
-  burger.addEventListener('click',function(){
-    var open=links.classList.toggle('open');
-    burger.setAttribute('aria-expanded',open);
-  });
-  links.addEventListener('click',function(e){if(e.target.tagName==='A')links.classList.remove('open');});
 
   // copy buttons
   document.querySelectorAll('.copy').forEach(function(btn){
-    btn.addEventListener('click',function(){
+    btn.addEventListener('click',function(e){
+      e.preventDefault();
       var text=btn.getAttribute('data-copy');
       var done=function(){
         var orig=btn.innerHTML;btn.classList.add('done');
         btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg> Copied';
-        setTimeout(function(){btn.classList.remove('done');btn.innerHTML=orig;},1800);
+        setTimeout(function(){btn.classList.remove('done');btn.innerHTML=orig;},1700);
       };
       if(navigator.clipboard&&navigator.clipboard.writeText){
         navigator.clipboard.writeText(text).then(done).catch(done);
       }else{
         var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);
-        ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();
+        ta.select();try{document.execCommand('copy');}catch(err){}document.body.removeChild(ta);done();
       }
     });
   });
@@ -751,8 +709,8 @@ footer{border-top:1px solid var(--border);padding:46px 0 56px;margin-top:30px}
       entries.forEach(function(en){
         if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
       });
-    },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
-    els.forEach(function(el,i){el.style.transitionDelay=(Math.min(i%4,3)*60)+'ms';io.observe(el);});
+    },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){io.observe(el);});
   }else{
     els.forEach(function(el){el.classList.add('in');});
   }
