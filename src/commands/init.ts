@@ -36,6 +36,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
     tooling: scan.tooling,
     structure: scan.structure,
     metadata: scan.metadata,
+    source: 'local',
   });
 
   reportSkippedSecrets(scan.skippedSecrets);

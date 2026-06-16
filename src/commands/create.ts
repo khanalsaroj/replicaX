@@ -1,11 +1,11 @@
 import path from 'node:path';
-import fs from 'fs-extra';
 import ora from 'ora';
 import { loadBundle, profileDir, profileExists, resolveProfileDir } from '@/core/profile-store';
 import { verifyChecksum } from '@/core/checksum';
 import { ConflictResolver, type ConflictPolicy } from '@/core/conflict-resolver';
 import { generateProject } from '@/core/project-generator';
 import { installDependencies } from '@/core/installer';
+import type { PackageManager, ProfileBundle, ProfileSource } from '@/schema';
 import { ReplicaxError } from '@/utils/errors';
 import { logger, pc, setVerbose } from '@/utils/logger';
 import { relPosix } from '@/utils/paths';
@@ -13,6 +13,7 @@ import { relPosix } from '@/utils/paths';
 export interface CreateOptions {
   profile?: string;
   skipInstall?: boolean;
+  install?: boolean;
   dryRun?: boolean;
   force?: boolean;
   verbose?: boolean;
@@ -86,45 +87,108 @@ export async function createCommand(projectName: string, options: CreateOptions)
 
   logger.hint(`Location: ${relPosix(process.cwd(), targetDir)}/`);
 
-  await maybeInstall(
-    bundle.metadata.packageManager,
-    targetDir,
-    options,
-    Boolean(bundle.tooling.packageJson),
-  );
+  await maybeInstall(bundle, targetDir, options);
 
   logger.newline();
   logger.success(`Project ${pc.bold(leafName)} is ready.`);
 }
 
+/**
+ * The install decision for a profile. Pure (no I/O, no logging) so the
+ * trust-gating policy is unit-testable without spawning a package manager.
+ *
+ * `install` runs the package manager — which executes lifecycle scripts from
+ * the captured devDependencies, so it is a trust boundary. A `local` profile is
+ * trusted and installs by default; an untrusted (`github`/`import`) profile is
+ * `blocked` unless the user opts in with `--install`.
+ */
+export type InstallDecision =
+  | { kind: 'skip-flag' }
+  | { kind: 'no-deps' }
+  | { kind: 'no-manager' }
+  | {
+      kind: 'blocked';
+      source: ProfileSource;
+      manager: PackageManager;
+      devDeps: Record<string, string>;
+    }
+  | {
+      kind: 'install';
+      trusted: boolean;
+      source: ProfileSource;
+      manager: PackageManager;
+      devDeps: Record<string, string>;
+    };
+
+export function decideInstall(
+  bundle: ProfileBundle,
+  options: Pick<CreateOptions, 'skipInstall' | 'install'>,
+): InstallDecision {
+  if (options.skipInstall) return { kind: 'skip-flag' };
+  const devDeps = bundle.tooling.packageJson?.devDependencies ?? {};
+  if (Object.keys(devDeps).length === 0) return { kind: 'no-deps' };
+  const manager = bundle.metadata.packageManager;
+  if (manager === 'unknown') return { kind: 'no-manager' };
+
+  const source = bundle.profile.source ?? 'local';
+  const trusted = source === 'local';
+  if (!trusted && !options.install) return { kind: 'blocked', source, manager, devDeps };
+  return { kind: 'install', trusted, source, manager, devDeps };
+}
+
+/** Print the devDependencies an install would add (capped for readability). */
+function printDependencySummary(devDeps: Record<string, string>): void {
+  const names = Object.keys(devDeps).sort();
+  for (const name of names.slice(0, 10)) logger.hint(`  ${name}  ${devDeps[name]}`);
+  if (names.length > 10) logger.hint(`  …and ${names.length - 10} more`);
+}
+
+/** Act on the install decision: report it, and run the manager when allowed. */
 async function maybeInstall(
-  manager: string,
+  bundle: ProfileBundle,
   targetDir: string,
   options: CreateOptions,
-  hasPackageJson: boolean,
 ): Promise<void> {
-  if (options.skipInstall) {
-    logger.hint('Skipped dependency install (--skip-install).');
-    return;
-  }
-  if (!hasPackageJson) return;
-  if (manager === 'unknown') {
-    logger.hint('No package manager detected; run your install command manually.');
-    return;
-  }
-  // Only install if there is actually something declared to install.
-  const pkgPath = path.join(targetDir, 'package.json');
-  const pkg = (await fs.readJson(pkgPath).catch(() => null)) as {
-    devDependencies?: Record<string, string>;
-  } | null;
-  if (!pkg?.devDependencies || Object.keys(pkg.devDependencies).length === 0) {
-    logger.hint('No dependencies to install.');
-    return;
-  }
+  const decision = decideInstall(bundle, options);
 
-  logger.newline();
-  logger.info(`Installing dependencies with ${manager}…`);
-  const ok = await installDependencies(targetDir, manager as never);
-  if (ok) logger.success('Dependencies installed.');
-  else logger.warn('Dependency install did not complete; run it manually.');
+  switch (decision.kind) {
+    case 'skip-flag':
+      logger.hint('Skipped dependency install (--skip-install).');
+      return;
+    case 'no-deps':
+      if (bundle.tooling.packageJson) logger.hint('No dependencies to install.');
+      return;
+    case 'no-manager':
+      logger.hint('No package manager detected; run your install command manually.');
+      return;
+    case 'blocked':
+      logger.newline();
+      logger.warn(
+        `Profile source is "${decision.source}" — skipping dependency install for safety.`,
+      );
+      logger.hint(
+        `Installing runs package lifecycle scripts. ${Object.keys(decision.devDeps).length} devDependencies would be added with ${decision.manager}:`,
+      );
+      printDependencySummary(decision.devDeps);
+      logger.hint(
+        `Review them, then run \`${decision.manager} install\`, or re-run create with --install.`,
+      );
+      return;
+    case 'install': {
+      logger.newline();
+      if (!decision.trusted) {
+        logger.warn(
+          `Installing for an untrusted ("${decision.source}") profile — package lifecycle scripts can execute code.`,
+        );
+      }
+      logger.info(
+        `Installing ${Object.keys(decision.devDeps).length} devDependencies with ${decision.manager}…`,
+      );
+      printDependencySummary(decision.devDeps);
+      const ok = await installDependencies(targetDir, decision.manager);
+      if (ok) logger.success('Dependencies installed.');
+      else logger.warn('Dependency install did not complete; run it manually.');
+      return;
+    }
+  }
 }

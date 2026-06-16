@@ -27,6 +27,9 @@ export async function importCommand(archivePath: string, options: ImportOptions)
 
     // Validate the incoming profile before adopting it.
     const bundle = await loadBundle(source);
+    // Adopted from an external archive — mark it untrusted so `create` makes
+    // dependency install opt-in regardless of what the archive claimed.
+    bundle.profile.source = 'import';
     spinner.succeed(`Validated profile "${bundle.profile.name}"`);
 
     const dest = profileDir(process.cwd());

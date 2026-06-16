@@ -34,6 +34,8 @@ export async function syncCommand(options: SyncOptions): Promise<void> {
     tooling: scan.tooling,
     structure: scan.structure,
     metadata: scan.metadata,
+    // A sync re-captures the local project, so the result is locally trusted.
+    source: 'local',
     existing: existing.profile,
   });
 

@@ -117,7 +117,9 @@ export async function initSkillCommand(options: InitSkillOptions): Promise<void>
         }
       } catch (err) {
         aiSpinner.fail('AI generation failed');
-        logger.warn(`${(err as Error).message}. Falling back to the built-in template.`);
+        logger.warn(`${(err as Error).message}`);
+        if (err instanceof ReplicaxError) for (const hint of err.hints) logger.hint(hint);
+        logger.warn('Falling back to the built-in template.');
       }
     } else {
       logger.info('No configured AI provider found — using the built-in template.');

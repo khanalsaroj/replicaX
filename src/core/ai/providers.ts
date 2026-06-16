@@ -37,6 +37,18 @@ interface ProviderDef {
   callApi: (prompt: string, apiKey: string, model: string) => Promise<string>;
 }
 
+/** An HTTP-level failure from a provider API, carrying the status code so the
+ * caller can turn it into an actionable message (bad model vs. bad key vs. …). */
+export class ApiHttpError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = 'ApiHttpError';
+  }
+}
+
 async function postJson(
   url: string,
   headers: Record<string, string>,
@@ -49,9 +61,41 @@ async function postJson(
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 300) || res.statusText}`);
+    throw new ApiHttpError(res.status, text.slice(0, 300) || res.statusText);
   }
   return res.json();
+}
+
+/**
+ * Turn a raw provider failure into a clear, actionable {@link ReplicaxError}.
+ * The model defaults below are best-effort "current release" guesses; if a
+ * provider has moved on, the API returns 404/400 and the user needs to know to
+ * override the model — so that case gets a specific, single-line message (which
+ * is what `init-skill` surfaces on fallback) plus override hints.
+ */
+export function enrichProviderError(err: unknown, def: ProviderDef, model: string): ReplicaxError {
+  const status = err instanceof ApiHttpError ? err.status : undefined;
+  const detail = err instanceof Error ? err.message : String(err);
+  const overrideHint = `Override the model with --model <id> or ${def.modelEnvVar}=<id>.`;
+
+  if (status === 404 || status === 400) {
+    return new ReplicaxError(
+      `${def.label} API rejected model "${model}" (HTTP ${status}). ${overrideHint}`,
+      [`Provider response: ${detail}`],
+    );
+  }
+  if (status === 401 || status === 403) {
+    return new ReplicaxError(`${def.label} API rejected the credentials (HTTP ${status}).`, [
+      `Check ${def.apiEnvVars[0]} holds a valid API key.`,
+      `Provider response: ${detail}`,
+    ]);
+  }
+  if (status === 429) {
+    return new ReplicaxError(`${def.label} API rate limit hit (HTTP 429).`, [
+      'Wait a moment and try again.',
+    ]);
+  }
+  return new ReplicaxError(`${def.label} API request failed: ${detail}`);
 }
 
 /** Anthropic Messages API. No sampling params — current Opus rejects them. */
@@ -144,7 +188,13 @@ function apiInvoker(def: ProviderDef, apiKey: string, modelOverride?: string): A
   return {
     id: def.id,
     via: `${def.label} API (${model})`,
-    run: (prompt) => def.callApi(prompt, apiKey, model),
+    run: async (prompt) => {
+      try {
+        return await def.callApi(prompt, apiKey, model);
+      } catch (err) {
+        throw enrichProviderError(err, def, model);
+      }
+    },
   };
 }
 

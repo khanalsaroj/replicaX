@@ -108,6 +108,7 @@ program
   .description('Create a new project from a profile')
   .option('--profile <path>', 'Use a profile from a custom path')
   .option('--skip-install', 'Do not run the package manager install step')
+  .option('--install', 'Install deps even for imported/remote (untrusted) profiles')
   .option('--dry-run', 'Preview the output without writing')
   .option('--force', 'Overwrite conflicting files without prompting')
   .option('--verbose', 'Show every written file')

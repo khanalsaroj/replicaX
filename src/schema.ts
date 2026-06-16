@@ -22,6 +22,14 @@ export const RegistrySchema = z.object({
   source: z.string().optional(),
 });
 
+/**
+ * How a profile was captured. Drives the install-trust boundary on `create`:
+ * `local` (made here by init/sync) is trusted; `github` (extract) and `import`
+ * (adopted from an archive) are untrusted, so dependency install is opt-in.
+ * Optional — absent on profiles written before 2.2.0, which are treated as local.
+ */
+export const ProfileSourceSchema = z.enum(['local', 'github', 'import']);
+
 /** profile.json — top-level identity and metadata. */
 export const ProfileSchema = z.object({
   name: z.string().min(1),
@@ -30,6 +38,8 @@ export const ProfileSchema = z.object({
   updatedAt: z.string().optional(),
   replicaxVersion: z.string().min(1),
   description: z.string().optional(),
+  /** Provenance of the captured setup (added in schema 2.2.0). */
+  source: ProfileSourceSchema.optional(),
   /** Optional registry metadata (future registry compatibility). */
   registry: RegistrySchema.optional(),
 });
@@ -158,6 +168,7 @@ export const ManifestSchema = z.object({
 });
 
 export type Profile = z.infer<typeof ProfileSchema>;
+export type ProfileSource = z.infer<typeof ProfileSourceSchema>;
 export type Registry = z.infer<typeof RegistrySchema>;
 export type FileVariant = z.infer<typeof FileVariantSchema>;
 export type ToolingFile = z.infer<typeof ToolingFileSchema>;

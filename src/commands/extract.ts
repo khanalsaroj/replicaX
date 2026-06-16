@@ -60,6 +60,8 @@ export async function extractCommand(repo: string, options: ExtractOptions): Pro
       tooling: scan.tooling,
       structure: scan.structure,
       metadata: scan.metadata,
+      // Captured from a remote repo we don't control — untrusted for auto-install.
+      source: 'github',
     });
 
     reportSkippedSecrets(scan.skippedSecrets);

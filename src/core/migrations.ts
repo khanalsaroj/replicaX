@@ -43,6 +43,16 @@ const MIGRATIONS: Migration[] = [
       return raw;
     },
   },
+  {
+    from: '2.1.0',
+    to: '2.2.0',
+    apply(raw) {
+      // 2.2.0 adds the optional `profile.source` provenance field. An older
+      // profile simply lacks it; `create` treats an absent source as `local`
+      // (trusted), so there is nothing to backfill.
+      return raw;
+    },
+  },
 ];
 
 /** The earliest version we know how to read, plus every version in the chain. */

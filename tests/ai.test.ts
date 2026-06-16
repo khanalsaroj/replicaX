@@ -1,9 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { extractJson, parseSkillBundle } from '@/core/ai/bundle';
 import { buildSkillPrompt } from '@/core/ai/prompt';
-import { resolveProvider, PROVIDER_IDS } from '@/core/ai/providers';
+import {
+  ApiHttpError,
+  enrichProviderError,
+  PROVIDERS,
+  resolveProvider,
+  PROVIDER_IDS,
+} from '@/core/ai/providers';
 import { commandExists } from '@/core/ai/cli';
 import { SKILL_TARGET_BY_ID } from '@/config/ai-targets';
+import { ReplicaxError } from '@/utils/errors';
 
 describe('extractJson', () => {
   it('returns the object from raw JSON', () => {
@@ -138,5 +145,119 @@ describe('resolveProvider', () => {
 
   it('exposes the known provider ids', () => {
     expect(PROVIDER_IDS).toEqual(['claude', 'openai', 'gemini']);
+  });
+});
+
+const providerById = (id: string) => PROVIDERS.find((p) => p.id === id)!;
+
+interface RecordedCall {
+  url: string;
+  headers: Record<string, string>;
+  body: string;
+}
+
+function mockFetch(body: unknown, opts: { ok?: boolean; status?: number } = {}) {
+  const calls: RecordedCall[] = [];
+  const fn = vi.fn(async (url: string | URL, init?: RequestInit) => {
+    calls.push({
+      url: String(url),
+      headers: (init?.headers ?? {}) as Record<string, string>,
+      body: String(init?.body ?? ''),
+    });
+    return {
+      ok: opts.ok ?? true,
+      status: opts.status ?? 200,
+      statusText: 'mock',
+      json: async () => body,
+      text: async () => JSON.stringify(body),
+    } as unknown as Response;
+  });
+  globalThis.fetch = fn as unknown as typeof fetch;
+  return { calls };
+}
+
+describe('provider API calls (mocked fetch)', () => {
+  const originalFetch = globalThis.fetch;
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+    vi.restoreAllMocks();
+  });
+
+  it('claude default model is the current Opus id', () => {
+    expect(providerById('claude').defaultModel).toBe('claude-opus-4-8');
+  });
+
+  it('calls the Anthropic Messages API with the right shape and parses text', async () => {
+    const { calls } = mockFetch({ content: [{ type: 'text', text: 'hello world' }] });
+    const out = await providerById('claude').callApi('PROMPT', 'sk-ant-key', 'claude-opus-4-8');
+    expect(out).toBe('hello world');
+
+    const call = calls[0]!;
+    expect(call.url).toBe('https://api.anthropic.com/v1/messages');
+    expect(call.headers['x-api-key']).toBe('sk-ant-key');
+    expect(call.headers['anthropic-version']).toBe('2023-06-01');
+    const sent = JSON.parse(call.body);
+    expect(sent.model).toBe('claude-opus-4-8');
+    expect(sent.max_tokens).toBeGreaterThan(0);
+    expect(sent.messages[0]).toMatchObject({ role: 'user' });
+    // Opus 4.x rejects sampling params — they must not be sent.
+    expect(sent).not.toHaveProperty('temperature');
+    expect(sent).not.toHaveProperty('top_p');
+    expect(sent).not.toHaveProperty('top_k');
+  });
+
+  it('calls the OpenAI Chat Completions API and parses content', async () => {
+    const { calls } = mockFetch({ choices: [{ message: { content: 'hi from openai' } }] });
+    const out = await providerById('openai').callApi('PROMPT', 'sk-openai', 'some-model');
+    expect(out).toBe('hi from openai');
+
+    const call = calls[0]!;
+    expect(call.url).toBe('https://api.openai.com/v1/chat/completions');
+    expect(call.headers['authorization']).toBe('Bearer sk-openai');
+    const sent = JSON.parse(call.body);
+    expect(sent.model).toBe('some-model');
+    expect(sent.messages[0]).toMatchObject({ role: 'user', content: 'PROMPT' });
+  });
+
+  it('calls the Gemini generateContent API and parses parts', async () => {
+    const { calls } = mockFetch({
+      candidates: [{ content: { parts: [{ text: 'hi from ' }, { text: 'gemini' }] } }],
+    });
+    const out = await providerById('gemini').callApi('PROMPT', 'goog-key', 'gemini-test');
+    expect(out).toBe('hi from gemini');
+
+    const call = calls[0]!;
+    expect(call.url).toContain('/models/gemini-test:generateContent');
+    expect(call.headers['x-goog-api-key']).toBe('goog-key');
+  });
+
+  it('throws an ApiHttpError carrying the status on a non-OK response', async () => {
+    mockFetch({ error: 'nope' }, { ok: false, status: 404 });
+    await expect(providerById('claude').callApi('P', 'k', 'bad-model')).rejects.toBeInstanceOf(
+      ApiHttpError,
+    );
+  });
+});
+
+describe('enrichProviderError', () => {
+  it('maps a 404/400 to an actionable bad-model message with an override hint', () => {
+    const def = providerById('openai');
+    const err = enrichProviderError(new ApiHttpError(404, 'model not found'), def, 'gpt-x');
+    expect(err).toBeInstanceOf(ReplicaxError);
+    expect(err.message).toMatch(/rejected model "gpt-x"/);
+    expect(err.message).toContain('REPLICAX_OPENAI_MODEL');
+  });
+
+  it('maps a 401/403 to a credentials message naming the env var', () => {
+    const def = providerById('gemini');
+    const err = enrichProviderError(new ApiHttpError(401, 'bad key'), def, 'gemini-x');
+    expect(err.message).toMatch(/credentials/i);
+    expect(err.hints.join(' ')).toContain('GEMINI_API_KEY');
+  });
+
+  it('wraps a non-HTTP error generically', () => {
+    const def = providerById('claude');
+    const err = enrichProviderError(new Error('socket hang up'), def, 'claude-opus-4-8');
+    expect(err.message).toContain('socket hang up');
   });
 });

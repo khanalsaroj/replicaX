@@ -1,7 +1,7 @@
 import os from 'node:os';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { extract as tarExtract } from 'tar';
+import { REPO_ARCHIVE_LIMITS, safeExtract } from '@/core/archive';
 import { ReplicaxError } from '@/utils/errors';
 
 /**
@@ -174,7 +174,9 @@ export async function downloadRepo(ref: GitHubRef): Promise<DownloadedRepo> {
     const extractDir = path.join(tmpRoot, 'src');
     await fs.ensureDir(extractDir);
     // GitHub tarballs are scoped under one top-level <owner>-<repo>-<sha>/ dir.
-    await tarExtract({ file: tarPath, cwd: extractDir, strip: 0 });
+    // safeExtract enforces size/entry caps and rejects path traversal before
+    // writing anything (links in a repo tarball are skipped, not followed).
+    await safeExtract(tarPath, extractDir, REPO_ARCHIVE_LIMITS);
 
     const repoRoot = await firstSubdir(extractDir);
     if (!repoRoot) {

@@ -29,10 +29,11 @@ export const ROOT_SKILL_FILE = 'SKILL.md';
 /**
  * The schema/format version stamped into every profile we write. Evolves
  * independently of the npm package version. 2.1.0 added optional `detections`
- * (metadata), `registry` (profile), and the `manifest.json` index — all
- * backward-compatible additions (see {@link file://./core/migrations.ts}).
+ * (metadata), `registry` (profile), and the `manifest.json` index; 2.2.0 added
+ * the optional `profile.source` provenance field — all backward-compatible
+ * additions (see {@link file://./core/migrations.ts}).
  */
-export const REPLICAX_VERSION = '2.1.0';
+export const REPLICAX_VERSION = '2.2.0';
 
 /**
  * File names that make up a profile inside {@link REPLICAX_DIR}. The first five

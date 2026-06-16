@@ -53,3 +53,28 @@ jobs:
         run: |
           node dist/index.js --version
           node dist/index.js --help
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Gate on the dependency tree that actually ships in `dist/`. Dev-only
+      # advisories (e.g. esbuild's dev server via tsup — see README) are reported
+      # for visibility but do not fail the build.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies (informational)
+        run: npm audit --audit-level=high || true

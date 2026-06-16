@@ -1,5 +1,5 @@
 import { REPLICAX_VERSION } from '@/constants';
-import type { Metadata, Profile, ProfileBundle, Structure, Tooling } from '@/schema';
+import type { Metadata, Profile, ProfileBundle, ProfileSource, Structure, Tooling } from '@/schema';
 import { computeChecksum } from '@/core/checksum';
 import { buildManifest } from '@/core/manifest';
 
@@ -9,6 +9,8 @@ export interface BuildBundleArgs {
   tooling: Tooling;
   structure: Structure;
   metadata: Metadata;
+  /** Provenance of this capture (init/sync → local, extract → github). */
+  source?: ProfileSource;
   /** When syncing, the previous profile whose identity we preserve. */
   existing?: Profile;
 }
@@ -28,6 +30,10 @@ export function buildBundle(args: BuildBundleArgs): ProfileBundle {
         description: args.description ?? args.existing.description,
         replicaxVersion: REPLICAX_VERSION,
         updatedAt: now,
+        // Preserve the original provenance on sync unless explicitly overridden.
+        ...((args.source ?? args.existing.source)
+          ? { source: args.source ?? args.existing.source }
+          : {}),
       }
     : {
         name: args.name,
@@ -35,6 +41,7 @@ export function buildBundle(args: BuildBundleArgs): ProfileBundle {
         createdAt: now,
         replicaxVersion: REPLICAX_VERSION,
         ...(args.description ? { description: args.description } : {}),
+        ...(args.source ? { source: args.source } : {}),
       };
 
   const checksum = computeChecksum(args.tooling);

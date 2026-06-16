@@ -1,0 +1,27 @@
+# Dependabot keeps dependencies and CI actions patched.
+# Policy: GitHub Actions are referenced by major-version tag and kept current
+# here (rather than hand-pinned SHAs) so security updates land automatically.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      # Batch routine dev-tooling bumps into one PR to cut review noise.
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    labels:
+      - dependencies
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci
