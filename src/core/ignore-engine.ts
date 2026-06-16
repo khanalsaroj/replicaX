@@ -17,6 +17,7 @@ type Ig = ReturnType<typeof ignore>;
  */
 export class IgnoreEngine {
   private readonly ig: Ig;
+  private readonly userIg: Ig;
   private readonly secrets: Ig;
   readonly userPatterns: string[];
 
@@ -26,6 +27,10 @@ export class IgnoreEngine {
       return t.length > 0 && !t.startsWith('#');
     });
     this.ig = ignore().add(DEFAULT_IGNORE_PATTERNS).add(this.userPatterns);
+    // A matcher for the user's `.replicaxignore` patterns *only* (no defaults),
+    // so an explicit `.replicaxinclude` can override the defaults while the user's
+    // own excludes still win. See {@link isUserIgnored}.
+    this.userIg = ignore().add(this.userPatterns);
     this.secrets = ignore().add(SECRET_GUARD_GLOBS);
   }
 
@@ -43,6 +48,16 @@ export class IgnoreEngine {
   isIgnored(relPosixPath: string): boolean {
     if (!relPosixPath || relPosixPath === '.') return false;
     return this.ig.ignores(relPosixPath);
+  }
+
+  /**
+   * Whether a path is excluded by the user's `.replicaxignore` *only* (ignoring
+   * the built-in defaults). Used to apply `.replicaxignore`'s precedence over an
+   * explicit `.replicaxinclude` without the defaults vetoing the include.
+   */
+  isUserIgnored(relPosixPath: string): boolean {
+    if (!relPosixPath || relPosixPath === '.') return false;
+    return this.userIg.ignores(relPosixPath);
   }
 
   /** Whether a path is a protected secret that must never be captured. */

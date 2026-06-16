@@ -1,5 +1,5 @@
 import Table from 'cli-table3';
-import { CATEGORY_BY_ID } from '@/config/supported-files';
+import { categoryLabel } from '@/config/supported-files';
 import { loadBundle, profileDir, profileExists, resolveProfileDir } from '@/core/profile-store';
 import type { ProfileBundle } from '@/schema';
 import { ReplicaxError } from '@/utils/errors';
@@ -109,12 +109,7 @@ function printTooling(bundle: ProfileBundle): void {
     table.push(['Package Management & Monorepos', 'package.json', 'json', 'template']);
   }
   for (const file of [...tooling.files].sort((a, b) => a.path.localeCompare(b.path))) {
-    table.push([
-      CATEGORY_BY_ID.get(file.category)?.label ?? file.category,
-      file.path,
-      file.variant,
-      formatBytes(file.bytes),
-    ]);
+    table.push([categoryLabel(file.category), file.path, file.variant, formatBytes(file.bytes)]);
   }
   logger.out(table.toString());
   logger.out('');

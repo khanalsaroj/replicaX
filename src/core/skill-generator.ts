@@ -1,4 +1,4 @@
-import { CATEGORY_BY_ID } from '@/config/supported-files';
+import { categoryLabel } from '@/config/supported-files';
 import type { Metadata, PackageManager, Structure, Tooling } from '@/schema';
 import type { RawPackageJson } from '@/core/detect';
 import { slugify } from '@/utils/slug';
@@ -103,7 +103,7 @@ function orderedScripts(scripts: Record<string, string>): string[] {
 function toolingByCategoryLabel(tooling: Tooling): Array<[string, string[]]> {
   const groups = new Map<string, string[]>();
   for (const file of tooling.files) {
-    const label = CATEGORY_BY_ID.get(file.category)?.label ?? file.category;
+    const label = categoryLabel(file.category);
     const list = groups.get(label) ?? [];
     list.push(file.path);
     groups.set(label, list);

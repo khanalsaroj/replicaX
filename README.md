@@ -350,6 +350,10 @@ replicax init-skill --target claude --force                    # overwrite exist
 `codex` → `.codex/skills/<name>/SKILL.md`, `antigravity` → `.agents/skills/<name>.md`. The **provider** (auto‑detected,
 or forced with `--provider`) is the AI that _authors_ it — the two are independent.
 
+> **Bring your own template.** If the project root has a `SKILL.md`, `init-skill` hands it to the AI as the **base** to
+> refine — the model preserves your headings, structure, and instructions and fills them in from the detected setup,
+> instead of starting from scratch.
+
 > **Privacy:** only the project's _setup_ is sent to the provider — the same safe surface ReplicaX captures (config
 > files, structure, `package.json` scripts/deps). Source code and secrets are never sent. With `--no-ai` (or no provider
 > configured), ReplicaX falls back to a deterministic, fully offline template.
@@ -475,10 +479,10 @@ The same guarantees apply to `extract` — a remote repo's secrets are filtered 
 
 ---
 
-## Configuration — `.replicaxignore`
+## Configuration — `.replicaxignore` and `.replicaxinclude`
 
-Control what gets exported with **gitignore syntax**. `init` can scaffold a starter for you. Ignored files are excluded
-from the profile — but their parent directories are still captured for structure.
+**`.replicaxignore`** controls what gets *excluded*, with **gitignore syntax**. `init` can scaffold a starter for you.
+Ignored files are excluded from the profile — but their parent directories are still captured for structure.
 
 ```gitignore
 # Business logic (folders kept, contents dropped)
@@ -489,6 +493,21 @@ src/**/*.ts
 .env
 *.log
 ```
+
+**`.replicaxinclude`** is the opposite: a list of **glob patterns** (one per line, `#` comments) for *extra* files to
+capture verbatim, on top of the auto-detected catalogue. Use it for config ReplicaX doesn't recognize by default
+(`*.toml`, a `config/` directory, an IDE file you do want shared, …). A trailing `/` means "the whole directory".
+
+```gitignore
+# Capture these in addition to the auto-detected setup
+app.config.toml
+config/**
+.vscode/extensions.json
+```
+
+**Precedence** (highest first): the **secret guard** always wins (a secret can never be included) →
+**`.replicaxignore`** (your excludes beat your includes) → **`.replicaxinclude`** (overrides the default prune/ignore
+lists, so it can reach normally-skipped locations) → the **built-in catalogue**.
 
 ---
 

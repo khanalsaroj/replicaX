@@ -1,4 +1,4 @@
-import { CATEGORY_BY_ID } from '@/config/supported-files';
+import { categoryLabel } from '@/config/supported-files';
 import type { Detection, ProfileBundle, Tooling } from '@/schema';
 import { logger, pc } from '@/utils/logger';
 
@@ -23,7 +23,7 @@ export function toolingByCategory(tooling: Tooling): Array<[string, number]> {
     counts.set('package', (counts.get('package') ?? 0) + 1);
   }
   return [...counts.entries()]
-    .map(([id, n]): [string, number] => [CATEGORY_BY_ID.get(id)?.label ?? id, n])
+    .map(([id, n]): [string, number] => [categoryLabel(id), n])
     .sort((a, b) => a[0].localeCompare(b[0]));
 }
 

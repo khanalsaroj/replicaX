@@ -173,3 +173,14 @@ export const ALL_CONFIG_PATTERNS: string[] = CONFIG_CATEGORIES.flatMap((c) => c.
 
 /** Map from category id to its definition, for quick lookup. */
 export const CATEGORY_BY_ID = new Map(CONFIG_CATEGORIES.map((c) => [c.id, c]));
+
+/** Labels for categories that aren't part of the glob catalogue. */
+const EXTRA_CATEGORY_LABELS: Record<string, string> = {
+  // Files pulled in explicitly via `.replicaxinclude`.
+  included: 'Included files',
+};
+
+/** Human-friendly label for a tooling category id, falling back to the id. */
+export function categoryLabel(id: string): string {
+  return CATEGORY_BY_ID.get(id)?.label ?? EXTRA_CATEGORY_LABELS[id] ?? id;
+}
