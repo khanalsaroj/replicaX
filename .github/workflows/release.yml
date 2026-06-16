@@ -28,7 +28,7 @@ jobs:
       should_release: ${{ steps.v.outputs.should_release }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Resolve version and check npm
         id: v
@@ -58,7 +58,7 @@ jobs:
       url: https://www.npmjs.com/package/@iamsaroj/replicax
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # full history + tags for tagging and release notes
 
