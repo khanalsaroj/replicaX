@@ -41,12 +41,20 @@ function renderReport(name: string, detections: Detection[]): string {
 async function scanExample(name: string): Promise<ProfileBundle> {
   const scan = await scanProject(path.join(EXAMPLES_DIR, name, 'source'));
   scan.structure.root = name;
-  return buildBundle({
-    name,
-    tooling: scan.tooling,
-    structure: scan.structure,
-    metadata: scan.metadata,
-  });
+
+  // Fixture files may be checked out with CRLF on some platforms / git configs.
+  // ReplicaX captures bytes verbatim (correct), but the *setup* an example
+  // represents is line-ending-agnostic, so normalize to LF before building and
+  // comparing — keeping the committed profiles deterministic everywhere.
+  const tooling = {
+    ...scan.tooling,
+    files: scan.tooling.files.map((file) => {
+      const content = file.content.replace(/\r\n/g, '\n');
+      return { ...file, content, bytes: Buffer.byteLength(content, 'utf8') };
+    }),
+  };
+
+  return buildBundle({ name, tooling, structure: scan.structure, metadata: scan.metadata });
 }
 
 /** Zero out machine-dependent metadata so comparisons are host-independent. */
@@ -91,7 +99,9 @@ describe('examples', () => {
 
       const comparison = compareBundles(committed, fresh);
       expect(comparisonHasChanges(comparison)).toBe(false);
-      expect(await fs.readFile(reportPath, 'utf8')).toBe(report);
+
+      const committedReport = (await fs.readFile(reportPath, 'utf8')).replace(/\r\n/g, '\n');
+      expect(committedReport).toBe(report);
     });
   }
 });

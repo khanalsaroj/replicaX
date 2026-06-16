@@ -1,0 +1,11 @@
+# Normalize line endings to LF in the repository for text files. Without this,
+# Windows checkouts (git core.autocrlf=true) rewrite files to CRLF, which would
+# flip every captured config-file hash in the examples integration test.
+* text=auto eol=lf
+
+# Example fixtures and the generated profiles they're compared against must be
+# byte-stable LF on every platform — the examples test asserts they stay in sync.
+examples/** text eol=lf
+
+# Lockfiles are generated; leave them to the package manager.
+package-lock.json -diff
