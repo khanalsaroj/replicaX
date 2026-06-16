@@ -1,0 +1,70 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "node_modules/\ndist/\nbuild/\n.env\nios/Pods/\n",
+      "bytes": 42
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "20\n",
+      "bytes": 3
+    },
+    {
+      "path": ".prettierrc",
+      "category": "prettier",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "{\n  \"singleQuote\": true,\n  \"trailingComma\": \"all\"\n}\n",
+      "bytes": 52
+    },
+    {
+      "path": "eslint.config.js",
+      "category": "eslint",
+      "variant": "js",
+      "encoding": "utf8",
+      "content": "export default [];\n",
+      "bytes": 19
+    },
+    {
+      "path": "jest.config.js",
+      "category": "testing",
+      "variant": "js",
+      "encoding": "utf8",
+      "content": "module.exports = { preset: 'react-native' };\n",
+      "bytes": 45
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "typescript",
+      "variant": "json",
+      "encoding": "utf8",
+      "content": "{\n  \"extends\": \"@react-native/typescript-config\"\n}\n",
+      "bytes": 51
+    }
+  ],
+  "packageJson": {
+    "packageManager": "yarn@1.22.22",
+    "scripts": {
+      "start": "react-native start",
+      "android": "react-native run-android",
+      "ios": "react-native run-ios",
+      "test": "jest",
+      "lint": "eslint .",
+      "format": "prettier --write ."
+    },
+    "devDependencies": {
+      "@react-native/eslint-config": "^0.75.0",
+      "eslint": "^9.0.0",
+      "jest": "^29.7.0",
+      "prettier": "^3.3.0",
+      "typescript": "^5.5.0"
+    }
+  }
+}

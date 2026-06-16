@@ -1,0 +1,17 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    ".github/workflows/ci.yml": "a824b52495daaeec4472c9238e88c0a6dab9bea03efea725faa97cb76c38102f",
+    ".gitignore": "4a58f2e68f9db8de2c3729c9ca16a625fad84c24616cae51e89301d7f4946ac1",
+    ".nvmrc": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3",
+    ".prettierrc": "37055c98043228133ffcc5cad7bba5ef6c8f24698a551cae547b90f51d22e519",
+    "docker-compose.yml": "868fdbc093febf6ee7d15d67166d0bfaff67bb12025d2cc3bb5b324a1d43cd02",
+    "Dockerfile": "3059d53c41c8bfbf692b8143669632f0e38c4a523dd8f5c6aaced8492739a59c",
+    "eslint.config.js": "d7076912d1c9786ca76231a2a77cef475b7fafbe4950a8ecc430af171422993c",
+    "server/pom.xml": "941f76cfc080d4faf28ccb467b97d0e8fa8f0eadf43373a977eadbc00c2305e1",
+    "server/src/main/resources/application.yml": "45e63f8ded3a8a2691855506af853702d40c54b09643a9d7f8e12e7c8beddd16",
+    "tsconfig.json": "1cb53468eafb746883b77faa8f64bb38169d8c992cfc4b55db1a230ea4a65d96",
+    "vite.config.ts": "8d2ad79d7e9dc09c8b712dac2c5db6869608f8c9845ca76d3da51e3c22a52df4",
+    "package.json": "1c879244d4dac93fa694487df36ea0877bb26bdc018c4cdf89fa3d0bac70ba67"
+  }
+}

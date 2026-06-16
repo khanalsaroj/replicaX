@@ -86,3 +86,10 @@ $RECYCLE.BIN/
 .replicax-tmp/
 *.replicax.tar.gz
 .replicax
+
+# …but the entire examples/ tree IS committed verbatim: it holds curated
+# fixtures (source + generated .replicax profiles) that tests/examples.test.ts
+# compares against. Re-include every directory and file even when a name collides
+# with a rule above (e.g. `.replicax`, `lib/`). Keep this block last.
+!examples/**/
+!examples/**

@@ -1,0 +1,9 @@
+{
+  "root": "react-vite",
+  "directories": [
+    "public",
+    "src",
+    "src/components",
+    "src/hooks"
+  ]
+}

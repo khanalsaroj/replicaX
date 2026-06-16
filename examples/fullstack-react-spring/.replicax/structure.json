@@ -1,0 +1,15 @@
+{
+  "root": "fullstack-react-spring",
+  "directories": [
+    ".github",
+    ".github/workflows",
+    "server",
+    "server/src",
+    "server/src/main",
+    "server/src/main/java",
+    "server/src/main/resources",
+    "src",
+    "src/components",
+    "src/pages"
+  ]
+}

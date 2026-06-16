@@ -1,0 +1,111 @@
+{
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "name: CI\non: [push]\njobs:\n  web:\n    runs-on: ubuntu-latest\n    steps:\n      - run: npm test\n  api:\n    runs-on: ubuntu-latest\n    steps:\n      - run: cd server && ./mvnw -B package\n",
+      "bytes": 182
+    },
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "node_modules/\ndist/\nbuild/\n.env\nserver/target/\n",
+      "bytes": 47
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "20\n",
+      "bytes": 3
+    },
+    {
+      "path": ".prettierrc",
+      "category": "prettier",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "{\n  \"singleQuote\": true\n}\n",
+      "bytes": 26
+    },
+    {
+      "path": "docker-compose.yml",
+      "category": "docker",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "services:\n  web:\n    build: .\n    ports: [\"3000:3000\"]\n  api:\n    build: ./server\n    ports: [\"8080:8080\"]\n  db:\n    image: postgres:16\n",
+      "bytes": 136
+    },
+    {
+      "path": "Dockerfile",
+      "category": "docker",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "FROM node:20-alpine\nWORKDIR /web\nCOPY . .\nRUN npm ci && npm run build\n",
+      "bytes": 70
+    },
+    {
+      "path": "eslint.config.js",
+      "category": "eslint",
+      "variant": "js",
+      "encoding": "utf8",
+      "content": "export default [];\n",
+      "bytes": 19
+    },
+    {
+      "path": "server/pom.xml",
+      "category": "jvm-build",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>3.3.2</version>\n  </parent>\n  <groupId>com.example</groupId>\n  <artifactId>api</artifactId>\n  <version>0.0.1-SNAPSHOT</version>\n</project>\n",
+      "bytes": 395
+    },
+    {
+      "path": "server/src/main/resources/application.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "server:\n  port: 8080\nspring:\n  application:\n    name: api\n",
+      "bytes": 58
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "typescript",
+      "variant": "json",
+      "encoding": "utf8",
+      "content": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"jsx\": \"react-jsx\"\n  }\n}\n",
+      "bytes": 74
+    },
+    {
+      "path": "vite.config.ts",
+      "category": "build",
+      "variant": "ts",
+      "encoding": "utf8",
+      "content": "import react from '@vitejs/plugin-react';\nexport default { plugins: [react()], server: { proxy: { '/api': 'http://localhost:8080' } } };\n",
+      "bytes": 137
+    }
+  ],
+  "packageJson": {
+    "type": "module",
+    "packageManager": "npm@10.2.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "test": "vitest",
+      "lint": "eslint .",
+      "format": "prettier --write ."
+    },
+    "devDependencies": {
+      "@vitejs/plugin-react": "^4.3.0",
+      "eslint": "^9.0.0",
+      "prettier": "^3.3.0",
+      "typescript": "^5.5.0",
+      "vite": "^5.3.0",
+      "vitest": "^2.0.0"
+    }
+  }
+}

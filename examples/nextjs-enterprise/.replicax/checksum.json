@@ -1,0 +1,20 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    ".dockerignore": "9f8db0ef469e5891565dac7c5a0f188140dcbc36f500e9ad78c2204a24e541ff",
+    ".github/workflows/ci.yml": "b8750bc9902038f013081fce31908c9d41d0a5537f0df5346b772f2456bfc654",
+    ".github/workflows/release.yml": "394b23109d5b38dcea5c0190143eca5612cc373aaa16b0fedc37beb1f239f34e",
+    ".gitignore": "7c374787bc1f1baf0486f628eb131e4497743b868ff8a077003b4ddc7bcf95ea",
+    ".husky/commit-msg": "4f351f65f6c0c6e76279fb88bf6b5d56ff0c5c5f33465b4c6fb4839ce66a4754",
+    ".husky/pre-commit": "e2b7c9733375d7182af2033bda9a7d2a05d0db5eef5be53d26eb7b5f3df8fbc3",
+    ".nvmrc": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3",
+    ".prettierrc": "37055c98043228133ffcc5cad7bba5ef6c8f24698a551cae547b90f51d22e519",
+    "commitlint.config.js": "c8b731d07ca8dbe9ecbba722a0c9c5eb455771a5885008bb92bceca43f53fd44",
+    "docker-compose.yml": "6ce8aa2e4803331bd953add6a14459cf37250173dbf5f1979fb1f0e200be9cbe",
+    "Dockerfile": "7ed3a135d424c4c2779480193ac347d429ee696df15553f710535520fe50099f",
+    "eslint.config.js": "d7076912d1c9786ca76231a2a77cef475b7fafbe4950a8ecc430af171422993c",
+    "jest.config.ts": "38381fa8d7ec6243edd67f5cf3a2b45df2929d7b4e609fd64157198551bc843f",
+    "tsconfig.json": "fc9fc38c21441b7f67a91280ed28b8ca4ad67fc69d713db441f5c0fd9a6abf9f",
+    "package.json": "a827c388415b644a9695fe985d8a11f8b3cdab9dc87bfd1b186f2588b3336203"
+  }
+}

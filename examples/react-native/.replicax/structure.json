@@ -1,0 +1,9 @@
+{
+  "root": "react-native",
+  "directories": [
+    "__tests__",
+    "src",
+    "src/components",
+    "src/screens"
+  ]
+}

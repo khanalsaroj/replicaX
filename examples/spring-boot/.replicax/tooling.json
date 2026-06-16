@@ -1,0 +1,76 @@
+{
+  "files": [
+    {
+      "path": ".github/workflows/maven.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "name: Build\non: [push]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: ./mvnw -B package\n",
+      "bytes": 107
+    },
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "target/\n*.class\n.env\n",
+      "bytes": 21
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "20\n",
+      "bytes": 3
+    },
+    {
+      "path": "Dockerfile",
+      "category": "docker",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "FROM eclipse-temurin:21-jre\nCOPY target/demo.jar app.jar\nENTRYPOINT [\"java\",\"-jar\",\"/app.jar\"]\n",
+      "bytes": 95
+    },
+    {
+      "path": "mvnw",
+      "category": "jvm-build",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "#!/bin/sh\nexec \"$(dirname \"$0\")/.mvn/wrapper/maven\" \"$@\"\n",
+      "bytes": 57
+    },
+    {
+      "path": "mvnw.cmd",
+      "category": "jvm-build",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "@echo off\n",
+      "bytes": 10
+    },
+    {
+      "path": "pom.xml",
+      "category": "jvm-build",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>3.3.2</version>\n  </parent>\n  <groupId>com.example</groupId>\n  <artifactId>demo</artifactId>\n  <version>0.0.1-SNAPSHOT</version>\n  <properties>\n    <java.version>21</java.version>\n  </properties>\n</project>\n",
+      "bytes": 463
+    },
+    {
+      "path": "src/main/resources/application-prod.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "server:\n  port: 80\n",
+      "bytes": 19
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "encoding": "utf8",
+      "content": "server:\n  port: 8080\nspring:\n  application:\n    name: demo\n",
+      "bytes": 59
+    }
+  ]
+}

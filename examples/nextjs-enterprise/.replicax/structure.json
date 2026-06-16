@@ -1,0 +1,12 @@
+{
+  "root": "nextjs-enterprise",
+  "directories": [
+    ".github",
+    ".github/workflows",
+    ".husky",
+    "src",
+    "src/app",
+    "src/components",
+    "src/lib"
+  ]
+}

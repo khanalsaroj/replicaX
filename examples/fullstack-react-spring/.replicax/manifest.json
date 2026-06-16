@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-06-16T02:27:04.244Z",
+  "entries": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "bytes": 182,
+      "sha256": "a824b52495daaeec4472c9238e88c0a6dab9bea03efea725faa97cb76c38102f"
+    },
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "bytes": 47,
+      "sha256": "4a58f2e68f9db8de2c3729c9ca16a625fad84c24616cae51e89301d7f4946ac1"
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "bytes": 3,
+      "sha256": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3"
+    },
+    {
+      "path": ".prettierrc",
+      "category": "prettier",
+      "variant": "other",
+      "bytes": 26,
+      "sha256": "37055c98043228133ffcc5cad7bba5ef6c8f24698a551cae547b90f51d22e519"
+    },
+    {
+      "path": "docker-compose.yml",
+      "category": "docker",
+      "variant": "yaml",
+      "bytes": 136,
+      "sha256": "868fdbc093febf6ee7d15d67166d0bfaff67bb12025d2cc3bb5b324a1d43cd02"
+    },
+    {
+      "path": "Dockerfile",
+      "category": "docker",
+      "variant": "other",
+      "bytes": 70,
+      "sha256": "3059d53c41c8bfbf692b8143669632f0e38c4a523dd8f5c6aaced8492739a59c"
+    },
+    {
+      "path": "eslint.config.js",
+      "category": "eslint",
+      "variant": "js",
+      "bytes": 19,
+      "sha256": "d7076912d1c9786ca76231a2a77cef475b7fafbe4950a8ecc430af171422993c"
+    },
+    {
+      "path": "package.json",
+      "category": "package",
+      "variant": "json",
+      "bytes": 0,
+      "sha256": "1c879244d4dac93fa694487df36ea0877bb26bdc018c4cdf89fa3d0bac70ba67"
+    },
+    {
+      "path": "server/pom.xml",
+      "category": "jvm-build",
+      "variant": "other",
+      "bytes": 395,
+      "sha256": "941f76cfc080d4faf28ccb467b97d0e8fa8f0eadf43373a977eadbc00c2305e1"
+    },
+    {
+      "path": "server/src/main/resources/application.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "bytes": 58,
+      "sha256": "45e63f8ded3a8a2691855506af853702d40c54b09643a9d7f8e12e7c8beddd16"
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "typescript",
+      "variant": "json",
+      "bytes": 74,
+      "sha256": "1cb53468eafb746883b77faa8f64bb38169d8c992cfc4b55db1a230ea4a65d96"
+    },
+    {
+      "path": "vite.config.ts",
+      "category": "build",
+      "variant": "ts",
+      "bytes": 137,
+      "sha256": "8d2ad79d7e9dc09c8b712dac2c5db6869608f8c9845ca76d3da51e3c22a52df4"
+    }
+  ]
+}

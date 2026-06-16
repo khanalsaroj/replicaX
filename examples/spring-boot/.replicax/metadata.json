@@ -1,0 +1,54 @@
+{
+  "nodeVersion": "20",
+  "packageManager": "unknown",
+  "framework": "unknown",
+  "language": "java",
+  "platform": "win32",
+  "detections": [
+    {
+      "id": "java",
+      "name": "Java",
+      "category": "language",
+      "confidence": 1,
+      "evidence": [
+        "metadata.language"
+      ]
+    },
+    {
+      "id": "spring-boot",
+      "name": "Spring Boot",
+      "category": "framework",
+      "confidence": 0.9,
+      "evidence": [
+        "src/main/resources/application-prod.yml"
+      ]
+    },
+    {
+      "id": "maven",
+      "name": "Maven",
+      "category": "jvm",
+      "confidence": 1,
+      "evidence": [
+        "pom.xml"
+      ]
+    },
+    {
+      "id": "docker",
+      "name": "Docker",
+      "category": "container",
+      "confidence": 1,
+      "evidence": [
+        "Dockerfile"
+      ]
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions",
+      "category": "ci",
+      "confidence": 1,
+      "evidence": [
+        ".github/workflows/maven.yml"
+      ]
+    }
+  ]
+}

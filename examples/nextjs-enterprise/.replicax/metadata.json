@@ -1,0 +1,117 @@
+{
+  "nodeVersion": "20",
+  "packageManager": "pnpm",
+  "framework": "next",
+  "language": "typescript",
+  "platform": "win32",
+  "detections": [
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "category": "language",
+      "confidence": 1,
+      "evidence": [
+        "metadata.language"
+      ]
+    },
+    {
+      "id": "next",
+      "name": "Next.js",
+      "category": "framework",
+      "confidence": 1,
+      "evidence": [
+        "package.json"
+      ]
+    },
+    {
+      "id": "pnpm",
+      "name": "pnpm",
+      "category": "package-manager",
+      "confidence": 0.9,
+      "evidence": [
+        "package.json#packageManager"
+      ]
+    },
+    {
+      "id": "eslint",
+      "name": "ESLint",
+      "category": "lint",
+      "confidence": 1,
+      "evidence": [
+        "eslint.config.js"
+      ]
+    },
+    {
+      "id": "prettier",
+      "name": "Prettier",
+      "category": "format",
+      "confidence": 1,
+      "evidence": [
+        ".prettierrc"
+      ]
+    },
+    {
+      "id": "jest",
+      "name": "Jest",
+      "category": "test",
+      "confidence": 1,
+      "evidence": [
+        "jest.config.ts"
+      ]
+    },
+    {
+      "id": "docker",
+      "name": "Docker",
+      "category": "container",
+      "confidence": 1,
+      "evidence": [
+        "Dockerfile"
+      ]
+    },
+    {
+      "id": "docker-compose",
+      "name": "Docker Compose",
+      "category": "container",
+      "confidence": 1,
+      "evidence": [
+        "docker-compose.yml"
+      ]
+    },
+    {
+      "id": "github-actions",
+      "name": "GitHub Actions",
+      "category": "ci",
+      "confidence": 1,
+      "evidence": [
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "id": "husky",
+      "name": "Husky",
+      "category": "git-hooks",
+      "confidence": 1,
+      "evidence": [
+        ".husky/"
+      ]
+    },
+    {
+      "id": "commitlint",
+      "name": "Commitlint",
+      "category": "commit",
+      "confidence": 1,
+      "evidence": [
+        "commitlint.config.js"
+      ]
+    },
+    {
+      "id": "lint-staged",
+      "name": "lint-staged",
+      "category": "commit",
+      "confidence": 1,
+      "evidence": [
+        "package.json#lint-staged"
+      ]
+    }
+  ]
+}

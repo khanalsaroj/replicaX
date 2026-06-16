@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-06-16T02:27:04.302Z",
+  "entries": [
+    {
+      "path": ".dockerignore",
+      "category": "docker",
+      "variant": "other",
+      "bytes": 19,
+      "sha256": "9f8db0ef469e5891565dac7c5a0f188140dcbc36f500e9ad78c2204a24e541ff"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "bytes": 96,
+      "sha256": "b8750bc9902038f013081fce31908c9d41d0a5537f0df5346b772f2456bfc654"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "bytes": 124,
+      "sha256": "394b23109d5b38dcea5c0190143eca5612cc373aaa16b0fedc37beb1f239f34e"
+    },
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "bytes": 39,
+      "sha256": "7c374787bc1f1baf0486f628eb131e4497743b868ff8a077003b4ddc7bcf95ea"
+    },
+    {
+      "path": ".husky/commit-msg",
+      "category": "husky",
+      "variant": "other",
+      "bytes": 33,
+      "sha256": "4f351f65f6c0c6e76279fb88bf6b5d56ff0c5c5f33465b4c6fb4839ce66a4754"
+    },
+    {
+      "path": ".husky/pre-commit",
+      "category": "husky",
+      "variant": "other",
+      "bytes": 16,
+      "sha256": "e2b7c9733375d7182af2033bda9a7d2a05d0db5eef5be53d26eb7b5f3df8fbc3"
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "bytes": 3,
+      "sha256": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3"
+    },
+    {
+      "path": ".prettierrc",
+      "category": "prettier",
+      "variant": "other",
+      "bytes": 26,
+      "sha256": "37055c98043228133ffcc5cad7bba5ef6c8f24698a551cae547b90f51d22e519"
+    },
+    {
+      "path": "commitlint.config.js",
+      "category": "misc",
+      "variant": "js",
+      "bytes": 65,
+      "sha256": "c8b731d07ca8dbe9ecbba722a0c9c5eb455771a5885008bb92bceca43f53fd44"
+    },
+    {
+      "path": "docker-compose.yml",
+      "category": "docker",
+      "variant": "yaml",
+      "bytes": 61,
+      "sha256": "6ce8aa2e4803331bd953add6a14459cf37250173dbf5f1979fb1f0e200be9cbe"
+    },
+    {
+      "path": "Dockerfile",
+      "category": "docker",
+      "variant": "other",
+      "bytes": 90,
+      "sha256": "7ed3a135d424c4c2779480193ac347d429ee696df15553f710535520fe50099f"
+    },
+    {
+      "path": "eslint.config.js",
+      "category": "eslint",
+      "variant": "js",
+      "bytes": 19,
+      "sha256": "d7076912d1c9786ca76231a2a77cef475b7fafbe4950a8ecc430af171422993c"
+    },
+    {
+      "path": "jest.config.ts",
+      "category": "testing",
+      "variant": "ts",
+      "bytes": 45,
+      "sha256": "38381fa8d7ec6243edd67f5cf3a2b45df2929d7b4e609fd64157198551bc843f"
+    },
+    {
+      "path": "package.json",
+      "category": "package",
+      "variant": "json",
+      "bytes": 0,
+      "sha256": "a827c388415b644a9695fe985d8a11f8b3cdab9dc87bfd1b186f2588b3336203"
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "typescript",
+      "variant": "json",
+      "bytes": 50,
+      "sha256": "fc9fc38c21441b7f67a91280ed28b8ca4ad67fc69d713db441f5c0fd9a6abf9f"
+    }
+  ]
+}

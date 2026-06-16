@@ -1,0 +1,80 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "node_modules/\ndist/\nbuild/\n.env\n",
+      "bytes": 32
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "20\n",
+      "bytes": 3
+    },
+    {
+      "path": ".prettierrc",
+      "category": "prettier",
+      "variant": "other",
+      "encoding": "utf8",
+      "content": "{\n  \"singleQuote\": true,\n  \"semi\": true\n}\n",
+      "bytes": 42
+    },
+    {
+      "path": "eslint.config.js",
+      "category": "eslint",
+      "variant": "js",
+      "encoding": "utf8",
+      "content": "export default [];\n",
+      "bytes": 19
+    },
+    {
+      "path": "tsconfig.json",
+      "category": "typescript",
+      "variant": "json",
+      "encoding": "utf8",
+      "content": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"jsx\": \"react-jsx\"\n  }\n}\n",
+      "bytes": 74
+    },
+    {
+      "path": "tsconfig.node.json",
+      "category": "typescript",
+      "variant": "json",
+      "encoding": "utf8",
+      "content": "{\n  \"compilerOptions\": {\n    \"composite\": true\n  }\n}\n",
+      "bytes": 53
+    },
+    {
+      "path": "vite.config.ts",
+      "category": "build",
+      "variant": "ts",
+      "encoding": "utf8",
+      "content": "import react from '@vitejs/plugin-react';\nexport default { plugins: [react()] };\n",
+      "bytes": 81
+    }
+  ],
+  "packageJson": {
+    "type": "module",
+    "packageManager": "npm@10.2.0",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview",
+      "test": "vitest",
+      "lint": "eslint .",
+      "format": "prettier --write ."
+    },
+    "devDependencies": {
+      "@vitejs/plugin-react": "^4.3.0",
+      "eslint": "^9.0.0",
+      "prettier": "^3.3.0",
+      "typescript": "^5.5.0",
+      "vite": "^5.3.0",
+      "vitest": "^2.0.0"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "nodeVersion": "20",
+  "packageManager": "yarn",
+  "framework": "react-native",
+  "language": "typescript",
+  "platform": "win32",
+  "detections": [
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "category": "language",
+      "confidence": 1,
+      "evidence": [
+        "metadata.language"
+      ]
+    },
+    {
+      "id": "react-native",
+      "name": "React Native",
+      "category": "framework",
+      "confidence": 1,
+      "evidence": [
+        "package.json"
+      ]
+    },
+    {
+      "id": "yarn",
+      "name": "Yarn",
+      "category": "package-manager",
+      "confidence": 0.9,
+      "evidence": [
+        "package.json#packageManager"
+      ]
+    },
+    {
+      "id": "eslint",
+      "name": "ESLint",
+      "category": "lint",
+      "confidence": 1,
+      "evidence": [
+        "eslint.config.js"
+      ]
+    },
+    {
+      "id": "prettier",
+      "name": "Prettier",
+      "category": "format",
+      "confidence": 1,
+      "evidence": [
+        ".prettierrc"
+      ]
+    },
+    {
+      "id": "jest",
+      "name": "Jest",
+      "category": "test",
+      "confidence": 1,
+      "evidence": [
+        "jest.config.js"
+      ]
+    }
+  ]
+}

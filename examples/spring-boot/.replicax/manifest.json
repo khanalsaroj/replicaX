@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "2.1.0",
+  "generatedAt": "2026-06-16T02:27:04.457Z",
+  "entries": [
+    {
+      "path": ".github/workflows/maven.yml",
+      "category": "cicd",
+      "variant": "yaml",
+      "bytes": 107,
+      "sha256": "a79a20e2bace8a826ff9d57123207291d2db51c8901a1dd0de0240e755acb944"
+    },
+    {
+      "path": ".gitignore",
+      "category": "git",
+      "variant": "other",
+      "bytes": 21,
+      "sha256": "72159236be958686ab5b0f988f6b8549876afc88d52118ad218bea613ff0a9c0"
+    },
+    {
+      "path": ".nvmrc",
+      "category": "package",
+      "variant": "other",
+      "bytes": 3,
+      "sha256": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3"
+    },
+    {
+      "path": "Dockerfile",
+      "category": "docker",
+      "variant": "other",
+      "bytes": 95,
+      "sha256": "4bf6236a037613cdfa1853803500821e1b5a720e0e98ada06f4f538426f82937"
+    },
+    {
+      "path": "mvnw",
+      "category": "jvm-build",
+      "variant": "other",
+      "bytes": 57,
+      "sha256": "deefeabba992a33dc900a72681eb2a0be2d1ed390d9ed17fd6a7393890bc3b43"
+    },
+    {
+      "path": "mvnw.cmd",
+      "category": "jvm-build",
+      "variant": "other",
+      "bytes": 10,
+      "sha256": "9f8129c857ba7b758f02c9cb2c786d589ae3590a04e69250c4c36cca1dda012e"
+    },
+    {
+      "path": "pom.xml",
+      "category": "jvm-build",
+      "variant": "other",
+      "bytes": 463,
+      "sha256": "992ae69164515a2ac0bc9a4a8bb62800d068a0c595c50b10a4192afeeda69746"
+    },
+    {
+      "path": "src/main/resources/application-prod.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "bytes": 19,
+      "sha256": "0857af37bd10824623eca95f67f1fa94d1e3f3bb5cb83d2461407749b898fa95"
+    },
+    {
+      "path": "src/main/resources/application.yml",
+      "category": "jvm-config",
+      "variant": "yaml",
+      "bytes": 59,
+      "sha256": "960c7cf09928105cb3d86e317946194c4b40ef1a403dd63c9322c9915e0671b0"
+    }
+  ]
+}

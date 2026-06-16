@@ -1,0 +1,11 @@
+{
+  "root": "spring-boot",
+  "directories": [
+    ".github",
+    ".github/workflows",
+    "src",
+    "src/main",
+    "src/main/java",
+    "src/main/resources"
+  ]
+}

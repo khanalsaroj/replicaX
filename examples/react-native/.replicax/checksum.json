@@ -1,0 +1,12 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    ".gitignore": "897814be93229a6d94b7331804c047f943165a793b41139e84a696fd6e8b4737",
+    ".nvmrc": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3",
+    ".prettierrc": "e51419e8206a0a5493e85ef1f4dea080982dc9187992bb253220a93d0784f6b2",
+    "eslint.config.js": "d7076912d1c9786ca76231a2a77cef475b7fafbe4950a8ecc430af171422993c",
+    "jest.config.js": "651100e81819eb4da9e6176324a255b7ebad334b42f75c737efc66dbf94222f4",
+    "tsconfig.json": "b1e4fae5f75d03ae06659a0c21214b8cdad0f92bf5667762d472fbee4c22985e",
+    "package.json": "a9ba9e7da81f642f2beea1eb1e9c7f36af7a02550da504c89a674801985ae443"
+  }
+}
