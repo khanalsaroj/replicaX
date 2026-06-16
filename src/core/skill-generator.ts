@@ -1,6 +1,7 @@
 import { CATEGORY_BY_ID } from '@/config/supported-files';
 import type { Metadata, PackageManager, Structure, Tooling } from '@/schema';
 import type { RawPackageJson } from '@/core/detect';
+import { slugify } from '@/utils/slug';
 
 /**
  * Turn a project scan into an AI-assistant *skill*: a markdown document with YAML
@@ -61,16 +62,6 @@ const PRIMARY_SCRIPTS = [
   'format:check',
   'typecheck',
 ];
-
-/** Convert a project name into a safe kebab-case slug. */
-export function slugify(input: string): string {
-  const slug = input
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  return slug || 'project';
-}
 
 /** The package manager's install command. */
 function installCommand(pm: PackageManager): string {

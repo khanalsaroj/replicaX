@@ -44,4 +44,15 @@ describe('IgnoreEngine', () => {
     expect(ig.isSecret('id_rsa')).toBe(true);
     expect(ig.isSecret('tsconfig.json')).toBe(false);
   });
+
+  it('guards additional credential file types', () => {
+    const ig = new IgnoreEngine();
+    expect(ig.isSecret('deploy.ppk')).toBe(true); // PuTTY private key
+    expect(ig.isSecret('AuthKey_ABC123.p8')).toBe(true); // Apple / PKCS#8 key
+    expect(ig.isSecret('.pgpass')).toBe(true); // Postgres password file
+    expect(ig.isSecret('config/.htpasswd')).toBe(true); // HTTP basic-auth creds
+    // A user .replicaxignore can never re-allow a guarded secret.
+    const permissive = new IgnoreEngine(['!**/*.p8']);
+    expect(permissive.isSecret('AuthKey.p8')).toBe(true);
+  });
 });

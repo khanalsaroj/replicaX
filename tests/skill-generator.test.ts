@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import fs from 'fs-extra';
 import { scanProject } from '@/core/scanner';
-import { buildSkill, slugify } from '@/core/skill-generator';
+import { buildSkill } from '@/core/skill-generator';
+import { slugify } from '@/utils/slug';
 import { SKILL_TARGET_BY_ID } from '@/config/ai-targets';
 import { makeTempDir, scaffoldSampleProject } from './helpers';
 

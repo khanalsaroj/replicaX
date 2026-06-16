@@ -104,7 +104,7 @@ export function detectFramework(pkg: RawPackageJson | null): string {
     [has('svelte'), 'svelte'],
     [has('solid-js'), 'solid'],
     [has('react'), 'react'],
-    [has('@fastify/fastify') || has('fastify'), 'fastify'],
+    [has('fastify'), 'fastify'],
     [has('koa'), 'koa'],
     [has('express'), 'express'],
   ];

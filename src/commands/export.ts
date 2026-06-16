@@ -5,19 +5,12 @@ import { exportProfile } from '@/core/archive';
 import { loadBundle, profileDir, profileExists, resolveProfileDir } from '@/core/profile-store';
 import { ReplicaxError } from '@/utils/errors';
 import { logger } from '@/utils/logger';
+import { formatBytes } from '@/utils/format';
+import { slugify } from '@/utils/slug';
 
 export interface ExportOptions {
   out?: string;
   profile?: string;
-}
-
-function slug(name: string): string {
-  return (
-    name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '') || 'profile'
-  );
 }
 
 export async function exportCommand(options: ExportOptions): Promise<void> {
@@ -32,7 +25,9 @@ export async function exportCommand(options: ExportOptions): Promise<void> {
   // Validate before packaging so we never ship a corrupt archive.
   const bundle = await loadBundle(dir);
 
-  const outPath = path.resolve(options.out ?? `${slug(bundle.profile.name)}.replicax.tar.gz`);
+  const outPath = path.resolve(
+    options.out ?? `${slugify(bundle.profile.name, 'profile')}.replicax.tar.gz`,
+  );
 
   const spinner = ora({ text: 'Packaging profile…' }).start();
   await exportProfile(dir, outPath);
@@ -43,10 +38,4 @@ export async function exportCommand(options: ExportOptions): Promise<void> {
     `Exported "${bundle.profile.name}" → ${path.relative(process.cwd(), outPath)} (${formatBytes(size)})`,
   );
   logger.hint('Share it, then `replicax import <file>` elsewhere.');
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }

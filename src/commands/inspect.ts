@@ -5,6 +5,7 @@ import type { ProfileBundle } from '@/schema';
 import { ReplicaxError } from '@/utils/errors';
 import { logger, pc } from '@/utils/logger';
 import { renderTree } from '@/utils/tree';
+import { formatBytes } from '@/utils/format';
 
 export type InspectSection = 'profile' | 'tooling' | 'structure' | 'metadata';
 const SECTIONS: InspectSection[] = ['profile', 'tooling', 'structure', 'metadata'];
@@ -98,10 +99,4 @@ function printStructure(bundle: ProfileBundle): void {
   logger.out(pc.bold(`Structure (${structure.directories.length} director(ies))`));
   logger.out(renderTree(structure.directories, structure.root));
   logger.out('');
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
