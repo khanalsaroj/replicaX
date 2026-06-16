@@ -8,17 +8,35 @@ export const REPLICAX_DIR = '.replicax';
 /** The user-authored ignore file controlling what is exported into a profile. */
 export const IGNORE_FILE = '.replicaxignore';
 
-/** The schema/format version stamped into every profile we write. */
-export const REPLICAX_VERSION = '2.0.0';
+/**
+ * The schema/format version stamped into every profile we write. Evolves
+ * independently of the npm package version. 2.1.0 added optional `detections`
+ * (metadata), `registry` (profile), and the `manifest.json` index — all
+ * backward-compatible additions (see {@link file://./core/migrations.ts}).
+ */
+export const REPLICAX_VERSION = '2.1.0';
 
-/** File names that make up a profile inside {@link REPLICAX_DIR}. */
+/**
+ * File names that make up a profile inside {@link REPLICAX_DIR}. The first five
+ * are required; `manifest.json` is optional (synthesized on load when missing).
+ */
 export const PROFILE_FILES = {
   profile: 'profile.json',
   tooling: 'tooling.json',
   structure: 'structure.json',
   metadata: 'metadata.json',
   checksum: 'checksum.json',
+  manifest: 'manifest.json',
 } as const;
+
+/** Logical keys of the five required profile files (manifest is optional). */
+export const REQUIRED_PROFILE_FILE_KEYS = [
+  'profile',
+  'tooling',
+  'structure',
+  'metadata',
+  'checksum',
+] as const;
 
 export type ProfileFileKey = keyof typeof PROFILE_FILES;
 

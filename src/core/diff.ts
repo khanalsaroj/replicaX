@@ -8,28 +8,47 @@ export interface ProfileDiff {
   metadataChanges: Array<{ field: string; from: string; to: string }>;
 }
 
-function diffChecksums(prev: Checksum, next: Checksum) {
+/** Added/removed/changed keys between two string-valued maps. */
+export interface MapDiff {
+  added: string[];
+  removed: string[];
+  changed: string[];
+}
+
+/**
+ * Generic, sorted diff of two `key → value` maps: keys only in `next` are
+ * "added", keys only in `prev` are "removed", shared keys with differing values
+ * are "changed". Shared by the checksum diff here and the `compare` command's
+ * config-file comparator, so both agree on what "changed" means.
+ */
+export function diffStringMaps(
+  prev: Record<string, string>,
+  next: Record<string, string>,
+  options: { ignoreKeys?: ReadonlySet<string> } = {},
+): MapDiff {
+  const ignore = options.ignoreKeys;
   const added: string[] = [];
   const removed: string[] = [];
   const changed: string[] = [];
-  let packageJsonChanged = false;
 
-  const keys = new Set([...Object.keys(prev.files), ...Object.keys(next.files)]);
+  const keys = new Set([...Object.keys(prev), ...Object.keys(next)]);
   for (const key of keys) {
-    const before = prev.files[key];
-    const after = next.files[key];
-    if (key === PACKAGE_JSON_KEY) {
-      if (before !== after) packageJsonChanged = true;
-      continue;
-    }
+    if (ignore?.has(key)) continue;
+    const before = prev[key];
+    const after = next[key];
     if (before === undefined) added.push(key);
     else if (after === undefined) removed.push(key);
     else if (before !== after) changed.push(key);
   }
-  return {
-    files: { added: added.sort(), removed: removed.sort(), changed: changed.sort() },
-    packageJsonChanged,
-  };
+  return { added: added.sort(), removed: removed.sort(), changed: changed.sort() };
+}
+
+const PACKAGE_JSON_KEYS = new Set([PACKAGE_JSON_KEY]);
+
+function diffChecksums(prev: Checksum, next: Checksum) {
+  const files = diffStringMaps(prev.files, next.files, { ignoreKeys: PACKAGE_JSON_KEYS });
+  const packageJsonChanged = prev.files[PACKAGE_JSON_KEY] !== next.files[PACKAGE_JSON_KEY];
+  return { files, packageJsonChanged };
 }
 
 function diffStructure(prev: Structure, next: Structure) {

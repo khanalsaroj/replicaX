@@ -219,6 +219,9 @@ No `.env`. No `Button.tsx`. No `UserService.ts`. No `react` runtime dependency. 
 | [`replicax validate`](#replicax-validate)                                            | Schema + integrity (SHA‑256) check — CI‑friendly   |
 | [`replicax export`](#replicax-export--import) / [`import`](#replicax-export--import) | Portable `.tar.gz` profile in/out                  |
 | [`replicax init-skill`](#replicax-init-skill)                                        | Author an AI‑assistant skill from your stack       |
+| [`replicax doctor`](#replicax-doctor)                                                | Check which dev tools are installed locally        |
+| [`replicax compare <a> <b>`](#replicax-compare-source-target)                        | Diff two profiles/projects: tooling, config, …     |
+| [`replicax audit`](#replicax-audit)                                                  | Score a setup vs best practices + recommendations  |
 
 > Every write operation accepts `--dry-run` (preview, touch nothing) and `--verbose` (list every file).
 
@@ -351,6 +354,84 @@ or forced with `--provider`) is the AI that _authors_ it — the two are indepen
 > files, structure, `package.json` scripts/deps). Source code and secrets are never sent. With `--no-ai` (or no provider
 > configured), ReplicaX falls back to a deterministic, fully offline template.
 
+### `replicax doctor`
+
+Report which developer tools are installed locally — runtimes, package managers, Docker, and editors — with versions.
+Cross‑platform and read‑only; a missing tool is a finding, not an error.
+
+```bash
+replicax doctor
+replicax doctor --json     # machine-readable
+```
+
+```console
+$ replicax doctor
+Developer environment
+
+✓ Node.js 22.17.1
+✓ Git 2.45.1
+✓ npm 10.2.0
+✗ Docker not found
+✓ Claude Code 2.1.0
+
+8/11 tools found
+```
+
+### `replicax compare <source> <target>`
+
+Diff two profiles — or two project directories — across tooling, configuration files, `package.json`, structure, and
+metadata. Each argument may be a `.replicax` profile, a directory containing one, or a plain project folder (scanned on
+the fly), so you can compare anything against anything.
+
+```bash
+replicax compare ./examples/react-vite ./examples/nextjs-enterprise
+replicax compare ./my-app ./other-app --json
+```
+
+```text
+Added:
+  + Docker (Tooling)
+  + src/api (Structure)
+Removed:
+  - Jest (Tooling)
+Changed:
+  ~ eslint.config.js (Configuration files)
+  ~ language: javascript → typescript (Metadata)
+```
+
+### `replicax audit`
+
+Score a project's setup against best‑practice rules — linting, formatting, testing, git hooks, CI/CD, containerization —
+and get concrete recommendations for what's missing. Scans the current directory by default, or evaluates a stored
+profile with `--profile`.
+
+```bash
+replicax audit
+replicax audit --path ./some/project
+replicax audit --profile ./examples/nextjs-enterprise/.replicax --json
+```
+
+```text
+Project Score: 60/100
+
+✓ Formatting
+✓ Testing
+✗ Git hooks
+✗ Containerization
+
+Missing:
+  - Git hooks
+  - Containerization
+
+Recommendations:
+  - Add Husky to run checks before each commit.
+  - Add a Dockerfile to containerize the application.
+```
+
+> `compare` and `audit` build on the detection engine: every scan now reports the **detected stack** (React, TypeScript,
+> Docker, GitHub Actions, …) with a confidence score, persisted in the profile and viewable via `inspect --section
+> detections`.
+
 ---
 
 ## What gets captured
@@ -364,6 +445,7 @@ or forced with `--provider`) is the AI that _authors_ it — the two are indepen
 | `.editorconfig`, Husky hooks                        | IDE folders (`.vscode/`, `.idea/`, `.vs/`, `.fleet/`, `.zed/`) |
 | Test configs (Vitest/Jest/Playwright/Cypress)       | Anything matched by `.replicaxignore`                          |
 | Monorepo files, commitlint/lint‑staged/release/knip |                                                                |
+| JVM build (Maven/Gradle) + Spring `application.*`   | Compiled output (`target/`, `*.class`), the gradle wrapper JAR |
 | Folder hierarchy (directories only)                 | Folder _contents_                                              |
 
 **`package.json` is curated, not copied.** Only `scripts`, `devDependencies`, `engines`, `type`, `packageManager`, and
@@ -412,18 +494,23 @@ src/**/*.ts
 
 ## Profile format
 
-A profile is five JSON files under `.replicax/`:
+A profile is five required JSON files under `.replicax/`, plus an optional manifest:
 
 ```text
 .replicax/
 ├── profile.json     # identity & metadata (name, version, timestamps)
 ├── tooling.json     # every captured config file (verbatim) + the package.json template
 ├── structure.json   # folder hierarchy (sorted POSIX directory paths)
-├── metadata.json    # node version, package manager, framework, language, platform
-└── checksum.json    # SHA-256 integrity hashes
+├── metadata.json    # node version, package manager, framework, language + detected stack
+├── checksum.json    # SHA-256 integrity hashes
+└── manifest.json    # content-free index of artifacts (path, category, size, hash)
 ```
 
-All five are schema‑validated (zod) on load; `validate` additionally re‑checks checksums and rejects unsafe paths.
+All files are schema‑validated (zod) on load; `validate` additionally re‑checks checksums and rejects unsafe paths.
+
+**Schema version 2.1.0** added the detected stack (`metadata.detections`), an optional `registry` block (for future
+registry support), and `manifest.json` — all backward‑compatible. Profiles written by older ReplicaX (2.0.0) are
+**migrated automatically on load** and the manifest is synthesized when absent, so existing profiles keep working.
 
 ---
 

@@ -1,0 +1,8 @@
+react-vite — detected setup
+
+✓ TypeScript           language         100%
+✓ React                framework        100%
+✓ npm                  package-manager  90%
+✓ ESLint               lint             100%
+✓ Prettier             format           100%
+✓ Vitest               test             90%

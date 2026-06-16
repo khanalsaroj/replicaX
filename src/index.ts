@@ -13,6 +13,9 @@ import { inspectCommand } from '@/commands/inspect';
 import { validateCommand } from '@/commands/validate';
 import { exportCommand } from '@/commands/export';
 import { importCommand } from '@/commands/import';
+import { doctorCommand } from '@/commands/doctor';
+import { compareCommand } from '@/commands/compare';
+import { auditCommand } from '@/commands/audit';
 
 /**
  * The CLI version is the published npm package version, read from package.json at
@@ -145,6 +148,28 @@ program
   .description('Import a portable profile archive into .replicax/')
   .option('--force', 'Overwrite an existing profile')
   .action(action(importCommand));
+
+program
+  .command('doctor')
+  .description('Check which developer tools are installed locally')
+  .option('--json', 'Output as JSON')
+  .action(action(doctorCommand));
+
+program
+  .command('compare')
+  .argument('<source>', 'A profile path or project directory')
+  .argument('<target>', 'A profile path or project directory')
+  .description('Compare two profiles (or projects): tooling, config, structure, metadata')
+  .option('--json', 'Output as JSON')
+  .action(action(compareCommand));
+
+program
+  .command('audit')
+  .description('Score a project setup against best practices and recommend improvements')
+  .option('--path <dir>', 'Directory to audit (default: current dir)')
+  .option('--profile <path>', 'Audit a stored profile instead of scanning')
+  .option('--json', 'Output as JSON')
+  .action(action(auditCommand));
 
 if (process.argv.slice(2).length === 0) {
   program.outputHelp();

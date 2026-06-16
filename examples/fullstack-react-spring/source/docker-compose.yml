@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    ports: ["3000:3000"]
+  api:
+    build: ./server
+    ports: ["8080:8080"]
+  db:
+    image: postgres:16

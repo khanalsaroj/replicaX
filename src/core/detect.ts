@@ -82,6 +82,12 @@ export async function detectLanguage(
       return file === 'jsconfig.json' ? 'javascript' : 'typescript';
     }
   }
+  // A JVM project (no package.json) reports java rather than defaulting to js.
+  if (!pkg) {
+    for (const file of ['pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle']) {
+      if (await fs.pathExists(path.join(root, file))) return 'java';
+    }
+  }
   return 'javascript';
 }
 

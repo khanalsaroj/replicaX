@@ -1,6 +1,7 @@
 import { REPLICAX_VERSION } from '@/constants';
 import type { Metadata, Profile, ProfileBundle, Structure, Tooling } from '@/schema';
 import { computeChecksum } from '@/core/checksum';
+import { buildManifest } from '@/core/manifest';
 
 export interface BuildBundleArgs {
   name: string;
@@ -36,11 +37,14 @@ export function buildBundle(args: BuildBundleArgs): ProfileBundle {
         ...(args.description ? { description: args.description } : {}),
       };
 
+  const checksum = computeChecksum(args.tooling);
+
   return {
     profile,
     tooling: args.tooling,
     structure: args.structure,
     metadata: args.metadata,
-    checksum: computeChecksum(args.tooling),
+    checksum,
+    manifest: buildManifest(args.tooling, checksum),
   };
 }

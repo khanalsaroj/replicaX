@@ -1,0 +1,8 @@
+react-native — detected setup
+
+✓ TypeScript           language         100%
+✓ React Native         framework        100%
+✓ Yarn                 package-manager  90%
+✓ ESLint               lint             100%
+✓ Prettier             format           100%
+✓ Jest                 test             100%

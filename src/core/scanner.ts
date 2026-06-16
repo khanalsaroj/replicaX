@@ -3,18 +3,21 @@ import fs from 'fs-extra';
 import fg from 'fast-glob';
 import { CONFIG_CATEGORIES } from '@/config/supported-files';
 import { SCAN_PRUNE_GLOBS } from '@/constants';
-import type { Metadata, Structure, Tooling, ToolingFile } from '@/schema';
+import type { Detection, Metadata, Structure, Tooling, ToolingFile } from '@/schema';
 import { detectVariant, toPosix } from '@/utils/paths';
 import { logger } from '@/utils/logger';
 import { IgnoreEngine } from '@/core/ignore-engine';
 import { detectMetadata, readPackageJson, type RawPackageJson } from '@/core/detect';
 import { buildPackageTemplate } from '@/core/package-template';
+import { detectStack } from '@/core/detection/registry';
 
 export interface ScanResult {
   tooling: Tooling;
   structure: Structure;
   metadata: Metadata;
   pkg: RawPackageJson | null;
+  /** Detected tools/technologies with confidence (also stored in metadata). */
+  detections: Detection[];
   /** Paths skipped by the secret guard — surfaced so the user knows. */
   skippedSecrets: string[];
 }
@@ -141,10 +144,15 @@ export async function scanProject(root: string): Promise<ScanResult> {
     detectMetadata(resolved, pkg),
   ]);
 
+  // Detection depends on the inferred metadata (for language/framework), so it
+  // runs after the parallel batch; it does its own bounded filesystem probe.
+  const detections = await detectStack(resolved, pkg, metadata);
+  metadata.detections = detections;
+
   const tooling: Tooling = {
     files,
     packageJson: buildPackageTemplate(pkg),
   };
 
-  return { tooling, structure, metadata, pkg, skippedSecrets };
+  return { tooling, structure, metadata, pkg, detections, skippedSecrets };
 }

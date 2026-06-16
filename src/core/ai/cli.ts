@@ -6,22 +6,9 @@ import { spawn } from 'node:child_process';
  * escaping or argv-length concern, and the only argv values are static flags.
  */
 
-/** Whether an executable is resolvable on PATH (cross-platform). */
-export async function commandExists(bin: string): Promise<boolean> {
-  const onWindows = process.platform === 'win32';
-  const locator = onWindows ? 'where' : 'command';
-  const args = onWindows ? [bin] : ['-v', bin];
-  return new Promise((resolve) => {
-    const child = spawn(locator, args, {
-      // `command -v` is a POSIX shell builtin; `where` is a real Windows exe.
-      shell: !onWindows,
-      stdio: 'ignore',
-      windowsHide: true,
-    });
-    child.on('error', () => resolve(false));
-    child.on('close', (code) => resolve(code === 0));
-  });
-}
+// `commandExists` is a general process probe shared with `replicax doctor`; it
+// lives in core/process.ts and is re-exported here for existing callers.
+export { commandExists } from '@/core/process';
 
 export interface RunResult {
   stdout: string;

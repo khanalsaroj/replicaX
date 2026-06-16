@@ -4,12 +4,15 @@ import { z } from 'zod';
 import { PROFILE_FILES, REPLICAX_DIR } from '@/constants';
 import {
   ChecksumSchema,
+  ManifestSchema,
   MetadataSchema,
   ProfileSchema,
   StructureSchema,
   ToolingSchema,
   type ProfileBundle,
 } from '@/schema';
+import { migrateRawBundle, type RawProfileFiles } from '@/core/migrations';
+import { buildManifest } from '@/core/manifest';
 import { ReplicaxError } from '@/utils/errors';
 
 /** Absolute path to the `.replicax` directory for a given project root. */
@@ -46,26 +49,32 @@ export async function resolveProfileDir(input: string): Promise<string> {
 /** Write a profile bundle to `dir`, creating it if necessary. */
 export async function saveBundle(dir: string, bundle: ProfileBundle): Promise<void> {
   await fs.ensureDir(dir);
+  const manifest = bundle.manifest ?? buildManifest(bundle.tooling, bundle.checksum);
   await Promise.all([
     fs.writeJson(path.join(dir, PROFILE_FILES.profile), bundle.profile, { spaces: 2 }),
     fs.writeJson(path.join(dir, PROFILE_FILES.tooling), bundle.tooling, { spaces: 2 }),
     fs.writeJson(path.join(dir, PROFILE_FILES.structure), bundle.structure, { spaces: 2 }),
     fs.writeJson(path.join(dir, PROFILE_FILES.metadata), bundle.metadata, { spaces: 2 }),
     fs.writeJson(path.join(dir, PROFILE_FILES.checksum), bundle.checksum, { spaces: 2 }),
+    fs.writeJson(path.join(dir, PROFILE_FILES.manifest), manifest, { spaces: 2 }),
   ]);
 }
 
-async function readAndParse<T>(dir: string, file: string, schema: z.ZodType<T>): Promise<T> {
+/** Read one required profile file as raw JSON (no schema validation yet). */
+async function readRawFile(dir: string, file: string): Promise<Record<string, unknown>> {
   const full = path.join(dir, file);
   if (!(await fs.pathExists(full))) {
     throw new ReplicaxError(`Profile is missing ${file}`, [`Expected at ${full}.`]);
   }
-  let raw: unknown;
   try {
-    raw = await fs.readJson(full);
+    return (await fs.readJson(full)) as Record<string, unknown>;
   } catch {
     throw new ReplicaxError(`Profile file ${file} is not valid JSON`, [`Path: ${full}`]);
   }
+}
+
+/** Validate already-read raw JSON against its schema, with friendly errors. */
+function parseFile<T>(file: string, schema: z.ZodType<T>, raw: unknown): T {
   const result = schema.safeParse(raw);
   if (!result.success) {
     const issues = result.error.issues
@@ -76,19 +85,48 @@ async function readAndParse<T>(dir: string, file: string, schema: z.ZodType<T>):
   return result.data;
 }
 
-/** Load and validate a complete profile bundle from `dir`. */
+/**
+ * Load and validate a complete profile bundle from `dir`. Older profiles are
+ * migrated forward (see {@link migrateRawBundle}) before validation, and the
+ * optional `manifest.json` is synthesized when absent — so a profile written by
+ * an earlier ReplicaX still loads cleanly.
+ */
 export async function loadBundle(dir: string): Promise<ProfileBundle> {
   if (!(await profileExists(dir))) {
     throw new ReplicaxError(`No ReplicaX profile found in ${dir}`, [
       'Run `replicax init` to create one.',
     ]);
   }
-  const [profile, tooling, structure, metadata, checksum] = await Promise.all([
-    readAndParse(dir, PROFILE_FILES.profile, ProfileSchema),
-    readAndParse(dir, PROFILE_FILES.tooling, ToolingSchema),
-    readAndParse(dir, PROFILE_FILES.structure, StructureSchema),
-    readAndParse(dir, PROFILE_FILES.metadata, MetadataSchema),
-    readAndParse(dir, PROFILE_FILES.checksum, ChecksumSchema),
-  ]);
-  return { profile, tooling, structure, metadata, checksum };
+
+  const rawFiles: RawProfileFiles = {
+    profile: await readRawFile(dir, PROFILE_FILES.profile),
+    tooling: await readRawFile(dir, PROFILE_FILES.tooling),
+    structure: await readRawFile(dir, PROFILE_FILES.structure),
+    metadata: await readRawFile(dir, PROFILE_FILES.metadata),
+    checksum: await readRawFile(dir, PROFILE_FILES.checksum),
+  };
+
+  const detectedVersion =
+    typeof rawFiles.profile.replicaxVersion === 'string'
+      ? rawFiles.profile.replicaxVersion
+      : '2.0.0';
+  const { raw } = migrateRawBundle(rawFiles, detectedVersion);
+
+  const profile = parseFile(PROFILE_FILES.profile, ProfileSchema, raw.profile);
+  const tooling = parseFile(PROFILE_FILES.tooling, ToolingSchema, raw.tooling);
+  const structure = parseFile(PROFILE_FILES.structure, StructureSchema, raw.structure);
+  const metadata = parseFile(PROFILE_FILES.metadata, MetadataSchema, raw.metadata);
+  const checksum = parseFile(PROFILE_FILES.checksum, ChecksumSchema, raw.checksum);
+
+  // manifest.json is optional: validate it if present, otherwise derive it.
+  const manifestPath = path.join(dir, PROFILE_FILES.manifest);
+  const manifest = (await fs.pathExists(manifestPath))
+    ? parseFile(
+        PROFILE_FILES.manifest,
+        ManifestSchema,
+        await readRawFile(dir, PROFILE_FILES.manifest),
+      )
+    : buildManifest(tooling, checksum);
+
+  return { profile, tooling, structure, metadata, checksum, manifest };
 }

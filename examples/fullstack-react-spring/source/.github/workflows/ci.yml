@@ -1,0 +1,11 @@
+name: CI
+on: [push]
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm test
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - run: cd server && ./mvnw -B package
