@@ -118,6 +118,38 @@ export const CONFIG_CATEGORIES: ConfigCategory[] = [
     patterns: ['.husky/*'],
   },
   {
+    id: 'jvm-build',
+    label: 'JVM Build',
+    // The captured surface is language-agnostic: Maven/Gradle build files are
+    // setup, not application code. Globbed with `**/` so monorepos (a Spring
+    // backend beside a JS frontend) are captured too. The gradle wrapper JAR is
+    // binary and deliberately excluded — only its text `.properties` is kept.
+    patterns: [
+      '**/pom.xml',
+      '**/build.gradle',
+      '**/build.gradle.kts',
+      '**/settings.gradle',
+      '**/settings.gradle.kts',
+      'gradle.properties',
+      'mvnw',
+      'mvnw.cmd',
+      'gradlew',
+      'gradlew.bat',
+      '**/gradle/wrapper/gradle-wrapper.properties',
+    ],
+  },
+  {
+    id: 'jvm-config',
+    label: 'JVM Config',
+    // Spring-style externalized config. Scoped to `src/main/resources/` so we
+    // capture application config without sweeping up unrelated `.properties`.
+    patterns: [
+      '**/src/main/resources/application*.yml',
+      '**/src/main/resources/application*.yaml',
+      '**/src/main/resources/application*.properties',
+    ],
+  },
+  {
     id: 'misc',
     label: 'Miscellaneous Tooling',
     patterns: [
@@ -141,3 +173,14 @@ export const ALL_CONFIG_PATTERNS: string[] = CONFIG_CATEGORIES.flatMap((c) => c.
 
 /** Map from category id to its definition, for quick lookup. */
 export const CATEGORY_BY_ID = new Map(CONFIG_CATEGORIES.map((c) => [c.id, c]));
+
+/** Labels for categories that aren't part of the glob catalogue. */
+const EXTRA_CATEGORY_LABELS: Record<string, string> = {
+  // Files pulled in explicitly via `.replicaxinclude`.
+  included: 'Included files',
+};
+
+/** Human-friendly label for a tooling category id, falling back to the id. */
+export function categoryLabel(id: string): string {
+  return CATEGORY_BY_ID.get(id)?.label ?? EXTRA_CATEGORY_LABELS[id] ?? id;
+}

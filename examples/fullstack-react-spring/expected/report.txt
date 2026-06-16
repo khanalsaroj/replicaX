@@ -1,0 +1,13 @@
+fullstack-react-spring — detected setup
+
+✓ TypeScript           language         100%
+✓ React                framework        100%
+✓ Spring Boot          framework        90%
+✓ Maven                jvm              100%
+✓ npm                  package-manager  90%
+✓ ESLint               lint             100%
+✓ Prettier             format           100%
+✓ Vitest               test             90%
+✓ Docker               container        100%
+✓ Docker Compose       container        100%
+✓ GitHub Actions       ci               100%

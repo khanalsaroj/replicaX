@@ -3,6 +3,10 @@ dist
 coverage
 .replicax
 
+# Example fixtures are byte-stable inputs to the examples integration test —
+# reformatting source/ would desync the committed profiles captured from them.
+examples
+
 # Hand-authored docs — keep manual formatting
 *.md
 

@@ -1,6 +1,17 @@
-import { CATEGORY_BY_ID } from '@/config/supported-files';
-import type { ProfileBundle, Tooling } from '@/schema';
+import { categoryLabel } from '@/config/supported-files';
+import type { Detection, ProfileBundle, Tooling } from '@/schema';
 import { logger, pc } from '@/utils/logger';
+
+/**
+ * Format a single `✓`/`✗` status line. Shared by `doctor`, `audit`, and the
+ * detection report so the check styling stays identical everywhere. The label is
+ * dimmed when not OK; an optional `note` (a version, a hint) is always dimmed.
+ */
+export function statusLine(ok: boolean, label: string, note?: string): string {
+  const mark = ok ? pc.green('✓') : pc.red('✗');
+  const text = ok ? label : pc.dim(label);
+  return note ? `${mark} ${text} ${pc.dim(note)}` : `${mark} ${text}`;
+}
 
 /** Group captured files by category and return ordered [label, count] pairs. */
 export function toolingByCategory(tooling: Tooling): Array<[string, number]> {
@@ -12,7 +23,7 @@ export function toolingByCategory(tooling: Tooling): Array<[string, number]> {
     counts.set('package', (counts.get('package') ?? 0) + 1);
   }
   return [...counts.entries()]
-    .map(([id, n]): [string, number] => [CATEGORY_BY_ID.get(id)?.label ?? id, n])
+    .map(([id, n]): [string, number] => [categoryLabel(id), n])
     .sort((a, b) => a[0].localeCompare(b[0]));
 }
 
@@ -25,6 +36,9 @@ export function printScanSummary(bundle: ProfileBundle): void {
   logger.hint(`framework      ${metadata.framework}`);
   logger.hint(`packageManager ${metadata.packageManager}`);
   logger.hint(`nodeVersion    ${metadata.nodeVersion}`);
+
+  // The "what we detected" ✓ list sits between the stack summary and tooling.
+  printDetections(metadata.detections ?? []);
   logger.newline();
 
   logger.info(pc.bold(`Tooling (${tooling.files.length + (tooling.packageJson ? 1 : 0)} files)`));
@@ -33,6 +47,22 @@ export function printScanSummary(bundle: ProfileBundle): void {
   }
   logger.newline();
   logger.info(pc.bold(`Structure (${structure.directories.length} directories)`));
+}
+
+/**
+ * Print the detected tech stack as a `✓` list — the post-scan "what we found"
+ * report. Goes to stderr (it's part of the human scan summary, like
+ * {@link printScanSummary}); machine-readable detection data lives in the profile
+ * and `inspect --json`. Detections arrive pre-sorted from the detection registry.
+ */
+export function printDetections(detections: Detection[]): void {
+  if (detections.length === 0) return;
+  logger.newline();
+  logger.info(pc.bold(`Detected (${detections.length})`));
+  for (const d of detections) {
+    const pct = d.confidence < 1 ? pc.dim(` (${Math.round(d.confidence * 100)}%)`) : '';
+    logger.hint(`${pc.green('✓')} ${d.name}${pct}`);
+  }
 }
 
 /** Warn about any files the secret guard excluded. */

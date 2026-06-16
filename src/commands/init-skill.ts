@@ -1,6 +1,7 @@
 import path from 'node:path';
 import fs from 'fs-extra';
 import ora from 'ora';
+import { ROOT_SKILL_FILE } from '@/constants';
 import { SKILL_TARGET_BY_ID, SKILL_TARGET_IDS } from '@/config/ai-targets';
 import { scanProject } from '@/core/scanner';
 import { buildSkill } from '@/core/skill-generator';
@@ -48,6 +49,13 @@ export async function initSkillCommand(options: InitSkillOptions): Promise<void>
     `Scanned ${scan.tooling.files.length} config file(s) and ${scan.structure.directories.length} director(ies)`,
   );
 
+  // An optional project-root SKILL.md is the user's preferred template; when
+  // present we hand it to the AI as the base to refine (read here, used below).
+  const rootSkillPath = path.join(root, ROOT_SKILL_FILE);
+  const rootSkill = (await fs.pathExists(rootSkillPath))
+    ? await fs.readFile(rootSkillPath, 'utf8')
+    : undefined;
+
   const name = options.name ?? scan.structure.root;
   // The deterministic skill is both the offline fallback and the ground-truth
   // analysis we hand to the AI to refine.
@@ -84,6 +92,7 @@ export async function initSkillCommand(options: InitSkillOptions): Promise<void>
     const provider = await resolveProvider(options.provider, options.model);
     if (provider) {
       logger.info(`Generating with ${provider.via} (sending project setup only)…`);
+      if (rootSkill?.trim()) logger.info(`Using ${ROOT_SKILL_FILE} as the skill template.`);
       const aiSpinner = ora({ text: 'Authoring skill…', isEnabled: !options.verbose }).start();
       try {
         const prompt = buildSkillPrompt({
@@ -94,6 +103,7 @@ export async function initSkillCommand(options: InitSkillOptions): Promise<void>
           analysis: seed.content,
           toolingPaths: scan.tooling.files.map((f) => f.path),
           scripts: scan.pkg?.scripts ?? {},
+          rootSkill,
         });
         const raw = await provider.run(prompt);
         const parsed = parseSkillBundle(raw);

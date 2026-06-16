@@ -1,5 +1,5 @@
 import Table from 'cli-table3';
-import { CATEGORY_BY_ID } from '@/config/supported-files';
+import { categoryLabel } from '@/config/supported-files';
 import { loadBundle, profileDir, profileExists, resolveProfileDir } from '@/core/profile-store';
 import type { ProfileBundle } from '@/schema';
 import { ReplicaxError } from '@/utils/errors';
@@ -7,8 +7,8 @@ import { logger, pc } from '@/utils/logger';
 import { renderTree } from '@/utils/tree';
 import { formatBytes } from '@/utils/format';
 
-export type InspectSection = 'profile' | 'tooling' | 'structure' | 'metadata';
-const SECTIONS: InspectSection[] = ['profile', 'tooling', 'structure', 'metadata'];
+export type InspectSection = 'profile' | 'tooling' | 'structure' | 'metadata' | 'detections';
+const SECTIONS: InspectSection[] = ['profile', 'tooling', 'structure', 'metadata', 'detections'];
 
 export interface InspectOptions {
   json?: boolean;
@@ -35,15 +35,41 @@ export async function inspectCommand(options: InspectOptions): Promise<void> {
   const section = options.section as InspectSection | undefined;
 
   if (options.json) {
-    const payload = section ? { [section]: bundle[section] } : bundle;
-    logger.out(JSON.stringify(payload, null, 2));
+    logger.out(JSON.stringify(jsonPayload(bundle, section), null, 2));
     return;
   }
 
   if (!section || section === 'profile') printProfile(bundle);
   if (!section || section === 'metadata') printMetadata(bundle);
+  if (!section || section === 'detections') printDetectionsSection(bundle);
   if (!section || section === 'tooling') printTooling(bundle);
   if (!section || section === 'structure') printStructure(bundle);
+}
+
+/** Build the `--json` payload, with `detections` resolved from metadata. */
+function jsonPayload(bundle: ProfileBundle, section: InspectSection | undefined): unknown {
+  if (!section) return bundle;
+  if (section === 'detections') return { detections: bundle.metadata.detections ?? [] };
+  return { [section]: bundle[section] };
+}
+
+function printDetectionsSection(bundle: ProfileBundle): void {
+  const detections = bundle.metadata.detections ?? [];
+  logger.out(pc.bold(`Detections (${detections.length})`));
+  if (detections.length === 0) {
+    logger.out('  (none)');
+    logger.out('');
+    return;
+  }
+  const table = new Table({
+    head: ['Category', 'Tool', 'Confidence', 'Evidence'],
+    style: { head: ['cyan'], border: ['dim'] },
+  });
+  for (const d of detections) {
+    table.push([d.category, d.name, `${Math.round(d.confidence * 100)}%`, d.evidence.join(', ')]);
+  }
+  logger.out(table.toString());
+  logger.out('');
 }
 
 function printProfile(bundle: ProfileBundle): void {
@@ -83,12 +109,7 @@ function printTooling(bundle: ProfileBundle): void {
     table.push(['Package Management & Monorepos', 'package.json', 'json', 'template']);
   }
   for (const file of [...tooling.files].sort((a, b) => a.path.localeCompare(b.path))) {
-    table.push([
-      CATEGORY_BY_ID.get(file.category)?.label ?? file.category,
-      file.path,
-      file.variant,
-      formatBytes(file.bytes),
-    ]);
+    table.push([categoryLabel(file.category), file.path, file.variant, formatBytes(file.bytes)]);
   }
   logger.out(table.toString());
   logger.out('');

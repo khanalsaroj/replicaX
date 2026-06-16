@@ -1,0 +1,14 @@
+nextjs-enterprise — detected setup
+
+✓ TypeScript           language         100%
+✓ Next.js              framework        100%
+✓ pnpm                 package-manager  90%
+✓ ESLint               lint             100%
+✓ Prettier             format           100%
+✓ Jest                 test             100%
+✓ Docker               container        100%
+✓ Docker Compose       container        100%
+✓ GitHub Actions       ci               100%
+✓ Husky                git-hooks        100%
+✓ Commitlint           commit           100%
+✓ lint-staged          commit           100%

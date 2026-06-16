@@ -89,6 +89,35 @@ describe('buildSkillPrompt', () => {
     expect(prompt).toContain('single JSON object');
     expect(prompt).toContain('".."');
   });
+
+  const baseArgs = {
+    slug: 'sample',
+    entryFile: 'SKILL.md',
+    entryPath: '.codex/skills/sample/SKILL.md',
+    target: SKILL_TARGET_BY_ID.get('codex')!,
+    analysis: 'PROJECT IS REACT/TS',
+    toolingPaths: ['tsconfig.json'],
+    scripts: { build: 'tsc' },
+  };
+
+  it('embeds a root SKILL.md template and its honouring rule when provided', () => {
+    const prompt = buildSkillPrompt({
+      ...baseArgs,
+      rootSkill: '# My House Style\n\nAlways mention the deploy step.',
+    });
+    expect(prompt).toContain('USER SKILL TEMPLATE');
+    expect(prompt).toContain('# My House Style');
+    expect(prompt).toContain('Always mention the deploy step.');
+    // The rule that pins the template as the base must be present too.
+    expect(prompt).toContain('root SKILL.md');
+  });
+
+  it('omits the template section when no root SKILL.md is given (or it is blank)', () => {
+    expect(buildSkillPrompt(baseArgs)).not.toContain('USER SKILL TEMPLATE');
+    expect(buildSkillPrompt({ ...baseArgs, rootSkill: '   \n  ' })).not.toContain(
+      'USER SKILL TEMPLATE',
+    );
+  });
 });
 
 describe('commandExists', () => {

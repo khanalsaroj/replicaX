@@ -1,0 +1,7 @@
+spring-boot — detected setup
+
+✓ Java                 language         100%
+✓ Spring Boot          framework        90%
+✓ Maven                jvm              100%
+✓ Docker               container        100%
+✓ GitHub Actions       ci               100%

@@ -1,6 +1,6 @@
 {
   "name": "@iamsaroj/replicax",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Copy the setup, not the code. Extract a project's tooling, structure, and conventions and recreate them in new projects.",
   "type": "module",
   "license": "MIT",

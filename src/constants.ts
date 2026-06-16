@@ -8,17 +8,53 @@ export const REPLICAX_DIR = '.replicax';
 /** The user-authored ignore file controlling what is exported into a profile. */
 export const IGNORE_FILE = '.replicaxignore';
 
-/** The schema/format version stamped into every profile we write. */
-export const REPLICAX_VERSION = '2.0.0';
+/**
+ * The user-authored *include* file: glob patterns (one per line, `#` comments)
+ * for extra files to capture verbatim, on top of the auto-detected catalogue.
+ * Named to avoid colliding with the `.replicax/` profile directory.
+ *
+ * Precedence: the secret guard always wins, then `.replicaxignore`, then this
+ * include file (which overrides the default ignore/prune lists so it can reach
+ * otherwise-skipped locations), then the built-in catalogue.
+ */
+export const INCLUDE_FILE = '.replicaxinclude';
 
-/** File names that make up a profile inside {@link REPLICAX_DIR}. */
+/**
+ * Optional project-root skill template. When present, `init-skill` feeds its
+ * contents to the AI provider as the authoritative base for the generated skill
+ * (see `core/ai/prompt.buildSkillPrompt`).
+ */
+export const ROOT_SKILL_FILE = 'SKILL.md';
+
+/**
+ * The schema/format version stamped into every profile we write. Evolves
+ * independently of the npm package version. 2.1.0 added optional `detections`
+ * (metadata), `registry` (profile), and the `manifest.json` index — all
+ * backward-compatible additions (see {@link file://./core/migrations.ts}).
+ */
+export const REPLICAX_VERSION = '2.1.0';
+
+/**
+ * File names that make up a profile inside {@link REPLICAX_DIR}. The first five
+ * are required; `manifest.json` is optional (synthesized on load when missing).
+ */
 export const PROFILE_FILES = {
   profile: 'profile.json',
   tooling: 'tooling.json',
   structure: 'structure.json',
   metadata: 'metadata.json',
   checksum: 'checksum.json',
+  manifest: 'manifest.json',
 } as const;
+
+/** Logical keys of the five required profile files (manifest is optional). */
+export const REQUIRED_PROFILE_FILE_KEYS = [
+  'profile',
+  'tooling',
+  'structure',
+  'metadata',
+  'checksum',
+] as const;
 
 export type ProfileFileKey = keyof typeof PROFILE_FILES;
 
@@ -50,6 +86,14 @@ export const SCAN_PRUNE_GLOBS = [
   '**/.fleet/**',
   '**/.zed/**',
 ];
+
+/**
+ * Lighter prune used only when globbing `.replicaxinclude` patterns. An explicit
+ * include is allowed to reach locations the normal scan prunes (e.g. `.vscode/`,
+ * `dist/`), so we keep only the hard, never-capture directories here. The secret
+ * guard and `.replicaxignore` still apply afterward.
+ */
+export const INCLUDE_PRUNE_GLOBS = ['**/node_modules/**', '**/.git/**', `**/${REPLICAX_DIR}/**`];
 
 /**
  * Default gitignore-style patterns folded into every ignore engine instance,
