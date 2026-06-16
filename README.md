@@ -5,7 +5,7 @@
 <h3><em>Copy the setup, not the code.</em></h3>
 
 <p>
-  Extract a project's entire development environment — <strong>tooling, folder structure, and conventions</strong> —
+  Extract a project's entire development environment  <strong>tooling, folder structure, and conventions</strong> 
   into a portable profile, then recreate it anywhere in seconds.<br/>
   None of your business code. None of your secrets. Just the setup.
 </p>
@@ -29,14 +29,14 @@
 
 ---
 
-> **ReplicaX captures the _setup_ of a project — the parts you copy‑paste between every new repo — and leaves
+> **ReplicaX captures the _setup_ of a project  the parts you copy‑paste between every new repo  and leaves
 the _implementation_ behind.**
 
 Every new project starts the same way: copy `tsconfig.json`, port the ESLint and Prettier config, recreate the
 Dockerfiles, re‑add the CI workflow, rebuild `src/`'s folder layout. It's slow, error‑prone, and quietly drifts out of
 sync across a team.
 
-ReplicaX captures that ritual **once** and replays it **on demand** — locally, or straight from any GitHub repo.
+ReplicaX captures that ritual **once** and replays it **on demand**  locally, or straight from any GitHub repo.
 
 > It is **not** a code generator, a project cloner, or a backup tool.
 
@@ -59,10 +59,10 @@ ReplicaX captures that ritual **once** and replays it **on demand** — locally,
 |                               |                                                                                                                  |
 |-------------------------------|------------------------------------------------------------------------------------------------------------------|
 | **One‑command capture**       | `init` scans the current project into a reusable profile.                                                        |
-| **Capture any GitHub repo**   | `extract owner/repo` profiles a remote repo — no clone, no `git` required.                                       |
+| **Capture any GitHub repo**   | `extract owner/repo` profiles a remote repo  no clone, no `git` required.                                       |
 | **One‑command scaffold**      | `create` reproduces the setup in a fresh directory.                                                              |
 | **AI assistant skills**       | `init-skill` uses your own AI (Claude · Codex · Gemini) to author a ready‑to‑use skill for agentic coding tools. |
-| **`.ts` _and_ `.js` configs** | Copied byte‑for‑byte — never compiled, never executed.                                                           |
+| **`.ts` _and_ `.js` configs** | Copied byte‑for‑byte  never compiled, never executed.                                                           |
 | **Secret‑safe by design**     | `.env`, keys, and certs can never enter a profile; `.npmrc` tokens are stripped automatically.                   |
 | **No business code**          | Folders are recreated empty; source files are never read.                                                        |
 | **Stays in sync**             | `sync --diff` shows what drifted; `validate` verifies integrity via SHA‑256.                                     |
@@ -86,11 +86,11 @@ pnpm add -g @iamsaroj/replicax
 ## Quick start
 
 ```bash
-# 1 — In an existing, well-configured project
+# 1  In an existing, well-configured project
 cd my-project
 replicax init                  # → writes a profile to .replicax/
 
-# 2 — Anywhere the profile lives, scaffold a fresh project
+# 2  Anywhere the profile lives, scaffold a fresh project
 replicax create my-new-app     # → same setup, none of the code
 ```
 
@@ -136,14 +136,14 @@ my-app/
   Create a project from it with: replicax create <project-name>
 ```
 
-> 💡 **Tip:** run `replicax init --dry-run` first to preview exactly what would be captured — nothing is written.
+> 💡 **Tip:** run `replicax init --dry-run` first to preview exactly what would be captured  nothing is written.
 
 ---
 
 ## Before & After
 
 Starting from a typical **Vite + React + TypeScript** project, `replicax init && replicax create my-new-app` produces a
-clean skeleton — same tooling, zero application code, zero secrets.
+clean skeleton  same tooling, zero application code, zero secrets.
 
 <table>
 <tr>
@@ -216,7 +216,7 @@ No `.env`. No `Button.tsx`. No `UserService.ts`. No `react` runtime dependency. 
 | [`replicax create <name>`](#replicax-create-project-name)                            | Scaffold a new project from a profile              |
 | [`replicax sync`](#replicax-sync)                                                    | Update the profile from the current project        |
 | [`replicax inspect`](#replicax-inspect)                                              | Display captured config & structure                |
-| [`replicax validate`](#replicax-validate)                                            | Schema + integrity (SHA‑256) check — CI‑friendly   |
+| [`replicax validate`](#replicax-validate)                                            | Schema + integrity (SHA‑256) check  CI‑friendly   |
 | [`replicax export`](#replicax-export--import) / [`import`](#replicax-export--import) | Portable `.tar.gz` profile in/out                  |
 | [`replicax init-skill`](#replicax-init-skill)                                        | Author an AI‑assistant skill from your stack       |
 | [`replicax doctor`](#replicax-doctor)                                                | Check which dev tools are installed locally        |
@@ -237,7 +237,7 @@ replicax init --verbose                    # list every detected file
 
 ### `replicax extract <repo>`
 
-Capture a profile from a **remote GitHub repository** instead of the current directory — the same scan as `init`,
+Capture a profile from a **remote GitHub repository** instead of the current directory  the same scan as `init`,
 pointed at a repo you don't even have checked out. The repo is downloaded as a tarball over the GitHub API (no `git`
 required) into a temp directory, scanned, then discarded; only the profile is kept.
 
@@ -254,7 +254,7 @@ replicax extract owner/repo --dry-run                       # preview, write not
 Accepts `owner/repo`, a `github.com` URL (including `/tree/<branch>` links), an ssh remote, or a `#branch` / `@tag`
 suffix.
 
-> **Private repos & rate limits:** set `GITHUB_TOKEN` (or `GH_TOKEN`) in your environment — it's read from the
+> **Private repos & rate limits:** set `GITHUB_TOKEN` (or `GH_TOKEN`) in your environment  it's read from the
 > environment, used for the one request, and **never stored**. The same secret guard applies, so a remote repo's
 `.env` /
 > keys are never captured.
@@ -306,7 +306,7 @@ Tooling (14 file(s))
 
 ### `replicax validate`
 
-Check the profile's schema and integrity (SHA‑256 checksums + path safety). Exits non‑zero on failure — handy in CI.
+Check the profile's schema and integrity (SHA‑256 checksums + path safety). Exits non‑zero on failure  handy in CI.
 
 ```bash
 replicax validate
@@ -324,12 +324,12 @@ replicax import ./react-enterprise.tar.gz --force  # overwrite an existing profi
 
 ### `replicax init-skill`
 
-Generate an AI‑assistant **skill** from the current project — a ready‑to‑use bundle (an entry `SKILL.md` plus optional
+Generate an AI‑assistant **skill** from the current project  a ready‑to‑use bundle (an entry `SKILL.md` plus optional
 `references/`) that teaches an assistant the tech stack, the install/build/test/lint commands, the tooling, and the
 folder layout, written where your assistant looks for skills.
 
 It uses **whatever AI you already have configured**. ReplicaX prefers a locally installed CLI (reusing its login) and
-falls back to a provider API key from your environment — it never stores credentials:
+falls back to a provider API key from your environment  it never stores credentials:
 
 | Provider | CLI (preferred) | API key (fallback)                  | API model default  |
 |----------|-----------------|-------------------------------------|--------------------|
@@ -348,19 +348,19 @@ replicax init-skill --target claude --force                    # overwrite exist
 
 **Targets** (`--target`, required) control the on‑disk _format/location_: `claude` → `.claude/skills/<name>/SKILL.md`,
 `codex` → `.codex/skills/<name>/SKILL.md`, `antigravity` → `.agents/skills/<name>.md`. The **provider** (auto‑detected,
-or forced with `--provider`) is the AI that _authors_ it — the two are independent.
+or forced with `--provider`) is the AI that _authors_ it  the two are independent.
 
 > **Bring your own template.** If the project root has a `SKILL.md`, `init-skill` hands it to the AI as the **base** to
-> refine — the model preserves your headings, structure, and instructions and fills them in from the detected setup,
+> refine  the model preserves your headings, structure, and instructions and fills them in from the detected setup,
 > instead of starting from scratch.
 
-> **Privacy:** only the project's _setup_ is sent to the provider — the same safe surface ReplicaX captures (config
+> **Privacy:** only the project's _setup_ is sent to the provider  the same safe surface ReplicaX captures (config
 > files, structure, `package.json` scripts/deps). Source code and secrets are never sent. With `--no-ai` (or no provider
 > configured), ReplicaX falls back to a deterministic, fully offline template.
 
 ### `replicax doctor`
 
-Report which developer tools are installed locally — runtimes, package managers, Docker, and editors — with versions.
+Report which developer tools are installed locally  runtimes, package managers, Docker, and editors  with versions.
 Cross‑platform and read‑only; a missing tool is a finding, not an error.
 
 ```bash
@@ -383,7 +383,7 @@ Developer environment
 
 ### `replicax compare <source> <target>`
 
-Diff two profiles — or two project directories — across tooling, configuration files, `package.json`, structure, and
+Diff two profiles  or two project directories  across tooling, configuration files, `package.json`, structure, and
 metadata. Each argument may be a `.replicax` profile, a directory containing one, or a plain project folder (scanned on
 the fly), so you can compare anything against anything.
 
@@ -405,7 +405,7 @@ Changed:
 
 ### `replicax audit`
 
-Score a project's setup against best‑practice rules — linting, formatting, testing, git hooks, CI/CD, containerization —
+Score a project's setup against best‑practice rules  linting, formatting, testing, git hooks, CI/CD, containerization 
 and get concrete recommendations for what's missing. Scans the current directory by default, or evaluates a stored
 profile with `--profile`.
 
@@ -456,7 +456,7 @@ Recommendations:
 config blocks like `lint-staged` are kept. Runtime `dependencies` are deliberately dropped (that's your application),
 and the new project's name is stamped in on `create`.
 
-Both `.ts` and `.js` config variants work because ReplicaX copies them **verbatim** — it never needs to compile or
+Both `.ts` and `.js` config variants work because ReplicaX copies them **verbatim**  it never needs to compile or
 execute a config to capture it.
 
 ---
@@ -466,7 +466,7 @@ execute a config to capture it.
 ReplicaX treats secret exclusion as a **hard guarantee, not a best effort.**
 
 > 🛡️ **Secrets are never captured.** `.env`, `.env.*`, `*.pem`, `*.key`, `*.crt`, SSH keys, and friends are blocked *
-*unconditionally** — this cannot be overridden by configuration.
+*unconditionally**  this cannot be overridden by configuration.
 
 > 🧼 **`.npmrc` is sanitized.** It's a legitimate setup file, but auth tokens (`_authToken`, `_password`, …) are stripped
 > out before it enters a profile.
@@ -475,14 +475,14 @@ ReplicaX treats secret exclusion as a **hard guarantee, not a best effort.**
 > and absolute paths before anything is written, so a malicious profile can never write outside its target directory.
 `validate` re‑checks this.
 
-The same guarantees apply to `extract` — a remote repo's secrets are filtered exactly as a local project's are.
+The same guarantees apply to `extract`  a remote repo's secrets are filtered exactly as a local project's are.
 
 ---
 
-## Configuration — `.replicaxignore` and `.replicaxinclude`
+## Configuration  `.replicaxignore` and `.replicaxinclude`
 
 **`.replicaxignore`** controls what gets *excluded*, with **gitignore syntax**. `init` can scaffold a starter for you.
-Ignored files are excluded from the profile — but their parent directories are still captured for structure.
+Ignored files are excluded from the profile  but their parent directories are still captured for structure.
 
 ```gitignore
 # Business logic (folders kept, contents dropped)
@@ -528,7 +528,7 @@ A profile is five required JSON files under `.replicax/`, plus an optional manif
 All files are schema‑validated (zod) on load; `validate` additionally re‑checks checksums and rejects unsafe paths.
 
 **Schema version 2.1.0** added the detected stack (`metadata.detections`), an optional `registry` block (for future
-registry support), and `manifest.json` — all backward‑compatible. Profiles written by older ReplicaX (2.0.0) are
+registry support), and `manifest.json`  all backward‑compatible. Profiles written by older ReplicaX (2.0.0) are
 **migrated automatically on load** and the manifest is synthesized when absent, so existing profiles keep working.
 
 ---
@@ -581,7 +581,7 @@ npx vitest run -t "sanitizes a captured .npmrc"
 <br/>
 
 **Lockfile.** `package-lock.json` is maintained with **npm 10** (what CI's Node 20/22 ship with). On npm 11+, regenerate
-with `npx npm@10 install` when changing dependencies — npm 11 resolves a different tree and will desync `npm ci`.
+with `npx npm@10 install` when changing dependencies  npm 11 resolves a different tree and will desync `npm ci`.
 
 **Path alias.** Imports use a `@/*` → `src/*` alias resolved by tsc, tsup/esbuild, and the `vite-tsconfig-paths` vitest
 plugin. The build bundles to one file, so the alias never reaches the published output.
@@ -608,7 +608,7 @@ No. Only configuration files and the empty folder hierarchy. Application code is
 <details>
 <summary><b>What about <code>.ts</code> config files like <code>vite.config.ts</code>?</b></summary>
 <br/>
-Fully supported — they're copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.
+Fully supported  they're copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.
 </details>
 
 <details>
@@ -626,22 +626,22 @@ They're part of your application, not your setup. <code>devDependencies</code>, 
 <details>
 <summary><b>Does <code>extract</code> need <code>git</code> installed?</b></summary>
 <br/>
-No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code> — no <code>git</code> binary, no full clone.
+No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code>  no <code>git</code> binary, no full clone.
 </details>
 
 <details>
 <summary><b>Is it cross-platform?</b></summary>
 <br/>
-Yes — Windows (native + WSL), macOS, and Linux.
+Yes  Windows (native + WSL), macOS, and Linux.
 </details>
 
 ---
 
 ## License
 
-**MIT** — see [LICENSE](LICENSE).
+**MIT**  see [LICENSE](LICENSE).
 
 <div align="center">
 <br/>
-<sub><i>ReplicaX — copy the setup, not the code.</i></sub>
+<sub><i>ReplicaX  copy the setup, not the code.</i></sub>
 </div>
