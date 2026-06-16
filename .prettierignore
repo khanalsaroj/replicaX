@@ -10,6 +10,9 @@ examples
 # Hand-authored docs — keep manual formatting
 *.md
 
+# Hand-authored GitHub Pages site (inline CSS/SVG) — keep manual formatting
+docs/
+
 # Lockfiles / generated
 package-lock.json
 pnpm-lock.yaml
