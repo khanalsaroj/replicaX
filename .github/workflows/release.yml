@@ -1,18 +1,12 @@
 name: Release
 
-# Auto-tag + publish on a version bump.
-#
-# Flow: bump the version and push to main — the workflow does the rest.
-#   npm version patch --no-git-tag-version   # bump package.json + lock only
-#   git commit -am "Release vX.Y.Z"
-#   git push                                 # → tags vX.Y.Z and publishes to npm
-#
-# It is idempotent: the gate is "is this version already on npm?", so ordinary
-# pushes (no version change) are a no-op, and re-running never double-publishes.
-# Prerelease versions (1.2.0-beta.1) go to a matching dist-tag, never `latest`.
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+    paths-ignore:
+      - examples/**
+      - docs/**
+      - '**/*.md'
   workflow_dispatch:
 
 # Read-only by default; the publish job elevates its own permissions.
