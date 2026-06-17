@@ -3,565 +3,519 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ReplicaX — Copy the setup, not the code</title>
-<meta name="description" content="ReplicaX extracts a project's tooling, folder structure, and conventions into a portable profile — then recreates it anywhere in seconds. None of your source. None of your secrets. Just the setup." />
-<meta name="theme-color" content="#c4c3b6" />
-<meta name="color-scheme" content="light" />
+<title>ReplicaX: Copy the setup, not the code</title>
+<meta name="description" content="ReplicaX extracts a project's tooling, folder structure, and conventions into a portable profile, then recreates it anywhere in seconds. No source. No secrets. Just the setup." />
+<meta name="theme-color" content="#0a0b0d" />
+<meta name="color-scheme" content="light dark" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="ReplicaX — Copy the setup, not the code" />
+<meta property="og:title" content="ReplicaX: Copy the setup, not the code" />
 <meta property="og:description" content="Extract a project's tooling, structure, and conventions into a portable profile, then recreate it anywhere. No source. No secrets. Just the setup." />
 <meta property="og:url" content="https://khanalsaroj.github.io/replicaX/" />
 <meta property="og:site_name" content="ReplicaX" />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='4.5'%20y='4.5'%20width='15'%20height='15'%20fill='none'%20stroke='%23000'%20stroke-width='1.6'/%3E%3Crect%20x='12'%20y='12'%20width='15'%20height='15'%20fill='%23000'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='4.5'%20y='4.5'%20width='15'%20height='15'%20fill='none'%20stroke='%23ececed'%20stroke-width='1.6'/%3E%3Crect%20x='12'%20y='12'%20width='15'%20height='15'%20fill='%2334d399'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
-<script>document.documentElement.className += ' js';</script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script>
+// set theme before paint (no flash); dark is the brand default
+(function(){
+  var d = document.documentElement;
+  d.className += ' js';
+  var t;
+  try{
+    t = localStorage.getItem('theme');
+    if(t !== 'light' && t !== 'dark'){
+      t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+  }catch(e){ t = 'dark'; }
+  d.setAttribute('data-theme', t);
+})();
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --color-putty:#c4c3b6;
-  --color-ink:#000000;
-  --color-bone:#e7e5e4;
-  --color-chalk:#ebebeb;
-  --color-vellum:#dfdcd5;
-  --color-graphite:#595855;
-  --color-ash:#808080;
-  --color-paper:#ffffff;
-  --hair:var(--color-vellum);
-  --hair-ink:rgba(0,0,0,.15);
-  --hair-paper:rgba(255,255,255,.16);
-  --muted-on-dark:#aeaca4;
-  --font-davinci:'Playfair Display',Georgia,'Times New Roman',serif;
-  --font-grotesk:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  --font-mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;
-  --radius-cards:9px;
-  --radius-links:2px;
-  --radius-buttons:28.8px;
-  --maxw:1180px;
+  /* shared tokens */
+  --sans:'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'Geist Mono',ui-monospace,'SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace;
+  /* radius rule: panels 14 / code 9 / buttons pill */
+  --r-panel:14px;
+  --r-code:9px;
+  --r-pill:999px;
+  --maxw:1160px;
+  color-scheme:dark;
+}
+/* single locked accent: emerald (verify / secret-safe / terminal).
+   --accent = bright fill (dark text reads on it in BOTH modes).
+   --accent-ink = emerald used as foreground text (deepens in light for contrast). */
+:root,:root[data-theme="dark"]{
+  --bg:#0a0b0d;
+  --surface:#121317;
+  --surface-2:#171920;
+  --surface-3:#1d2027;
+  --text:#ececed;
+  --text-dim:#a2a3aa;
+  --text-faint:#6c6e78;
+  --line:rgba(255,255,255,.08);
+  --line-2:rgba(255,255,255,.14);
+  --accent:#34d399;
+  --accent-ink:#34d399;
+  --accent-soft:rgba(52,211,153,.12);
+  --accent-line:rgba(52,211,153,.34);
+  --on-accent:#05140d;
+  --bar-bg:rgba(10,11,13,.72);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f4f4f2;
+  --surface:#fbfbfa;
+  --surface-2:#efeeeb;
+  --surface-3:#e6e5e1;
+  --text:#18181b;
+  --text-dim:#52525b;
+  --text-faint:#83838b;
+  --line:rgba(0,0,0,.10);
+  --line-2:rgba(0,0,0,.15);
+  --accent:#34d399;
+  --accent-ink:#047857;
+  --accent-soft:rgba(16,185,129,.12);
+  --accent-line:rgba(4,120,87,.30);
+  --on-accent:#05140d;
+  --bar-bg:rgba(244,244,242,.72);
 }
 
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  background:var(--color-putty);color:var(--color-ink);
-  font-family:var(--font-grotesk);font-size:16px;line-height:1.5;
+  background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:16px;line-height:1.55;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;
+  font-feature-settings:'cv11','ss01';
 }
 a{color:inherit;text-decoration:none}
 img,svg{display:block}
-code,pre{font-family:var(--font-mono)}
-::selection{background:var(--color-ink);color:var(--color-paper)}
+code,pre{font-family:var(--mono)}
+::selection{background:var(--accent);color:var(--on-accent)}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;border-radius:4px}
 
 /* ---------- layout ---------- */
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
-section{padding:clamp(72px,9vw,120px) 0;position:relative;scroll-margin-top:60px}
-.room-putty{background:var(--color-putty);color:var(--color-ink)}
-.room-bone{background:var(--color-bone);color:var(--color-ink)}
-.room-chalk{background:var(--color-chalk);color:var(--color-ink)}
-.room-ink{background:var(--color-ink);color:var(--color-paper)}
+section{padding:clamp(80px,10vw,138px) 0;position:relative;scroll-margin-top:72px}
 
 /* ---------- type ---------- */
-.label{font-family:var(--font-grotesk);font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--color-graphite)}
-.room-ink .label{color:var(--muted-on-dark)}
-.serif{font-family:var(--font-davinci);font-weight:500}
-.section-head{margin-bottom:clamp(40px,6vw,72px)}
-.section-head .toprow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--hair-ink);margin-bottom:28px}
-.room-ink .section-head .toprow{border-bottom-color:var(--hair-paper)}
-.display-title{font-family:var(--font-davinci);font-weight:500;font-size:clamp(40px,8.5vw,94px);line-height:.88;letter-spacing:-.012em;text-align:center}
-.section-head.left .display-title{text-align:left}
-.lede{max-width:560px;margin:22px auto 0;text-align:center;font-size:15px;line-height:1.55;color:var(--color-graphite)}
-.section-head.left .lede{margin-left:0;text-align:left}
-.room-ink .lede{color:var(--muted-on-dark)}
-em.it{font-style:italic;font-family:var(--font-davinci)}
-
-/* ---------- pills / links ---------- */
-.pill{
-  display:inline-flex;align-items:center;gap:9px;cursor:pointer;white-space:nowrap;
-  font-family:var(--font-grotesk);font-size:12px;font-weight:500;letter-spacing:.01em;
-  padding:11px 22px;border-radius:var(--radius-buttons);border:1.5px solid var(--color-ink);
-  background:var(--color-ink);color:var(--color-paper);
-  transition:transform .2s cubic-bezier(.2,.8,.2,1),opacity .2s,box-shadow .2s;
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent-ink);
 }
-.pill:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.18)}
-.pill:active{transform:translateY(0)}
-.pill.ghost{background:transparent;color:var(--color-ink)}
-.pill.ghost:hover{background:var(--color-ink);color:var(--color-paper);opacity:1}
-.room-ink .pill{background:var(--color-paper);color:var(--color-ink);border-color:var(--color-paper)}
-.room-ink .pill.ghost{background:transparent;color:var(--color-paper)}
-.room-ink .pill.ghost:hover{background:var(--color-paper);color:var(--color-ink)}
-.tlink{font-family:var(--font-grotesk);font-size:13px;color:inherit;border-radius:var(--radius-links);border-bottom:1px solid transparent;transition:border-color .18s}
-.tlink:hover{border-bottom-color:currentColor}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em;line-height:1.04}
+.h2{font-size:clamp(30px,4.6vw,52px);letter-spacing:-.025em}
+.lede{max-width:60ch;margin-top:20px;font-size:clamp(15px,1.6vw,17px);line-height:1.6;color:var(--text-dim)}
+.sec-head{margin-bottom:clamp(44px,6vw,68px);max-width:780px}
+.sec-head .eyebrow{margin-bottom:18px}
+.accent{color:var(--accent-ink)}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;white-space:nowrap;
+  font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:-.01em;
+  padding:12px 22px;border-radius:var(--r-pill);border:1px solid transparent;
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),background .18s,border-color .18s,opacity .18s;
+}
+.btn-primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn-primary:hover{transform:translateY(-1px);background:#48e0a8}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--line-2)}
+.btn-ghost:hover{transform:translateY(-1px);border-color:var(--text-dim);background:rgba(255,255,255,.03)}
+.btn-ghost:active{transform:translateY(0)}
+.btn svg{width:15px;height:15px;stroke-width:2}
 
 /* ---------- header ---------- */
 header.bar{
   position:fixed;top:0;left:0;right:0;z-index:60;
-  background:transparent;transition:background .4s,backdrop-filter .4s,border-color .4s;
+  background:transparent;transition:background .35s,backdrop-filter .35s,border-color .35s;
   border-bottom:1px solid transparent;
 }
 header.bar.scrolled{
-  background:rgba(196,195,182,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom-color:var(--hair);
+  background:var(--bar-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom-color:var(--line);
 }
-.bar-inner{display:flex;align-items:center;height:64px}
-.mark{display:flex;align-items:center;gap:11px}
-.monogram{
-  width:32px;height:32px;border:1.5px solid var(--color-ink);border-radius:50%;
-  display:grid;place-items:center;font-family:var(--font-davinci);font-weight:500;font-size:16px;line-height:1;
-  transition:transform .3s;
-}
-.mark:hover .monogram{transform:rotate(8deg)}
-.mark .name{font-family:var(--font-grotesk);font-size:13px;font-weight:500;letter-spacing:.06em}
-.bar-inner .right{margin-left:auto;display:flex;align-items:center;gap:22px}
+.bar-inner{display:flex;align-items:center;height:64px;gap:28px}
+.mark{display:flex;align-items:center;gap:10px}
+.mark svg{width:22px;height:22px}
+.mark .name{font-size:14px;font-weight:600;letter-spacing:.02em}
+.nav-links{display:flex;align-items:center;gap:26px;margin-left:14px}
+.nav-links a{font-size:14px;color:var(--text-dim);transition:color .16s}
+.nav-links a:hover{color:var(--text)}
+.bar-inner .right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.gh-link{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:var(--text-dim);transition:color .16s}
+.gh-link:hover{color:var(--text)}
+.gh-link svg{width:17px;height:17px}
 
-/* ===== FULL-SCREEN HERO ===== */
+/* ===== HERO ===== */
 .hero{
-  position:relative;height:100vh;min-height:600px;max-height:1100px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;overflow:hidden;padding:0;
-  background:var(--color-putty);
+  position:relative;min-height:100dvh;display:flex;align-items:center;
+  padding-top:96px;padding-bottom:64px;overflow:hidden;
 }
-
-/* Animated grid */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 78% 8%,rgba(52,211,153,.10),transparent 70%),
+    radial-gradient(50% 50% at 12% 90%,rgba(52,211,153,.05),transparent 70%);
+}
 .hero-grid{
-  position:absolute;inset:0;
+  position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
   background-image:
-    linear-gradient(rgba(0,0,0,.07) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.07) 1px,transparent 1px);
-  background-size:60px 60px;
-  animation:gridDrift 20s linear infinite;
-  transform-origin:center;
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 35%,transparent 78%);
+  mask-image:radial-gradient(120% 90% at 50% 0%,#000 35%,transparent 78%);
 }
-@keyframes gridDrift{
-  0%{background-position:0 0}
-  100%{background-position:60px 60px}
-}
-
-/* Floating orbs */
-.hero-orb{
-  position:absolute;border-radius:50%;filter:blur(60px);opacity:.3;
-  animation:orbFloat 8s ease-in-out infinite;pointer-events:none;
-}
-.hero-orb-1{width:500px;height:500px;background:rgba(0,0,0,.08);top:-100px;right:-100px;animation-delay:0s}
-.hero-orb-2{width:400px;height:400px;background:rgba(89,88,85,.15);bottom:-80px;left:-60px;animation-delay:-4s;animation-duration:10s}
-@keyframes orbFloat{
-  0%,100%{transform:translate(0,0) scale(1)}
-  33%{transform:translate(20px,-30px) scale(1.05)}
-  66%{transform:translate(-15px,20px) scale(.97)}
-}
-
-/* Hero content */
-.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:28px;padding:0 24px}
-.hero-kicker{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--color-graphite);
-  border:1px solid var(--hair-ink);border-radius:var(--radius-buttons);padding:7px 16px;
-  background:rgba(255,255,255,.5);backdrop-filter:blur(4px);
-}
-.hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--color-graphite);animation:blink 2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
-
+.hero-inner{position:relative;z-index:2;max-width:880px}
 .hero h1{
-  font-family:var(--font-davinci);font-weight:500;
-  font-size:clamp(42px,7vw,82px);line-height:1;letter-spacing:-.018em;max-width:12ch;
-  animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:.2s;
+  font-size:clamp(40px,7vw,78px);line-height:1.0;letter-spacing:-.035em;
+  margin:24px 0 0;max-width:14ch;
+  animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:.05s;
 }
-@keyframes heroFadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
-
-.hero-stats{
-  display:flex;gap:36px;align-items:center;flex-wrap:wrap;justify-content:center;
-  animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:.35s;
+.hero .eyebrow{animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both}
+.hero .lede{
+  margin-top:26px;max-width:52ch;font-size:clamp(16px,1.8vw,19px);color:var(--text-dim);
+  animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:.12s;
 }
-.hero-stat{text-align:center}
-.hero-stat .val{font-family:var(--font-davinci);font-size:32px;font-weight:500;line-height:1}
-.hero-stat .key{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-graphite);margin-top:4px}
-
-.hero-divider{width:1px;height:36px;background:var(--hair-ink)}
-
-.codecap{
-  display:inline-flex;align-items:center;gap:12px;
-  padding:8px 8px 8px 18px;border:1px solid var(--hair-ink);border-radius:var(--radius-buttons);
-  font-family:var(--font-mono);font-size:13px;background:rgba(255,255,255,.7);
-  backdrop-filter:blur(6px);
-  animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:.5s;
-}
-.codecap .pr{color:var(--color-graphite)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
 .hero-actions{
-  display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;
-  animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:.62s;
+  margin-top:34px;display:flex;flex-wrap:wrap;align-items:center;gap:14px;
+  animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:.2s;
 }
-
-/* Big wordmark at bottom */
-.wordmark-wrap{
-  position:absolute;bottom:-0.08em;left:0;right:0;z-index:1;
-  overflow:hidden;pointer-events:none;
-  animation:wordmarkRise 1.2s cubic-bezier(.16,1,.3,1) both;animation-delay:.15s;
+.install{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:7px 7px 7px 18px;border:1px solid var(--line-2);border-radius:var(--r-pill);
+  background:var(--surface);font-family:var(--mono);font-size:14px;color:var(--text);
 }
-@keyframes wordmarkRise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-.wordmark{
-  font-family:var(--font-davinci);font-weight:500;color:var(--color-ink);
-  font-size:clamp(100px,34vw,374px);line-height:.84;letter-spacing:-.012em;
-  white-space:nowrap;text-align:center;user-select:none;
-  opacity:.07;
-}
-
-/* Scroll indicator */
-.scroll-hint{
-  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:3;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-graphite);
-  animation:scrollFade 2s ease 1.5s both;
-}
-@keyframes scrollFade{from{opacity:0}to{opacity:1}}
-.scroll-hint svg{animation:scrollBounce 1.8s ease-in-out infinite}
-@keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-
-/* ---------- copy button ---------- */
+.install .pr{color:var(--accent-ink)}
 .copy{
   display:inline-flex;align-items:center;gap:6px;cursor:pointer;flex:0 0 auto;
-  font-family:var(--font-grotesk);font-size:11px;font-weight:500;letter-spacing:.02em;
-  padding:8px 14px;border-radius:var(--radius-buttons);border:1px solid var(--color-ink);
-  background:var(--color-ink);color:var(--color-paper);
-  transition:opacity .18s,transform .15s;
+  font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:-.01em;
+  padding:8px 14px;border-radius:var(--r-pill);border:1px solid transparent;
+  background:var(--accent);color:var(--on-accent);transition:background .16s,transform .14s;
 }
-.copy:hover{opacity:.82;transform:scale(1.03)}
-.copy svg{width:12px;height:12px}
-.copy.done{background:transparent;color:var(--color-ink)}
+.copy:hover{background:#48e0a8;transform:scale(1.02)}
+.copy svg{width:13px;height:13px;stroke-width:2}
+.copy.done{background:var(--surface-3);color:var(--accent-ink)}
 
-/* ---------- painting panel ---------- */
-.panel{
-  position:relative;width:100%;height:clamp(500px,72vh,780px);
-  display:grid;place-items:center;overflow:hidden;background:var(--color-graphite);
-  padding:0;
-}
-.panel img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  transform:scale(1.05);transition:transform 8s ease;
-}
-.panel:hover img{transform:scale(1)}
-.panel-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.1) 60%,rgba(0,0,0,.4) 100%);
-}
-.notched{
-  position:relative;z-index:2;width:min(420px,84vw);
-  background:var(--color-ink);color:var(--color-paper);padding:36px 32px;
-  display:flex;flex-direction:column;
-  clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 16px,100% calc(100% - 16px),calc(100% - 16px) 100%,16px 100%,0 calc(100% - 16px),0 16px);
-  transform:translateY(20px);opacity:0;transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .8s;
-}
-.notched.in{transform:none;opacity:1}
-.notched .nlabel{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-on-dark)}
-.notched h3{font-family:var(--font-davinci);font-weight:500;font-size:36px;line-height:1.02;letter-spacing:-.01em;margin:16px 0 0}
-.notched p{margin-top:14px;font-size:14px;line-height:1.6;color:var(--muted-on-dark)}
-.notched .scroll{margin-top:28px;font-family:var(--font-grotesk);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--color-paper);display:flex;align-items:center;gap:8px}
-.notched .scroll svg{width:9px;height:14px;stroke:var(--color-paper);fill:none;stroke-width:1.4}
+/* ---------- stats band ---------- */
+.statband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}
+.statband .wrap{display:grid;grid-template-columns:repeat(3,1fr);padding-top:0;padding-bottom:0}
+.stat{padding:34px 8px;text-align:center;border-left:1px solid var(--line)}
+.stat:first-child{border-left:none}
+.stat .val{font-size:clamp(32px,5vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1}
+.stat .val .accent{color:var(--accent-ink)}
+.stat .key{margin-top:8px;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint)}
 
-/* ---------- grid3 (features) ---------- */
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair-ink);border:1px solid var(--hair-ink)}
-.cell{background:var(--color-bone);padding:30px 26px;transition:background .2s}
-.cell:hover{background:#f0ede6}
-.cell .num{font-family:var(--font-mono);font-size:11px;color:var(--color-ash);letter-spacing:.1em}
-.cell h3{font-family:var(--font-davinci);font-weight:500;font-size:24px;line-height:1.1;letter-spacing:-.01em;margin:14px 0 0}
-.cell p{margin-top:10px;font-size:14px;line-height:1.55;color:var(--color-graphite)}
-.cell code,.line code,.q .a code,.notebody code{font-family:var(--font-mono);font-size:.85em;color:var(--color-ink);background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px}
-.room-ink code{color:var(--color-paper);background:rgba(255,255,255,.12)}
+/* ---------- generic panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-panel)}
 
-/* ---------- hex vignettes ---------- */
-.hex{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.4}
-.hexrow{display:flex;gap:8px;justify-content:center;align-items:center;opacity:.5}
-.vignettes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,52px);margin-top:clamp(36px,5vw,60px)}
-.vignette{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
-.vignette .cap{font-family:var(--font-davinci);font-weight:500;font-size:22px;letter-spacing:-.01em}
-.vignette .crop{
-  width:clamp(160px,20vw,212px);height:clamp(160px,20vw,212px);border-radius:50%;overflow:hidden;
-  background:var(--color-graphite);
-  transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;
-}
-.vignette:hover .crop{transform:scale(1.04);box-shadow:0 12px 36px rgba(0,0,0,.3)}
-.vignette .crop img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
-.vignette:hover .crop img{transform:scale(1.08)}
-.vignette p{font-size:13px;line-height:1.55;color:var(--muted-on-dark);max-width:30ch}
-
-/* ---------- steps ---------- */
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
-.step{background:var(--color-bone);padding:32px 30px;display:flex;flex-direction:column;gap:16px}
-.step .head{display:flex;align-items:baseline;gap:12px}
-.step .head .idx{font-family:var(--font-mono);font-size:13px;color:var(--color-graphite)}
-.step .head h3{font-family:var(--font-davinci);font-weight:500;font-size:26px;letter-spacing:-.01em}
-.step .body{font-size:14px;color:var(--color-graphite)}
-.step .runline{
+/* ---------- start (commands + terminal) ---------- */
+.start-grid{display:grid;grid-template-columns:0.82fr 1.18fr;gap:26px;align-items:start}
+.steps{display:flex;flex-direction:column;gap:16px}
+.step{padding:24px;display:flex;flex-direction:column;gap:14px}
+.step .stitle{display:flex;align-items:center;gap:11px;font-size:18px;font-weight:600;letter-spacing:-.02em}
+.step .stitle .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+.step .sbody{font-size:14.5px;color:var(--text-dim)}
+.runline{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  border:1px solid var(--hair-ink);border-radius:var(--radius-cards);padding:7px 7px 7px 16px;
-  font-family:var(--font-mono);font-size:13px;background:var(--color-paper);
+  border:1px solid var(--line-2);border-radius:var(--r-code);padding:9px 9px 9px 15px;
+  font-family:var(--mono);font-size:13.5px;background:var(--bg);
 }
-.step .note{font-size:13px;color:var(--color-graphite)}
+.runline .pr{color:var(--accent-ink)}
+.runline .copy{padding:6px 11px;font-size:12px}
+.step .note{font-size:13px;color:var(--text-faint)}
+.step .note code,.sbody code{font-family:var(--mono);font-size:.86em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
 
-/* ---------- exhibit terminal ---------- */
-.exhibit{
-  border:1px solid var(--hair-ink);border-radius:var(--radius-cards);overflow:hidden;
-  background:var(--color-ink);max-width:760px;margin:0 auto clamp(36px,5vw,56px);text-align:left;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
+/* terminal is intentionally dark in BOTH themes (a terminal window is dark) */
+.terminal{border-radius:var(--r-panel);overflow:hidden;background:#0c0d10;border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.terminal .plate{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.08);background:#15171c}
+.terminal .plate .h{width:11px;height:11px;border-radius:50%;background:#2a2d35}
+.terminal .plate .t{margin-left:10px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:#6c6e78}
+.terminal pre{margin:0;padding:22px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.75;overflow-x:auto;color:#c9cad2}
+.terminal .c-cmd{color:#ececed}
+.terminal .c-key{color:#34d399;font-weight:500}
+.terminal .c-ok{color:#34d399}
+.terminal .c-dim{color:#6c6e78}
+.terminal .c-path{color:#dfe0e6;font-style:italic}
+.caret{display:inline-block;width:8px;height:15px;background:#34d399;vertical-align:-2px;animation:blink 1.1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ---------- bento (features) ---------- */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.tile{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-panel);
+  padding:26px 24px;transition:border-color .2s,background .2s,transform .2s;
+  display:flex;flex-direction:column;gap:11px;min-height:170px;
 }
-.exhibit .plate{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--hair-paper)}
-.exhibit .plate .h{width:10px;height:10px;border:1px solid var(--hair-paper);border-radius:50%}
-.exhibit .plate .t{margin-left:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--muted-on-dark);text-transform:uppercase}
-.exhibit pre{margin:0;padding:24px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;overflow-x:auto;color:#d7d6cf}
-.exhibit .c-cmd{color:#fff}.exhibit .c-key{color:#fff;font-weight:600}.exhibit .c-dim{color:var(--color-ash)}.exhibit .c-path{color:#fff;font-style:italic}
+.tile:hover{border-color:var(--line-2);background:var(--surface-2);transform:translateY(-2px)}
+.tile h3{font-size:19px;letter-spacing:-.02em}
+.tile p{font-size:14px;color:var(--text-dim);line-height:1.55}
+.tile code{font-family:var(--mono);font-size:.84em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
+.tile .ico{width:24px;height:24px;stroke:var(--accent-ink);fill:none;stroke-width:1.6}
+/* span rhythm (sums to 6 per row, 9 cells, no empties) */
+.t-a{grid-column:span 4}
+.t-b{grid-column:span 2}
+.t-c,.t-d,.t-e{grid-column:span 2}
+.t-f{grid-column:span 3}
+.t-g{grid-column:span 3}
+.t-h{grid-column:span 2}
+.t-i{grid-column:span 4}
+/* visual variation: accent-feature + gradient + code cells */
+.t-a{background:linear-gradient(160deg,var(--accent-soft),transparent 62%),var(--surface);border-color:var(--accent-line)}
+.t-f{background:linear-gradient(200deg,rgba(255,255,255,.035),transparent 60%),var(--surface)}
+.t-a code{background:rgba(52,211,153,.16)}
+.tile .codeblock{
+  margin-top:auto;font-family:var(--mono);font-size:12px;color:var(--text-dim);
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-code);padding:10px 12px;line-height:1.6;
+}
+.tile .codeblock .pr{color:var(--accent-ink)}
+
+/* ---------- process (how it works) ---------- */
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:0}
+.phase{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-panel);
+  padding:30px 26px;display:flex;flex-direction:column;gap:14px;
+}
+.phase .pk{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink)}
+.phase h3{font-size:23px;letter-spacing:-.02em}
+.phase p{font-size:14px;color:var(--text-dim);line-height:1.55}
+.phase p code{font-family:var(--mono);font-size:.85em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
+.flow .arrow{display:flex;align-items:center;justify-content:center;padding:0 14px;color:var(--text-faint)}
+.flow .arrow svg{width:22px;height:22px;stroke:var(--accent-ink);fill:none;stroke-width:1.6}
 
 /* ---------- before / after ---------- */
-.ba{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair)}
-.ba-pane{background:var(--color-bone);overflow:hidden}
-.ba-pane .h{padding:14px 20px;border-bottom:1px solid var(--hair);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-graphite);font-weight:500}
-.ba-pane pre{margin:0;padding:22px;font-family:var(--font-mono);font-size:12.5px;line-height:1.75;overflow-x:auto;color:var(--color-ink)}
-.ba-pane .out{color:var(--color-graphite)}
-.ba-pane .tag{color:var(--color-ash);font-style:italic}
-.ba-note{margin-top:26px;text-align:center;font-size:15px;color:var(--color-graphite)}
-.ba-note b{color:var(--color-ink);font-weight:600}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ba-pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-panel);overflow:hidden}
+.ba-pane.kept{border-color:var(--accent-line)}
+.ba-pane .h{padding:15px 22px;border-bottom:1px solid var(--line);font-size:13px;letter-spacing:.06em;color:var(--text-dim);font-weight:600;display:flex;align-items:center;gap:9px}
+.ba-pane.kept .h{color:var(--accent-ink)}
+.ba-pane pre{margin:0;padding:22px;font-family:var(--mono);font-size:12.5px;line-height:1.8;overflow-x:auto;color:var(--text-dim)}
+.ba-pane .out{color:var(--accent-ink)}
+.ba-pane .tag{color:var(--text-faint);font-style:italic}
+.ba-note{margin-top:28px;font-size:16px;color:var(--text-dim)}
+.ba-note b{color:var(--text);font-weight:600}
+.ba-note code{font-family:var(--mono);font-size:.86em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
 
-/* ---------- commands ---------- */
-.cmds{border-top:1px solid var(--hair-ink)}
-.line{
-  display:flex;align-items:center;gap:18px;padding:19px 4px;border-bottom:1px solid var(--hair-ink);
-  transition:padding-left .22s cubic-bezier(.2,.8,.2,1),background .2s;
-  border-radius:3px;
+/* ---------- commands (2-col list) ---------- */
+.cmds{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.cmd{
+  display:flex;align-items:center;gap:16px;padding:17px 6px;border-bottom:1px solid var(--line);
+  transition:padding-left .2s cubic-bezier(.2,.8,.2,1),background .18s;border-radius:6px;
 }
-.line:hover{padding-left:14px;background:rgba(0,0,0,.02)}
-.line .name{font-family:var(--font-mono);font-size:14px;color:var(--color-ink);white-space:nowrap;min-width:200px}
-.line .name .kw{color:var(--color-graphite)}
-.line .desc{font-size:14px;color:var(--color-graphite);margin-left:auto;text-align:right}
-.line .arr{font-style:normal;color:var(--color-ink);transition:transform .2s}
-.line:hover .arr{transform:translate(2px,-2px)}
+.cmd:hover{padding-left:12px;background:rgba(255,255,255,.025)}
+.cmd .name{font-family:var(--mono);font-size:14px;color:var(--text);white-space:nowrap;min-width:148px}
+.cmd .name .kw{color:var(--accent-ink)}
+.cmd .desc{font-size:13.5px;color:var(--text-dim);margin-left:auto;text-align:right}
+.cmd .arr{color:var(--text-faint);transition:transform .18s,color .18s}
+.cmd:hover .arr{transform:translate(2px,-2px);color:var(--accent-ink)}
 
-/* ---------- security ---------- */
-.sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair-paper);border:1px solid var(--hair-paper)}
-.sec-item{background:var(--color-ink);padding:28px 24px;transition:background .2s}
-.sec-item:hover{background:#111}
-.sec-item .n{font-family:var(--font-mono);font-size:12px;color:var(--muted-on-dark);letter-spacing:.08em}
-.sec-item h3{font-family:var(--font-davinci);font-weight:500;font-size:22px;line-height:1.12;letter-spacing:-.01em;margin:12px 0 0;color:var(--color-paper)}
-.sec-item p{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--muted-on-dark)}
-.sec-item p code{color:var(--color-paper);background:rgba(255,255,255,.1)}
+/* ---------- security (ledger) ---------- */
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+.guarantee{display:flex;gap:18px;padding:26px 0;border-top:1px solid var(--line)}
+.guarantee .gn{font-family:var(--mono);font-size:13px;color:var(--accent-ink);padding-top:3px;flex:0 0 auto}
+.guarantee h3{font-size:18px;letter-spacing:-.02em;margin-bottom:9px}
+.guarantee p{font-size:14px;color:var(--text-dim);line-height:1.55}
+.guarantee p code,.guarantee p b{font-weight:600}
+.guarantee p code{font-family:var(--mono);font-size:.85em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
+.guarantee p b{color:var(--text)}
 
 /* ---------- faq ---------- */
-.faq{max-width:780px;margin:0 auto;border-top:1px solid var(--hair-ink)}
-details.q{border-bottom:1px solid var(--hair-ink)}
+.faq{max-width:800px}
+details.q{border-bottom:1px solid var(--line)}
 details.q summary{
-  list-style:none;cursor:pointer;padding:22px 4px;font-size:16px;font-weight:500;
-  display:flex;align-items:center;gap:16px;transition:color .18s;
+  list-style:none;cursor:pointer;padding:22px 4px;font-size:16.5px;font-weight:500;
+  display:flex;align-items:center;gap:16px;transition:color .16s;
 }
-details.q summary:hover{color:var(--color-graphite)}
+details.q summary:hover{color:var(--accent-ink)}
 details.q summary::-webkit-details-marker{display:none}
-details.q summary .pm{margin-left:auto;flex:0 0 auto;width:18px;height:18px;transition:transform .28s cubic-bezier(.2,.8,.2,1);stroke:var(--color-ink);fill:none;stroke-width:1.6}
+details.q summary code{font-family:var(--mono);font-size:.86em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
+details.q summary .pm{margin-left:auto;flex:0 0 auto;width:18px;height:18px;transition:transform .26s cubic-bezier(.2,.8,.2,1);stroke:var(--accent-ink);fill:none;stroke-width:1.8}
 details.q[open] summary .pm{transform:rotate(45deg)}
-details.q .a{padding:0 4px 24px;font-size:15px;line-height:1.6;color:var(--color-graphite);max-width:64ch}
+details.q .a{padding:0 4px 24px;font-size:15px;line-height:1.65;color:var(--text-dim);max-width:66ch}
+details.q .a code{font-family:var(--mono);font-size:.86em;color:var(--text);background:var(--surface-3);padding:1px 6px;border-radius:5px}
 
 /* ---------- cta ---------- */
-.cta{text-align:center;display:flex;flex-direction:column;align-items:center;gap:28px}
-.cta h2{font-family:var(--font-davinci);font-weight:500;font-size:clamp(40px,7.5vw,84px);line-height:.9;letter-spacing:-.012em}
-.cta p{max-width:480px;font-size:16px;color:var(--muted-on-dark)}
+.cta{
+  background:linear-gradient(165deg,var(--accent-soft),transparent 60%),var(--surface);
+  border:1px solid var(--accent-line);border-radius:var(--r-panel);
+  padding:clamp(48px,7vw,88px) 32px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+}
+.cta h2{font-size:clamp(32px,5.2vw,60px);letter-spacing:-.03em;line-height:1.02;max-width:16ch}
+.cta p{max-width:48ch;font-size:17px;color:var(--text-dim)}
+.cta .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px}
 
 /* ---------- footer ---------- */
-footer{background:var(--color-chalk);color:var(--color-ink);padding:52px 0 60px;border-top:1px solid var(--hair)}
+footer{border-top:1px solid var(--line);padding:48px 0 56px;background:var(--surface)}
 .foot{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
-.foot-links{margin-left:auto;display:flex;gap:22px;flex-wrap:wrap}
-.foot-links a{font-size:13px;color:var(--color-graphite);transition:color .18s}
-.foot-links a:hover{color:var(--color-ink)}
-.foot .note{flex-basis:100%;font-size:12px;color:var(--color-ash);margin-top:8px;line-height:1.7}
-.foot .note em{font-style:italic;font-family:var(--font-davinci)}
+.foot-links{margin-left:auto;display:flex;gap:24px;flex-wrap:wrap}
+.foot-links a{font-size:14px;color:var(--text-dim);transition:color .16s}
+.foot-links a:hover{color:var(--text)}
+.foot .note{flex-basis:100%;font-size:13px;color:var(--text-faint);margin-top:18px;line-height:1.7}
 
-/* ---------- reveal on scroll ---------- */
-html.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .75s cubic-bezier(.2,.8,.2,1),transform .75s cubic-bezier(.2,.8,.2,1)}
+/* ---------- reveal ---------- */
+html.js .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
 html.js .reveal.in{opacity:1;transform:none}
-html.js .reveal-delay-1{transition-delay:.1s}
-html.js .reveal-delay-2{transition-delay:.2s}
-html.js .reveal-delay-3{transition-delay:.3s}
+
+/* ---------- theme toggle ---------- */
+.theme-toggle{
+  position:relative;width:38px;height:38px;flex:0 0 auto;cursor:pointer;
+  display:grid;place-items:center;border-radius:var(--r-pill);
+  border:1px solid var(--line-2);background:var(--surface);color:var(--text-dim);
+  transition:color .16s,border-color .16s,background .16s;
+}
+.theme-toggle:hover{color:var(--text);border-color:var(--text-dim)}
+.theme-toggle svg{position:absolute;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;
+  transition:opacity .3s,transform .3s cubic-bezier(.2,.8,.2,1)}
+/* dark mode shows the sun (action: switch to light); light shows the moon */
+[data-theme="dark"] .theme-toggle .i-sun{opacity:1;transform:rotate(0) scale(1)}
+[data-theme="dark"] .theme-toggle .i-moon{opacity:0;transform:rotate(-40deg) scale(.5)}
+[data-theme="light"] .theme-toggle .i-moon{opacity:1;transform:rotate(0) scale(1)}
+[data-theme="light"] .theme-toggle .i-sun{opacity:0;transform:rotate(40deg) scale(.5)}
+
+/* View Transitions clip-path reveal (ported from the shadcn animated-theme-toggle) */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:9999}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+}
 
 /* ---------- responsive ---------- */
 @media(max-width:900px){
-  .grid3,.sec-grid,.vignettes{grid-template-columns:1fr}
-  .duo,.ba{grid-template-columns:1fr}
-  .section-head .toprow{flex-wrap:wrap}
-  .hero-divider{display:none}
+  .start-grid{grid-template-columns:1fr}
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .t-a,.t-b,.t-c,.t-d,.t-e,.t-f,.t-g,.t-h,.t-i{grid-column:span 1}
+  .flow{grid-template-columns:1fr;gap:14px}
+  .flow .arrow{padding:2px 0;transform:rotate(90deg)}
+  .ba{grid-template-columns:1fr}
+  .cmds,.ledger{grid-template-columns:1fr}
+  .nav-links{display:none}
 }
 @media(max-width:620px){
+  .wrap{padding:0 20px}
+  .bento{grid-template-columns:1fr}
+  .statband .wrap{grid-template-columns:1fr}
+  .stat{border-left:none;border-top:1px solid var(--line);padding:24px 8px}
+  .stat:first-child{border-top:none}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+  .install{width:100%;justify-content:space-between}
   .mark .name{display:none}
-  .line .desc{display:none}
-  .line .name{min-width:0}
-  .hero-actions{flex-direction:column}
-  .codecap{flex-wrap:wrap;justify-content:center}
-  .hero-stats{gap:20px}
-  .hero-stat .val{font-size:26px}
+  .cmd .desc{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
   html.js .reveal{opacity:1;transform:none}
-  .notched{opacity:1;transform:none}
-  .hero-grid{animation:none}
+  .caret{opacity:1}
 }
 </style>
 </head>
 <body>
 
+<!-- top sentinel for header state (no scroll listener) -->
+<div id="top-sentinel" style="position:absolute;top:0;height:40px;width:1px;pointer-events:none"></div>
+
 <!-- HEADER -->
 <header class="bar" id="bar">
   <div class="wrap bar-inner">
     <a class="mark" href="#top" aria-label="ReplicaX home">
-      <span class="monogram">R</span>
-      <span class="name">REPLICAX</span>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="12" y="12" width="15" height="15" fill="#34d399"/></svg>
+      <span class="name">ReplicaX</span>
     </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#commands">Commands</a>
+      <a href="#security">Security</a>
+    </nav>
     <div class="right">
-      <a class="tlink" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8Z"/></svg>
+      </button>
+      <a class="gh-link" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener" aria-label="ReplicaX on GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
+        GitHub
+      </a>
+      <a class="btn btn-primary" href="#start">Get started</a>
     </div>
   </div>
 </header>
 
-<!-- FULL-SCREEN HERO -->
+<!-- HERO -->
 <section class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero-grid" aria-hidden="true"></div>
-  <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
-  <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
-
-  <div class="hero-content">
-    <span class="hero-kicker">Open-source CLI · Node ≥ 20 · MIT</span>
-    <h1>Copy the <em class="it">setup,</em><br/>not the code.</h1>
-    <div class="hero-stats" style="animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) .4s both">
-      <div class="hero-stat">
-        <div class="val">11</div>
-        <div class="key">Commands</div>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <div class="val">0</div>
-        <div class="key">Secrets captured</div>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <div class="val">MIT</div>
-        <div class="key">License</div>
-      </div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Open source · MIT</span>
+    <h1>Copy the <span class="accent">setup</span>, not the code.</h1>
+    <p class="lede">ReplicaX captures a project's tooling and structure into a portable profile, then reproduces it anywhere. No source, no secrets.</p>
+    <div class="hero-actions">
+      <span class="install">
+        <span><span class="pr">$</span> npm install -g @iamsaroj/replicax</span>
+        <button class="copy" data-copy="npm install -g @iamsaroj/replicax" aria-label="Copy install command">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </span>
+      <a class="btn btn-ghost" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">
+        Read the docs
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
     </div>
-    <div class="codecap" style="animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) .5s both">
-      <span><span class="pr">$</span> npm install -g @iamsaroj/replicax</span>
-      <button class="copy" data-copy="npm install -g @iamsaroj/replicax" aria-label="Copy install command">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy
-      </button>
-    </div>
-    <div class="hero-actions" style="animation:heroFadeUp .9s cubic-bezier(.2,.8,.2,1) .63s both">
-      <a class="pill" href="#start">Get started</a>
-      <a class="pill ghost" href="#commands">Browse commands</a>
-    </div>
-  </div>
-
-  <div class="wordmark-wrap" aria-hidden="true">
-    <div class="wordmark">ReplicaX</div>
-  </div>
-
-  <div class="scroll-hint" aria-hidden="true">
-    <svg width="16" height="26" viewBox="0 0 16 26" fill="none" stroke="currentColor" stroke-width="1.4">
-      <rect x="1" y="1" width="14" height="22" rx="7"/>
-      <circle cx="8" cy="8" r="2" fill="currentColor" stroke="none">
-        <animate attributeName="cy" values="8;14;8" dur="2s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/>
-      </circle>
-    </svg>
-    Scroll
   </div>
 </section>
 
-<!-- PAINTING PANEL -->
-<section class="panel" aria-label="Capture once, reproduce anywhere" style="padding:0">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Albert_Bierstadt_-_Among_the_Sierra_Nevada%2C_California_-_Google_Art_Project.jpg/1920px-Albert_Bierstadt_-_Among_the_Sierra_Nevada%2C_California_-_Google_Art_Project.jpg" alt="Albert Bierstadt, Among the Sierra Nevada, California (1868)" loading="lazy" />
-  <div class="panel-overlay"></div>
-  <div class="notched reveal">
-    <span class="nlabel">The loop</span>
-    <h3>Capture once.<br/>Reproduce anywhere.</h3>
-    <p>One profile holds a project's tooling and folder structure — never its source, never its secrets.</p>
-    <span class="scroll">
-      <svg viewBox="0 0 9 14" aria-hidden="true"><path d="M4.5 1v12M1.5 9.5 4.5 13l3-3.5"/></svg>
-      Scroll to explore
-    </span>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section class="room-putty" id="features">
+<!-- STATS BAND -->
+<div class="statband">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Capabilities</span>
-        <span class="label">Fig. 01</span>
-      </div>
-      <h2 class="display-title">What travels</h2>
-      <p class="lede">Everything needed to clone a workflow — and nothing that shouldn't leave the building.</p>
-    </div>
-    <div class="grid3 reveal">
-      <div class="cell"><div class="num">01</div><h3>One-command capture</h3><p><code>init</code> scans the current project into a reusable profile under <code>.replicax/</code>.</p></div>
-      <div class="cell"><div class="num">02</div><h3>Any GitHub repo</h3><p><code>extract owner/repo</code> profiles a remote repo — no clone, no <code>git</code> binary required.</p></div>
-      <div class="cell"><div class="num">03</div><h3>One-command scaffold</h3><p><code>create</code> reproduces the exact setup in a fresh directory — same tooling, zero code.</p></div>
-      <div class="cell"><div class="num">04</div><h3>AI assistant skills</h3><p><code>init-skill</code> uses <em>your own</em> AI — Claude, Codex, or Gemini — to author a ready-to-use skill.</p></div>
-      <div class="cell"><div class="num">05</div><h3>.ts and .js configs</h3><p>Copied byte-for-byte — never compiled, never executed. Both variants simply work.</p></div>
-      <div class="cell"><div class="num">06</div><h3>Secret-safe by design</h3><p><code>.env</code>, keys, and certs can never enter a profile; <code>.npmrc</code> tokens are stripped automatically.</p></div>
-      <div class="cell"><div class="num">07</div><h3>Stays in sync</h3><p><code>sync --diff</code> shows what drifted; <code>validate</code> verifies integrity via SHA-256.</p></div>
-      <div class="cell"><div class="num">08</div><h3>Portable &amp; shareable</h3><p><code>export</code> / <code>import</code> a whole profile as a single, validated <code>.tar.gz</code>.</p></div>
-      <div class="cell"><div class="num">09</div><h3>Precise control</h3><p><code>.replicaxignore</code> excludes, <code>.replicaxinclude</code> adds — gitignore-style control over what travels.</p></div>
-    </div>
+    <div class="stat"><div class="val">11</div><div class="key">Commands</div></div>
+    <div class="stat"><div class="val"><span class="accent">0</span></div><div class="key">Secrets captured</div></div>
+    <div class="stat"><div class="val">MIT</div><div class="key">License</div></div>
   </div>
-</section>
+</div>
 
-<!-- THE METHOD -->
-<section class="room-ink" id="how">
+<!-- START: two commands + terminal -->
+<section id="start">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Process</span>
-        <span class="label">Fig. 02</span>
-      </div>
-      <h2 class="display-title">The method</h2>
-      <p class="lede">A two-pipeline design: capture filters everything through a non-overridable secret guard, and reproduce validates every path on the way out.</p>
+    <div class="sec-head reveal">
+      <h2 class="h2">Capture once. Reproduce anywhere.</h2>
+      <p class="lede">One profile holds a project's tooling and folder structure. Never its source, never its secrets. Two commands cover the whole loop.</p>
     </div>
-    <div class="vignettes reveal">
-      <div class="vignette">
-        <span class="cap">Scan</span>
-        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg/960px-Pieter_Bruegel_the_Elder_-_Hunters_in_the_Snow_%28Winter%29_-_Google_Art_Project.jpg" alt="Pieter Bruegel the Elder, Hunters in the Snow (1565)" loading="lazy" /></div>
-        <p>Surveys config files, the folder hierarchy, and metadata — locally or from a GitHub tarball.</p>
-        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
+    <div class="start-grid">
+      <div class="steps reveal">
+        <div class="step panel">
+          <div class="stitle"><span class="dot"></span>Capture a project</div>
+          <p class="sbody">In a project you have already set up the way you like:</p>
+          <div class="runline">
+            <span><span class="pr">$</span> replicax init</span>
+            <button class="copy" data-copy="replicax init" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+          </div>
+          <p class="note">Writes a profile to <code>.replicax/</code>. Add <code>--dry-run</code> to preview without writing.</p>
+        </div>
+        <div class="step panel">
+          <div class="stitle"><span class="dot"></span>Scaffold a fresh one</div>
+          <p class="sbody">Anywhere the profile lives, reproduce the setup:</p>
+          <div class="runline">
+            <span><span class="pr">$</span> replicax create my-new-app</span>
+            <button class="copy" data-copy="replicax create my-new-app" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+          </div>
+          <p class="note">Same tooling and structure, none of the code. Or pull from a repo with <code>extract owner/repo</code>.</p>
+        </div>
       </div>
-      <div class="vignette">
-        <span class="cap">Guard</span>
-        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Jan_van_Huysum_-_Still_Life_of_Flowers_and_Fruit_-_Google_Art_Project.jpg/960px-Jan_van_Huysum_-_Still_Life_of_Flowers_and_Fruit_-_Google_Art_Project.jpg" alt="Jan van Huysum, Still Life of Flowers and Fruit (c. 1715)" loading="lazy" /></div>
-        <p>A non-overridable secret guard sits beneath default ignores and your <code>.replicaxignore</code>.</p>
-        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
-      </div>
-      <div class="vignette">
-        <span class="cap">Reproduce</span>
-        <div class="crop"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Claude_Lorrain_-_Seaport_with_the_Embarkation_of_the_Queen_of_Sheba_-_WGA05002.jpg/960px-Claude_Lorrain_-_Seaport_with_the_Embarkation_of_the_Queen_of_Sheba_-_WGA05002.jpg" alt="Claude Lorrain, Seaport with the Embarkation of the Queen of Sheba (1648)" loading="lazy" /></div>
-        <p>Loads and zod-validates the bundle, then rebuilds the setup — every path checked on the way out.</p>
-        <div class="hexrow"><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg><svg class="hex" viewBox="0 0 24 24"><path d="M12 2 21 7v10l-9 5-9-5V7z"/></svg></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- QUICK START -->
-<section class="room-putty" id="start">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Quick start</span>
-        <span class="label">Fig. 03</span>
-      </div>
-      <h2 class="display-title">Two commands</h2>
-      <p class="lede">Capture a well-configured project once, then scaffold as many fresh ones as you like.</p>
-    </div>
-
-    <div class="exhibit reveal" role="img" aria-label="Example output of the replicax init command">
-      <div class="plate"><span class="h"></span><span class="h"></span><span class="h"></span><span class="t">replicax init</span></div>
+      <div class="terminal reveal" role="img" aria-label="Example output of the replicax init command">
+        <div class="plate"><span class="h"></span><span class="h"></span><span class="h"></span><span class="t">replicax init</span></div>
 <pre><span class="c-dim">$</span> <span class="c-cmd">replicax init</span>
 
-<span class="c-dim">✔</span> Scanned 14 config file(s) and 9 director(ies)
+<span class="c-ok">✔</span> Scanned 14 config file(s) and 9 director(ies)
 
 <span class="c-dim">ℹ</span> Captured setup
   <span class="c-key">language</span>       typescript
@@ -580,42 +534,106 @@ html.js .reveal-delay-3{transition-delay:.3s}
     ├── pages/
     └── services/
 
-<span class="c-dim">✔</span> Profile <span class="c-path">"my-app"</span> written to <span class="c-path">.replicax/</span></pre>
-    </div>
-
-    <div class="duo reveal">
-      <div class="step">
-        <div class="head"><span class="idx">01</span><h3>Capture a project</h3></div>
-        <p class="body">In a project you've already set up the way you like:</p>
-        <div class="runline">
-          <span><span style="color:var(--color-graphite)">$</span> cd my-project &amp;&amp; replicax init</span>
-          <button class="copy" data-copy="cd my-project && replicax init" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
-        </div>
-        <p class="note">→ writes a profile to <code>.replicax/</code>. Add <code>--dry-run</code> to preview without writing.</p>
+<span class="c-ok">✔</span> Profile <span class="c-path">"my-app"</span> written to <span class="c-path">.replicax/</span> <span class="caret"></span></pre>
       </div>
-      <div class="step">
-        <div class="head"><span class="idx">02</span><h3>Scaffold a fresh one</h3></div>
-        <p class="body">Anywhere the profile lives, reproduce the setup:</p>
-        <div class="runline">
-          <span><span style="color:var(--color-graphite)">$</span> replicax create my-new-app</span>
-          <button class="copy" data-copy="replicax create my-new-app" aria-label="Copy command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
-        </div>
-        <p class="note">→ same tooling and structure, <b style="color:var(--color-ink)">none of the code</b>. Or pull from a repo with <code>extract owner/repo</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES (bento) -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Capabilities</span>
+      <h2 class="h2">What travels</h2>
+      <p class="lede">Everything needed to clone a workflow, and nothing that should stay behind.</p>
+    </div>
+    <div class="bento reveal">
+      <div class="tile t-a">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 4h10l6 6v10H4z"/><path d="M14 4v6h6"/></svg>
+        <h3>One-command capture</h3>
+        <p><code>init</code> scans the current project into a reusable profile under <code>.replicax/</code>, ready to share or reuse.</p>
+        <div class="codeblock"><span class="pr">$</span> replicax init</div>
+      </div>
+      <div class="tile t-b">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/><path d="M12 3a13 13 0 0 1 0 18 13 13 0 0 1 0-18"/></svg>
+        <h3>Any GitHub repo</h3>
+        <p><code>extract owner/repo</code> profiles a remote repo. No clone, no <code>git</code> binary.</p>
+      </div>
+      <div class="tile t-c">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <h3>One-command scaffold</h3>
+        <p><code>create</code> rebuilds the exact setup in a fresh directory.</p>
+      </div>
+      <div class="tile t-d">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/></svg>
+        <h3>AI assistant skills</h3>
+        <p><code>init-skill</code> uses your own Claude, Codex, or Gemini to author a skill.</p>
+      </div>
+      <div class="tile t-e">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M16 18l4-6-4-6M8 6l-4 6 4 6"/></svg>
+        <h3>.ts and .js configs</h3>
+        <p>Copied byte for byte. Never compiled, never executed.</p>
+      </div>
+      <div class="tile t-f">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Secret-safe by design</h3>
+        <p><code>.env</code>, keys, and certs can never enter a profile. <code>.npmrc</code> tokens are stripped automatically.</p>
+      </div>
+      <div class="tile t-g">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg>
+        <h3>Stays in sync</h3>
+        <p><code>sync --diff</code> shows what drifted. <code>validate</code> verifies integrity via SHA-256.</p>
+      </div>
+      <div class="tile t-h">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+        <h3>Portable and shareable</h3>
+        <p><code>export</code> and <code>import</code> a whole profile as one validated <code>.tar.gz</code>.</p>
+      </div>
+      <div class="tile t-i">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M3 12h12M3 18h6"/></svg>
+        <h3>Precise control</h3>
+        <p><code>.replicaxignore</code> excludes, <code>.replicaxinclude</code> adds. Gitignore-style control over exactly what travels.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD (process flow) -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 class="h2">Two pipelines, one guard</h2>
+      <p class="lede">Capture filters everything through a non-overridable secret guard. Reproduce validates every path on the way out.</p>
+    </div>
+    <div class="flow reveal">
+      <div class="phase">
+        <span class="pk">Scan</span>
+        <h3>Survey the setup</h3>
+        <p>Reads config files, the folder hierarchy, and metadata, locally or from a GitHub tarball.</p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="phase">
+        <span class="pk">Guard</span>
+        <h3>Block secrets</h3>
+        <p>A non-overridable secret guard sits beneath default ignores and your <code>.replicaxignore</code>.</p>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="phase">
+        <span class="pk">Reproduce</span>
+        <h3>Rebuild safely</h3>
+        <p>Loads and zod-validates the bundle, then rebuilds the setup. Every path is checked on the way out.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- BEFORE / AFTER -->
-<section class="room-bone" id="before-after">
+<section id="before-after">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Before &amp; after</span>
-        <span class="label">Fig. 04</span>
-      </div>
-      <h2 class="display-title">What stays behind</h2>
-      <p class="lede">Starting from a typical Vite + React + TypeScript project, ReplicaX keeps the tooling and folder layout and drops everything else.</p>
+    <div class="sec-head reveal">
+      <h2 class="h2">What stays behind</h2>
+      <p class="lede">Starting from a typical Vite, React, and TypeScript project, ReplicaX keeps the tooling and folder layout and drops everything else.</p>
     </div>
     <div class="ba reveal">
       <div class="ba-pane">
@@ -628,34 +646,37 @@ html.js .reveal-delay-3{transition-delay:.3s}
 ├── Dockerfile
 ├── .github/workflows/ci.yml
 ├── .husky/pre-commit
-├── .env                  <span class="tag">← secret</span>
-├── package.json          <span class="tag">← runtime deps</span>
+├── .env                  <span class="tag">secret</span>
+├── package.json          <span class="tag">runtime deps</span>
 └── src/
     ├── components/
-    │   └── Button.tsx     <span class="tag">← business code</span>
+    │   └── Button.tsx     <span class="tag">business code</span>
     ├── hooks/
     ├── services/
-    │   └── UserService.ts <span class="tag">← business code</span>
+    │   └── UserService.ts <span class="tag">business code</span>
     └── pages/</pre>
       </div>
-      <div class="ba-pane">
-        <div class="h">Generated by ReplicaX</div>
+      <div class="ba-pane kept">
+        <div class="h">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>
+          Generated by ReplicaX
+        </div>
 <pre>my-new-app/
-├── vite.config.ts        <span class="out">✓ verbatim</span>
+├── vite.config.ts        <span class="out">verbatim</span>
 ├── tsconfig.json         <span class="out">✓</span>
 ├── .prettierrc           <span class="out">✓</span>
 ├── eslint.config.js      <span class="out">✓</span>
 ├── Dockerfile            <span class="out">✓</span>
 ├── .github/workflows/ci.yml
 ├── .husky/pre-commit     <span class="out">✓</span>
-├── package.json          <span class="out">✓ curated</span>
+├── package.json          <span class="out">curated</span>
 └── src/
-    ├── components/        <span class="out">✓ empty</span>
+    ├── components/        <span class="out">empty</span>
     │
-    ├── hooks/             <span class="out">✓ empty</span>
-    ├── services/          <span class="out">✓ empty</span>
+    ├── hooks/             <span class="out">empty</span>
+    ├── services/          <span class="out">empty</span>
     │
-    └── pages/             <span class="out">✓ empty</span></pre>
+    └── pages/             <span class="out">empty</span></pre>
       </div>
     </div>
     <p class="ba-note reveal">No <code>.env</code>. No <code>Button.tsx</code>. No <code>react</code> runtime dependency. <b>Only the setup.</b></p>
@@ -663,108 +684,113 @@ html.js .reveal-delay-3{transition-delay:.3s}
 </section>
 
 <!-- COMMANDS -->
-<section class="room-putty" id="commands">
+<section id="commands">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Reference</span>
-        <span class="label">Fig. 05</span>
-      </div>
-      <h2 class="display-title">The instrument</h2>
-      <p class="lede">One small CLI, eleven sharp tools. Every write operation accepts <code>--dry-run</code> and <code>--verbose</code>.</p>
+    <div class="sec-head reveal">
+      <h2 class="h2">Every command</h2>
+      <p class="lede">One small CLI, eleven sharp tools. Every write operation accepts <code style="font-family:var(--mono);font-size:.9em;background:var(--surface-3);padding:1px 6px;border-radius:5px">--dry-run</code> and <code style="font-family:var(--mono);font-size:.9em;background:var(--surface-3);padding:1px 6px;border-radius:5px">--verbose</code>.</p>
     </div>
     <div class="cmds reveal">
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-init" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init</span><span class="desc">Scan the current project into a profile</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-extract-repo" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> extract</span><span class="desc">Profile a remote GitHub repo</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-create-project-name" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> create</span><span class="desc">Scaffold a new project</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-sync" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> sync</span><span class="desc">Update the profile from the project</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-inspect" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> inspect</span><span class="desc">Display captured config &amp; structure</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-validate" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> validate</span><span class="desc">Schema + SHA-256 integrity check</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-export--import" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> export / import</span><span class="desc">Portable .tar.gz in and out</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-init-skill" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init-skill</span><span class="desc">Author an AI-assistant skill</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-doctor" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> doctor</span><span class="desc">Check which dev tools are installed</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-compare-source-target" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> compare</span><span class="desc">Diff two profiles or projects</span><span class="arr">↗</span></a>
-      <a class="line" href="https://github.com/khanalsaroj/replicaX#replicax-audit" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> audit</span><span class="desc">Score a setup against best practices</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-init" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init</span><span class="desc">Scan the current project</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-sync" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> sync</span><span class="desc">Update the profile from the project</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-extract-repo" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> extract</span><span class="desc">Profile a remote GitHub repo</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-inspect" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> inspect</span><span class="desc">Display captured config and structure</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-create-project-name" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> create</span><span class="desc">Scaffold a new project</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-validate" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> validate</span><span class="desc">Schema and SHA-256 integrity check</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-export--import" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> export / import</span><span class="desc">Portable .tar.gz in and out</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-doctor" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> doctor</span><span class="desc">Check which dev tools are installed</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-init-skill" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> init-skill</span><span class="desc">Author an AI-assistant skill</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-compare-source-target" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> compare</span><span class="desc">Diff two profiles or projects</span><span class="arr">↗</span></a>
+      <a class="cmd" href="https://github.com/khanalsaroj/replicaX#replicax-audit" target="_blank" rel="noopener"><span class="name"><span class="kw">replicax</span> audit</span><span class="desc">Score a setup against best practices</span><span class="arr">↗</span></a>
     </div>
   </div>
 </section>
 
-<!-- SECURITY -->
-<section class="room-ink" id="security">
+<!-- SECURITY (ledger) -->
+<section id="security">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Boundaries</span>
-        <span class="label">Fig. 06</span>
-      </div>
-      <h2 class="display-title">A hard guarantee</h2>
-      <p class="lede">Secret exclusion is enforced in code and covered by tests — not configuration you can accidentally turn off.</p>
+    <div class="sec-head reveal">
+      <span class="eyebrow">Boundaries</span>
+      <h2 class="h2">A hard guarantee</h2>
+      <p class="lede">Secret exclusion is enforced in code and covered by tests, not configuration you can accidentally turn off.</p>
     </div>
-    <div class="sec-grid reveal">
-      <div class="sec-item">
-        <div class="n">01</div>
-        <h3>Secrets are never captured</h3>
-        <p><code>.env</code>, <code>*.pem</code>, <code>*.key</code>, <code>*.crt</code>, SSH keys and friends are blocked <b style="color:var(--color-paper)">unconditionally</b> — config cannot override it.</p>
+    <div class="ledger reveal">
+      <div class="guarantee">
+        <span class="gn">01</span>
+        <div>
+          <h3>Secrets are never captured</h3>
+          <p><code>.env</code>, <code>*.pem</code>, <code>*.key</code>, <code>*.crt</code>, and SSH keys are blocked <b>unconditionally</b>. Config cannot override it.</p>
+        </div>
       </div>
-      <div class="sec-item">
-        <div class="n">02</div>
-        <h3>.npmrc is sanitized</h3>
-        <p>A legitimate setup file — but auth tokens (<code>_authToken</code>, <code>_password</code>, …) are stripped before it ever enters a profile.</p>
+      <div class="guarantee">
+        <span class="gn">02</span>
+        <div>
+          <h3>.npmrc is sanitized</h3>
+          <p>A legitimate setup file, but auth tokens (<code>_authToken</code>, <code>_password</code>) are stripped before it enters a profile.</p>
+        </div>
       </div>
-      <div class="sec-item">
-        <div class="n">03</div>
-        <h3>No path escapes</h3>
-        <p>Every path from a profile or AI response is validated against traversal (<code>..</code>) and absolute paths before anything is written.</p>
+      <div class="guarantee">
+        <span class="gn">03</span>
+        <div>
+          <h3>No path escapes</h3>
+          <p>Every path from a profile or AI response is validated against traversal (<code>..</code>) and absolute paths before anything is written.</p>
+        </div>
       </div>
-      <div class="sec-item">
-        <div class="n">04</div>
-        <h3>Archives are a trust boundary</h3>
-        <p>An imported <code>.tar.gz</code> is validated first: traversal, symlinks and device entries are rejected, with caps on size and file count.</p>
+      <div class="guarantee">
+        <span class="gn">04</span>
+        <div>
+          <h3>Archives are a trust boundary</h3>
+          <p>An imported <code>.tar.gz</code> is validated first. Traversal, symlinks, and device entries are rejected, with caps on size and file count.</p>
+        </div>
       </div>
-      <div class="sec-item">
-        <div class="n">05</div>
-        <h3>Install is opt-in</h3>
-        <p>Because installing runs lifecycle scripts, <code>create</code> won't auto-install an untrusted profile — it waits for an explicit <code>--install</code>.</p>
+      <div class="guarantee">
+        <span class="gn">05</span>
+        <div>
+          <h3>Install is opt-in</h3>
+          <p>Because installing runs lifecycle scripts, <code>create</code> waits for an explicit <code>--install</code> before touching an untrusted profile.</p>
+        </div>
       </div>
-      <div class="sec-item">
-        <div class="n">06</div>
-        <h3>No business source</h3>
-        <p>Only config and the empty folder hierarchy enter a profile. Runtime <code>dependencies</code> are dropped from <code>package.json</code>.</p>
+      <div class="guarantee">
+        <span class="gn">06</span>
+        <div>
+          <h3>No business source</h3>
+          <p>Only config and the empty folder hierarchy enter a profile. Runtime <code>dependencies</code> are dropped from <code>package.json</code>.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="room-bone" id="faq">
+<section id="faq">
   <div class="wrap">
-    <div class="section-head reveal">
-      <div class="toprow">
-        <span class="label">Questions</span>
-        <span class="label">Fig. 07</span>
-      </div>
-      <h2 class="display-title">Short answers</h2>
+    <div class="sec-head reveal">
+      <h2 class="h2">Short answers</h2>
     </div>
     <div class="faq reveal">
       <details class="q"><summary>Does it copy my source code?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Only configuration files and the empty folder hierarchy. Application code is never read into a profile.</div></details>
-      <details class="q"><summary>What about <code>.ts</code> configs like <code>vite.config.ts</code>?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Fully supported — they're copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.</div></details>
-      <details class="q"><summary>Can a profile leak a secret?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Secret exclusion is unconditional and <code>.npmrc</code> tokens are stripped; <code>validate</code> fails if a secret ever appears in a profile.</div></details>
-      <details class="q"><summary>Why are runtime <code>dependencies</code> dropped?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">They're part of your application, not your setup. <code>devDependencies</code>, <code>scripts</code>, and <code>engines</code> are kept; the new project's name is stamped in on <code>create</code>.</div></details>
-      <details class="q"><summary>Does <code>extract</code> need <code>git</code> installed?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code> — no <code>git</code> binary, no full clone.</div></details>
-      <details class="q"><summary>Is it cross-platform?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Yes — Windows (native + WSL), macOS, and Linux.</div></details>
+      <details class="q"><summary>What about <code>.ts</code> configs like <code>vite.config.ts</code>?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Fully supported. They are copied as text, so both <code>.ts</code> and <code>.js</code> variants work without any compile step.</div></details>
+      <details class="q"><summary>Can a profile leak a secret?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. Secret exclusion is unconditional and <code>.npmrc</code> tokens are stripped. <code>validate</code> fails if a secret ever appears in a profile.</div></details>
+      <details class="q"><summary>Why are runtime <code>dependencies</code> dropped?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">They are part of your application, not your setup. <code>devDependencies</code>, <code>scripts</code>, and <code>engines</code> are kept, and the new project's name is stamped in on <code>create</code>.</div></details>
+      <details class="q"><summary>Does <code>extract</code> need <code>git</code> installed?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">No. It downloads the repo as a tarball over the GitHub API using Node's built-in <code>fetch</code>. No <code>git</code> binary, no full clone.</div></details>
+      <details class="q"><summary>Is it cross-platform?<svg class="pm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><div class="a">Yes. Windows (native and WSL), macOS, and Linux.</div></details>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="room-ink">
-  <div class="wrap cta reveal">
-    <span class="label">Begin</span>
-    <h2>Stop re-typing<br/>your setup.</h2>
-    <p>Capture it once, reproduce it anywhere — secret-safe by design.</p>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
-      <a class="pill" href="https://www.npmjs.com/package/@iamsaroj/replicax" target="_blank" rel="noopener">Install from npm</a>
-      <a class="pill ghost" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">Star on GitHub</a>
+<section>
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Stop re-typing your setup.</h2>
+      <p>Capture it once, reproduce it anywhere. Secret-safe by design.</p>
+      <div class="row">
+        <a class="btn btn-primary" href="https://www.npmjs.com/package/@iamsaroj/replicax" target="_blank" rel="noopener">Install from npm</a>
+        <a class="btn btn-ghost" href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">
+          Star on GitHub
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -773,8 +799,8 @@ html.js .reveal-delay-3{transition-delay:.3s}
 <footer>
   <div class="wrap foot">
     <a class="mark" href="#top">
-      <span class="monogram">R</span>
-      <span class="name">REPLICAX</span>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="12" y="12" width="15" height="15" fill="#34d399"/></svg>
+      <span class="name">ReplicaX</span>
     </a>
     <div class="foot-links">
       <a href="https://github.com/khanalsaroj/replicaX" target="_blank" rel="noopener">GitHub</a>
@@ -783,28 +809,52 @@ html.js .reveal-delay-3{transition-delay:.3s}
       <a href="https://github.com/khanalsaroj/replicaX/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
       <a href="https://github.com/khanalsaroj/replicaX/issues" target="_blank" rel="noopener">Issues</a>
     </div>
-    <p class="note">
-      MIT © Saroj Khanal · <em>Copy the setup, not the code.</em><br/>
-      Paintings by Bierstadt, Bruegel, van Huysum &amp; Claude Lorrain — public domain, via Wikimedia Commons.
-    </p>
+    <p class="note">MIT © Saroj Khanal. Copy the setup, not the code.</p>
   </div>
 </footer>
 
 <script>
 (function(){
-  // frosted header on scroll
+  // header frosted state via IntersectionObserver sentinel (no scroll listener)
   var bar = document.getElementById('bar');
-  function onScroll(){ bar.classList.toggle('scrolled', window.scrollY > 40); }
-  onScroll();
-  window.addEventListener('scroll', onScroll, {passive:true});
+  var sentinel = document.getElementById('top-sentinel');
+  if('IntersectionObserver' in window && sentinel){
+    var hio = new IntersectionObserver(function(entries){
+      bar.classList.toggle('scrolled', !entries[0].isIntersecting);
+    }, {threshold:0});
+    hio.observe(sentinel);
+  }
+
+  // theme toggle with View Transitions clip-path reveal
+  var toggle = document.getElementById('theme-toggle');
+  var themeMeta = document.querySelector('meta[name="theme-color"]');
+  function applyTheme(next){
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('theme', next); }catch(e){}
+    if(themeMeta){ themeMeta.setAttribute('content', next === 'light' ? '#f4f4f2' : '#0a0b0d'); }
+  }
+  if(toggle){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    toggle.addEventListener('click', function(){
+      var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if(!document.startViewTransition || reduce){ applyTheme(next); return; }
+      var transition = document.startViewTransition(function(){ applyTheme(next); });
+      transition.ready.then(function(){
+        document.documentElement.animate(
+          { clipPath: ['inset(50% 0 50% 0)', 'inset(0 0 0 0)'] },
+          { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+        );
+      });
+    });
+  }
 
   // copy buttons
   document.querySelectorAll('.copy').forEach(function(btn){
     btn.addEventListener('click', function(e){
       e.preventDefault();
       var text = btn.getAttribute('data-copy');
+      var orig = btn.innerHTML;
       var done = function(){
-        var orig = btn.innerHTML;
         btn.classList.add('done');
         btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg> Copied';
         setTimeout(function(){ btn.classList.remove('done'); btn.innerHTML = orig; }, 1700);
@@ -820,43 +870,17 @@ html.js .reveal-delay-3{transition-delay:.3s}
     });
   });
 
-  // scroll reveal with staggered children
+  // scroll reveal
   var els = document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        if(en.isIntersecting){
-          en.target.classList.add('in');
-          io.unobserve(en.target);
-        }
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
       });
-    }, {threshold:.08, rootMargin:'0px 0px -30px 0px'});
+    }, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
     els.forEach(function(el){ io.observe(el); });
   } else {
     els.forEach(function(el){ el.classList.add('in'); });
-  }
-
-  // subtle parallax on painting panel
-  var panel = document.querySelector('.panel');
-  var panelImg = panel && panel.querySelector('img');
-  if(panelImg && window.matchMedia('(prefers-reduced-motion:no-preference)').matches){
-    window.addEventListener('scroll', function(){
-      var rect = panel.getBoundingClientRect();
-      var pct = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-      var y = (pct - .5) * 40;
-      panelImg.style.transform = 'scale(1.05) translateY(' + y + 'px)';
-    }, {passive:true});
-  }
-
-  // typing cursor effect on exhibit terminal
-  var exhibit = document.querySelector('.exhibit pre');
-  if(exhibit){
-    exhibit.addEventListener('mouseenter', function(){
-      exhibit.style.borderLeft = '2px solid rgba(255,255,255,.4)';
-    });
-    exhibit.addEventListener('mouseleave', function(){
-      exhibit.style.borderLeft = '';
-    });
   }
 })();
 </script>
